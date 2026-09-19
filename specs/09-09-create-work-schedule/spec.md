@@ -65,9 +65,9 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-09 requirement 1 | FR-SCH-01 |  |
+| UC-09 requirement 1 | FR-SCH-01 | AC-SCH-01 |
 | UC-09 requirement 2 | FR-SCH-02 | AC-SCH-01 |
 | UC-09 requirement 3 | FR-SCH-03 | AC-SCH-02 |
-| UC-09 requirement 4 | FR-SCH-04 |  |
+| UC-09 requirement 4 | FR-SCH-04 | AC-SCH-01 |
 | NFR-REL-01 | Quality Requirements | AC-SCH-03 |
-| NFR-PERF-01 | Quality Requirements |  |
+| NFR-PERF-01 | Quality Requirements | AC-SCH-01, AC-SCH-02 |
