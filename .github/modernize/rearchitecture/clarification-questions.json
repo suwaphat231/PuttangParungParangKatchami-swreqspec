@@ -1,0 +1,228 @@
+{
+  "schema": "clarification-questions/v1",
+  "generated_at": "2026-09-19T00:00:00Z",
+  "user_input": "/clarify specs/12-12-submit-performance-results/spec.md",
+  "title": "การส่งผลการปฏิบัติงาน",
+  "assessment_snapshot": {
+    "intro": "สเปก UC-12 กำหนดการตรวจสอบ ยืนยัน และส่งผลการปฏิบัติงานเข้าสู่กระบวนการถัดไป แต่ยังขาดข้อมูลสำหรับการออกแบบและตรวจสอบระบบให้ครบถ้วน:",
+    "bullets": [
+      "ต้องตรวจสอบว่าประเมินครบก่อนส่งและเปลี่ยนสถานะเป็นส่งแล้ว",
+      "การบันทึกผลกับการเปลี่ยนสถานะต้องเป็นธุรกรรมเดียวกัน",
+      "ต้องบันทึกผู้ส่งและเวลา และควบคุมการปลดล็อกหลังส่ง",
+      "ยังไม่ระบุ framework, API/data policy, SLA และนโยบายทดสอบ"
+    ]
+  },
+  "proposed_outcome": "ได้ข้อกำหนดที่พร้อมนำไปวางแผน implementation สำหรับการส่งผลการปฏิบัติงาน โดยระบุกรอบเทคโนโลยี นโยบาย API วิธีจัดการข้อมูล สิทธิ์การปลดล็อก เกณฑ์ความสำเร็จ และข้อจำกัดเฉพาะของ workflow การส่งผลอย่างชัดเจน",
+  "scope": [
+    "backend",
+    "generic"
+  ],
+  "status": "awaiting_answers",
+  "questions": [
+    {
+      "id": "B1",
+      "kit": "backend",
+      "field": "target.framework",
+      "title": "กรอบ backend เป้าหมาย",
+      "question": "ระบบ backend ของฟีเจอร์นี้ใช้ framework และเวอร์ชันใด หรือมีมาตรฐานของโครงการที่ต้องยึดตาม?",
+      "importance": "required",
+      "impact": 5,
+      "recommended": null,
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    },
+    {
+      "id": "B2",
+      "kit": "backend",
+      "field": "api.contract_preservation",
+      "title": "นโยบาย API",
+      "question": "API หรือ service contract เดิมต้องคงไว้ในระดับใด?",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "partial: submission APIs only",
+      "default": "must preserve",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "must preserve",
+          "label": "ต้องคง endpoint, payload และ status code เดิมทั้งหมด"
+        },
+        {
+          "value": "can break with versioning",
+          "label": "เปลี่ยนได้โดยออก version ใหม่"
+        },
+        {
+          "value": "can break",
+          "label": "ออกแบบใหม่ได้"
+        },
+        {
+          "value": "partial: submission APIs only",
+          "label": "คงไว้เฉพาะ API ของการส่งผล"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B3",
+      "kit": "backend",
+      "field": "data.migration_strategy",
+      "title": "กลยุทธ์ข้อมูล",
+      "question": "ข้อมูลผลการประเมิน สถานะการส่ง และประวัติการส่งควรจัดการอย่างไรกับฐานข้อมูลเดิม?",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "TBD / assess in research phase",
+      "default": "TBD / assess in research phase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "in-place",
+          "label": "ใช้ฐานข้อมูลและ schema เดิม"
+        },
+        {
+          "value": "dual-write",
+          "label": "ใช้ schema ใหม่ควบคู่และเขียนสองฝั่ง"
+        },
+        {
+          "value": "new schema",
+          "label": "ออกแบบ schema ใหม่และย้ายข้อมูลเดิม"
+        },
+        {
+          "value": "no migration",
+          "label": "ไม่ย้ายหรือเปลี่ยนฐานข้อมูล"
+        },
+        {
+          "value": "TBD / assess in research phase",
+          "label": "ประเมินแนวทางในช่วงศึกษาระบบ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B4",
+      "kit": "backend",
+      "field": "auth.framework",
+      "title": "การยืนยันตัวตนและสิทธิ์",
+      "question": "ระบบใช้กลไกยืนยันตัวตนและกำหนดสิทธิ์ใดสำหรับอาจารย์และเจ้าหน้าที่ โดยเฉพาะการปลดล็อกผลหลังส่ง?",
+      "importance": "recommended",
+      "impact": 5,
+      "recommended": null,
+      "default": "preserve existing auth mechanism; detect from codebase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    },
+    {
+      "id": "B5",
+      "kit": "backend",
+      "field": "nfr.sla",
+      "title": "เป้าหมาย SLA",
+      "question": "มีเป้าหมายด้าน latency, throughput หรือ availability สำหรับการตรวจสอบและส่งผลหรือไม่?",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": null,
+      "default": "match current production baseline; no regression",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    },
+    {
+      "id": "G1",
+      "kit": "generic",
+      "field": "success.definition",
+      "title": "นิยามความสำเร็จ",
+      "question": "เมื่อถือว่าฟีเจอร์การส่งผลนี้เสร็จสมบูรณ์และพร้อมใช้งาน?",
+      "importance": "required",
+      "impact": 5,
+      "recommended": null,
+      "default": "feature parity with the current system; all existing user-facing behaviors preserved",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    },
+    {
+      "id": "G2",
+      "kit": "generic",
+      "field": "out_of_scope",
+      "title": "ขอบเขตที่ยกเว้น",
+      "question": "นอกจาก UC-16 และ UC-13 ที่ระบุไว้ มีส่วนใดที่ห้ามเปลี่ยนหรือไม่รวมในงานนี้อีกหรือไม่?",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": null,
+      "default": "no explicit exclusions; agent will infer from project structure",
+      "prefilled": true,
+      "prefilled_value": "UC-16 การติดตาม/ตรวจสอบการจ่ายเงิน และ UC-13 การตรวจสอบสถานะผู้ปฏิบัติงาน ไม่อยู่ในขอบเขต",
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    },
+    {
+      "id": "G3",
+      "kit": "generic",
+      "field": "existing_tests.posture",
+      "title": "นโยบายชุดทดสอบ",
+      "question": "ชุดทดสอบเดิมควรจัดการอย่างไรหลังปรับปรุงฟีเจอร์นี้?",
+      "importance": "recommended",
+      "impact": 4,
+      "recommended": "partial: feature tests must pass",
+      "default": "must pass",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "must pass",
+          "label": "ชุดทดสอบเดิมทั้งหมดต้องผ่าน"
+        },
+        {
+          "value": "can rewrite",
+          "label": "เขียนทดสอบใหม่ที่ coverage เทียบเท่าได้"
+        },
+        {
+          "value": "ignore",
+          "label": "ชุดทดสอบเดิมใช้ไม่ได้ ให้เขียนใหม่"
+        },
+        {
+          "value": "partial: feature tests must pass",
+          "label": "บังคับเฉพาะชุดทดสอบของการส่งผล"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "G5",
+      "kit": "generic",
+      "field": "constraints.additional",
+      "title": "ข้อจำกัดเพิ่มเติม",
+      "question": "มีข้อกำหนดเพิ่มเติมหรือไม่ เช่น เงื่อนไขการประเมินครบ การทำธุรกรรมเดียวกัน การล็อกผลหลังส่ง ผู้มีสิทธิ์ปลดล็อก audit log หรือการแจ้งเตือน?",
+      "importance": "optional",
+      "impact": 5,
+      "recommended": null,
+      "default": "None beyond the decisions listed in this specification.",
+      "prefilled": true,
+      "prefilled_value": "ต้องประเมินครบก่อนส่ง; การบันทึกผลและเปลี่ยนสถานะต้องเป็นธุรกรรมเดียวกัน; เมื่อส่งแล้วต้องล็อกตามกติกา; ต้องยืนยันผู้มีสิทธิ์ปลดล็อกผลกับเจ้าหน้าที่",
+      "answer": null,
+      "depends_on": null,
+      "type": "text"
+    }
+  ]
+}

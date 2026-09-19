@@ -1,6 +1,6 @@
 # Feature: ประเมินการปฏิบัติงาน
 Spec ID: SPEC-11-11- | Source: Use Case Diagram UC-11 | Use case: UC-11
-Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
+Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
 
 ## Goal
 อาจารย์ประเมินผลการปฏิบัติงานของ Lab Boy และบันทึกผล
@@ -39,13 +39,13 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 
 ## Assumptions & Open Questions
 - ASM-01 เกณฑ์การประเมินถูกกำหนดก่อนเปิดรอบ
-- Q-01 แก้ไขผลหลังยืนยันได้หรือไม่ และใครอนุมัติ? -> ยืนยันกับอาจารย์/เจ้าหน้าที่
+- Q-01 การแก้ไขผลการประเมินหลังยืนยัน รวมถึงผู้มีอำนาจอนุมัติ ต้องยืนยันกับอาจารย์/เจ้าหน้าที่
 
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-11 requirement 1 | FR-EVL-01 | AC-EVL-01 |
-| UC-11 requirement 2 | FR-EVL-02 | AC-EVL-02 |
-| UC-11 requirement 3 | FR-EVL-03 |  |
-| NFR-AUD-01 | Quality Requirements |  |
-| NFR-SEC-01 | Quality Requirements |  |
+| UC-11 requirement 1 | FR-EVL-01 | — |
+| UC-11 requirement 2 | FR-EVL-02 | AC-EVL-01 |
+| UC-11 requirement 3 | FR-EVL-03 | AC-EVL-02 |
+| NFR-AUD-01 | NFR-AUD-01 | — |
+| NFR-SEC-01 | NFR-SEC-01 | — |
