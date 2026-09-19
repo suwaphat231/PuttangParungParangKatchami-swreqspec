@@ -1,6 +1,6 @@
 # Feature: ส่งผลการปฏิบัติงาน
 Spec ID: SPEC-12-12- | Source: Use Case Diagram UC-12 | Use case: UC-12
-Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
+Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
 
 ## Goal
 อาจารย์ยืนยันและส่งผลการปฏิบัติงานเพื่อเข้าสู่กระบวนการถัดไป
@@ -32,7 +32,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
       Given ประเมินครบทุกคน
             When  ยืนยันส่งผล
             Then  ระบบอนุญาตให้ส่ง
-- [ ] AC-RES-02 (FR-RES-03)
+- [ ] AC-RES-02 (FR-RES-02)
       Given ส่งผลสำเร็จ
             When  กลับมาดูข้อมูล
             Then  สถานะเป็นส่งแล้ว
@@ -43,7 +43,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 
 ## Assumptions & Open Questions
 - ASM-01 ขั้นตอนส่งผลถือเป็นจุดสิ้นสุดการแก้ไขตามปกติ
-- Q-01 ใครสามารถปลดล็อกผลหลังส่งแล้ว? -> ยืนยันกับเจ้าหน้าที่
+- Q-01 Open Question: ใครสามารถปลดล็อกผลหลังส่งแล้ว? ประเด็นนี้ยังต้องยืนยันกับเจ้าหน้าที่
 
 ## Traceability
 | SRS / Use Case | spec.md | AC |
@@ -51,5 +51,5 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 | UC-12 requirement 1 | FR-RES-01 | AC-RES-01 |
 | UC-12 requirement 2 | FR-RES-02 | AC-RES-02 |
 | UC-12 requirement 3 | FR-RES-03 | AC-RES-03 |
-| NFR-REL-01 | Quality Requirements |  |
-| NFR-AUD-01 | Quality Requirements |  |
+| NFR-REL-01 | NFR-REL-01 | AC-RES-03 |
+| NFR-AUD-01 | NFR-AUD-01 | — |
