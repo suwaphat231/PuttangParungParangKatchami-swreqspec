@@ -1,0 +1,269 @@
+{
+  "schema": "clarification-questions/v1",
+  "generated_at": "2026-09-19T00:00:00Z",
+  "user_input": "/clarify specs/09-09-create-work-schedule/spec.md",
+  "title": "ยืนยันรายละเอียดสเปกการจัดทำตารางปฏิบัติงาน",
+  "assessment_snapshot": {
+    "intro": "สเปก UC-09 ยังมีรายละเอียดที่ต้องยืนยันก่อนปรับเป็นข้อกำหนดที่นำไปพัฒนาได้",
+    "bullets": [
+      "ต้องกำหนดนโยบายแก้ไขตารางหลังประกาศ",
+      "ต้องกำหนดระดับโควตาและกติกาตารางซ้ำซ้อน",
+      "ต้องกำหนดสิทธิ์และพฤติกรรมการบันทึกพร้อมกัน",
+      "ต้องกำหนดผลลัพธ์หลังบันทึกสำเร็จ"
+    ]
+  },
+  "proposed_outcome": "ได้ข้อสรุปที่นำไปปรับ requirements และ acceptance criteria ของ specs/09-09-create-work-schedule/spec.md ได้โดยไม่ต้องตีความเพิ่มเติม",
+  "scope": [
+    "frontend",
+    "backend",
+    "generic"
+  ],
+  "status": "awaiting_answers",
+  "questions": [
+    {
+      "id": "B1",
+      "kit": "backend",
+      "field": "concurrent_save_behavior",
+      "title": "พฤติกรรมเมื่อมีการบันทึกพร้อมกัน",
+      "question": "หากมีผู้ใช้อื่นบันทึกตัดโควตาพร้อมกัน ระบบควรจัดการอย่างไร",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "first_wins",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "first_wins",
+          "label": "รายการที่บันทึกสำเร็จก่อนมีสิทธิ์ รายการถัดไปถูกปฏิเสธ"
+        },
+        {
+          "value": "queue",
+          "label": "จัดคิวและประมวลผลตามลำดับ"
+        },
+        {
+          "value": "retry",
+          "label": "ระบบลองบันทึกใหม่อัตโนมัติเมื่อโควตายังเพียงพอ"
+        },
+        {
+          "value": "other",
+          "label": "อื่น ๆ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F1",
+      "kit": "frontend",
+      "field": "schedule_edit_policy",
+      "title": "นโยบายการเปลี่ยนแปลงตารางหลังประกาศ",
+      "question": "หลังประกาศตารางแล้ว อาจารย์สามารถเปลี่ยนแปลงตารางได้ถึงเมื่อใด",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "before_start",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "anytime",
+          "label": "เปลี่ยนได้ตลอดเวลา"
+        },
+        {
+          "value": "before_start",
+          "label": "เปลี่ยนได้ก่อนวันหรือช่วงเวลาปฏิบัติงานเริ่มต้น"
+        },
+        {
+          "value": "before_announcement",
+          "label": "เปลี่ยนได้เฉพาะก่อนประกาศตาราง"
+        },
+        {
+          "value": "locked_after_announcement",
+          "label": "ห้ามเปลี่ยนหลังประกาศ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F2",
+      "kit": "frontend",
+      "field": "quota_definition",
+      "title": "ระดับของโควตาที่ใช้จัดตาราง",
+      "question": "โควตาที่ใช้จัดตารางหมายถึงโควตาในระดับใด",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "per_slot",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "per_slot",
+          "label": "จำนวน Lab Boy สูงสุดต่อช่วงเวลา"
+        },
+        {
+          "value": "per_day",
+          "label": "จำนวนครั้งหรือชั่วโมงสูงสุดต่อวันของแต่ละคน"
+        },
+        {
+          "value": "both",
+          "label": "ใช้ทั้งโควตาต่อช่วงเวลาและโควตาต่อวันของแต่ละคน"
+        },
+        {
+          "value": "other",
+          "label": "อื่น ๆ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F3",
+      "kit": "frontend",
+      "field": "slot_definition",
+      "title": "แหล่งที่มาของวันและช่วงเวลาที่จัดตารางได้",
+      "question": "ใครเป็นผู้กำหนดวันและช่วงเวลาที่สามารถจัดตารางได้",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "system_fixed",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "system_fixed",
+          "label": "ระบบกำหนดไว้ล่วงหน้า"
+        },
+        {
+          "value": "instructor_defined",
+          "label": "อาจารย์กำหนดเองในแต่ละประกาศ"
+        },
+        {
+          "value": "recruitment_defined",
+          "label": "กำหนดตามประกาศรับสมัคร"
+        },
+        {
+          "value": "other",
+          "label": "อื่น ๆ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F4",
+      "kit": "frontend",
+      "field": "conflict_scope",
+      "title": "ขอบเขตของการตรวจสอบตารางซ้ำซ้อน",
+      "question": "ระบบต้องป้องกันตารางซ้ำซ้อนในกรณีใดบ้าง",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "same_worker",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "same_worker",
+          "label": "คนเดียวกันมีตารางทับซ้อนกัน"
+        },
+        {
+          "value": "same_slot",
+          "label": "ช่วงเวลาเดียวกันเกินโควตา"
+        },
+        {
+          "value": "same_location",
+          "label": "สถานที่เดียวกันมีตารางทับซ้อนกัน"
+        },
+        {
+          "value": "instructor",
+          "label": "ตารางของอาจารย์ผู้จัดทับซ้อนกัน"
+        }
+      ],
+      "allow_other": true,
+      "type": "multi_select"
+    },
+    {
+      "id": "G1",
+      "kit": "generic",
+      "field": "permission_scope",
+      "title": "ผู้มีสิทธิ์จัดการตาราง",
+      "question": "ผู้ใดมีสิทธิ์สร้าง แก้ไข หรือลบตารางปฏิบัติงาน",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "instructor_admin",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "instructor",
+          "label": "อาจารย์ผู้รับผิดชอบ"
+        },
+        {
+          "value": "admin",
+          "label": "ผู้ดูแลระบบเท่านั้น"
+        },
+        {
+          "value": "instructor_admin",
+          "label": "อาจารย์ผู้รับผิดชอบและผู้ดูแลระบบ"
+        },
+        {
+          "value": "other",
+          "label": "อื่น ๆ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F5",
+      "kit": "frontend",
+      "field": "save_result",
+      "title": "ข้อมูลที่ต้องแสดงหลังบันทึกสำเร็จ",
+      "question": "เมื่อบันทึกตารางสำเร็จ ระบบควรแสดงผลอย่างไร",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": "summary_and_latest",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "latest_schedule",
+          "label": "แสดงตารางล่าสุดของผู้ปฏิบัติงานที่เลือก"
+        },
+        {
+          "value": "all_schedules",
+          "label": "แสดงตารางทั้งหมดของประกาศหรือรอบรับสมัคร"
+        },
+        {
+          "value": "summary_and_latest",
+          "label": "แสดงสรุปผลพร้อมตารางล่าสุด"
+        },
+        {
+          "value": "other",
+          "label": "อื่น ๆ"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    }
+  ]
+}
