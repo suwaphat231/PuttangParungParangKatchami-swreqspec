@@ -222,3 +222,26 @@ UC-15 ดำเนินการเสร็จแล้วตาม requiremen
 ### สรุป
 
 การแยก task สำหรับ UC-16 เสร็จสิ้นตาม spec และ plan โดยคง Open Question Q-01 ไว้เป็น task ที่ต้องรอคำยืนยัน และไม่ได้เพิ่ม requirement นอก scope
+
+---
+
+## [2026-10-03] [10:10 UTC] คำสั่ง: Resolve merge state for UC-16 branch
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-16 ติดตามและตรวจสอบการจ่ายเงิน
+- ขอบเขต: ตรวจสอบและยืนยันสถานะ merge ของ branch ให้สอดคล้องกับผลลัพธ์ของ UC-16 โดยไม่เพิ่ม requirement ใหม่และไม่สร้าง ID ใหม่
+
+### ผลการทำงาน
+
+- ตรวจสอบคอนฟิกและสเตทัสของ branch ทั้ง backend/frontend พบว่าเงื่อนไข UC-16 และ API integration 已อยู่ในสถานะที่ยอมรับได้แล้ว
+- ปรับ metadata ของหน้าเริ่มต้นให้ตรงกับ UC-16 โดยเปลี่ยน document title จาก "ตรวจสอบสถานะผู้ปฏิบัติงาน" เป็น "ติดตามและตรวจสอบการจ่ายเงิน"
+- ยืนยันว่า App, API client, Vite proxy, และ smoke test สำหรับ UC-16 ตรงกับ flow ที่ถูกสร้างไว้ก่อนหน้า
+
+### ผลการทดสอบ
+
+- Backend: `cd backend && pytest -q` ผ่าน 32 tests
+- Frontend: `cd frontend && npm test -- --run` ผ่าน 18 tests
+
+### สรุป
+
+Branch ในสถานะที่พร้อมดำเนินการต่อแล้ว โดยไม่มี unresolved conflict markers ใน working tree และ metadata ของหน้าเริ่มต้นสอดคล้องกับ UC-16 ที่กำหนดไว้ใน spec
