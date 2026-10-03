@@ -69,9 +69,30 @@ Spec Target: [specs/13-13-check-worker-status/spec.md](specs/13-13-check-worker-
 
 - [x] ตรวจสอบข้อกำหนดใน `spec.md` และผล Clarify ล่าสุด
 - [x] ยืนยัน Q-01 ว่ารายงานสรุปสถานะตามช่วงเวลาเป็น Required
-- [ ] ดำเนินงาน Backend, Frontend และ Test ตามแผน
-- [ ] ตรวจสอบ Acceptance Criteria และ traceability ก่อนส่งมอบ
+- [x] ดำเนินงาน Backend, Frontend และ Test ตามแผน
+- [x] ตรวจสอบ Acceptance Criteria และ traceability ก่อนส่งมอบ
 
 ## 7. Next Action
 
-เริ่มดำเนินงาน Backend, Frontend และการทดสอบตามลำดับ โดยตรวจสอบ AC-WKS-01 ถึง AC-WKS-04 และ AC-PERF-01 หลังส่งมอบ
+ส่งมอบ UC-13 demo/test implementation ให้ทีมตรวจ โดยเฉพาะการยอมรับ in-memory source, demo-principal configuration และการสรุป report จากสถานะล่าสุดของช่วงปฏิบัติงาน
+
+## 8. Technical Decisions ที่ใช้ใน UC-13 รอบนี้
+
+การเลือก FastAPI, React/Vite และรูปแบบ in-memory demo มาจากคำตัดสินใจของทีมและโครงสร้าง repo ไม่ได้เพิ่มหรือเปลี่ยน FR/AC ใน `spec.md`
+
+- **แหล่งข้อมูล:** ใช้ deterministic in-memory `WorkerStatusStore`; ไม่เชื่อม PostgreSQL และไม่สร้าง database/schema ใหม่
+- **Model/entity:** `WorkerRecord` มี worker ID, student ID, full name, department, course, semester, academic year, work-period start/end, status และ `last_updated_at`; ค่าเริ่มต้นเป็น demo records ที่คงที่เพื่อให้ tests ทำซ้ำได้
+- **Status transition:** สถานะก่อนวันเริ่มเป็น `คัดเลือกแล้ว`, ตั้งแต่วันเริ่มถึงวันสิ้นสุดรวมวันสิ้นสุดเป็น `กำลังปฏิบัติงาน`, หลังวันสิ้นสุดเป็น `ปฏิบัติงานเสร็จสิ้น`; `ยกเลิก/พ้นสภาพ` ไม่ถูกเปลี่ยนอัตโนมัติ การเปลี่ยนสถานะจะตั้ง `last_updated_at` เป็น UTC
+- **Authenticated principal:** production path รับ `Principal` จาก trusted `request.state.principal` และตอบ 401 เมื่อไม่มี; demo mode เปิดด้วย `UC13_AUTH_MODE=demo` เฉพาะเมื่อ `APP_ENV` เป็น `development` หรือ `test` และอ่าน role/scope จาก server environment เท่านั้น (`UC13_DEMO_ROLE`, `UC13_DEMO_DEPARTMENT`, `UC13_DEMO_COURSES`) ห้ามส่ง role ผ่าน query/body
+- **API contract:**
+  - `GET /uc13/context` คืน role และ Department/course ที่ principal มองเห็น
+  - `GET /uc13/course-scope?department_id=...` คืน course IDs ใน scope
+  - `GET /uc13/workers` รองรับ `student_id`, `full_name`, `course_id`, `semester`, `academic_year`, `work_period_from`, `work_period_to`, `status` และ `department_id`
+  - `GET /uc13/workers/{worker_id}` คืนรายละเอียดรวม Last Updated Timestamp ภายใน scope
+  - `GET /uc13/reports/status?period_from=...&period_to=...&department_id=...` คืนยอดรวมแยกตามสถานะ
+- **Filter semantics:** authorization scope ถูก apply ก่อน; selected search/filter criteria ภายใน scope ใช้ OR; student ID/full name เป็น case-insensitive partial match; work period ใช้ช่วงที่ซ้อนทับกันแบบรวมวันขอบเขต
+- **Report semantics:** นับ latest current status ของผู้ปฏิบัติงานที่ work period ซ้อนทับช่วงที่เลือก ไม่ใช่ประวัติการเปลี่ยนสถานะ เพราะ model นี้เก็บสถานะล่าสุดเท่านั้น
+- **Frontend/API integration:** Vite proxy ส่ง `/api/*` ไป Backend โดยตัด prefix `/api`; T-15 เชื่อม list, detail, context, department scope และ report ผ่าน API client เดียว
+- **Performance:** AC-PERF-01 วัด API search/filter กับ in-memory dataset 10,000 records; เวลาไม่รวมการสร้าง dataset
+
+ไม่มี external service หรือ production authentication/database ถูกสร้างเพิ่มในรอบนี้

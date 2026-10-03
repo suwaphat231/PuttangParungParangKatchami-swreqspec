@@ -1,6 +1,7 @@
+import os
+from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import Enum
-from collections.abc import Iterable
 
 from fastapi import HTTPException, Request
 
@@ -30,9 +31,35 @@ class Course:
 # Supports NFR-SEC-01 by accepting identity only from trusted request state.
 def get_current_principal(request: Request) -> Principal:
     principal = getattr(request.state, "principal", None)
-    if not isinstance(principal, Principal):
-        raise HTTPException(status_code=401, detail="Authenticated principal required")
-    return principal
+    if isinstance(principal, Principal):
+        return principal
+
+    runtime_environment = os.getenv("APP_ENV", "development").lower()
+    if (
+        os.getenv("UC13_AUTH_MODE") == "demo"
+        and runtime_environment in {"development", "test"}
+    ):
+        role_by_name = {
+            "department_staff": Role.DEPARTMENT_STAFF,
+            "instructor": Role.INSTRUCTOR,
+            "admin": Role.ADMIN,
+        }
+        role_name = os.getenv("UC13_DEMO_ROLE", "department_staff")
+        role = role_by_name.get(role_name)
+        if role is None:
+            raise HTTPException(status_code=503, detail="Invalid UC-13 demo role")
+        course_ids = frozenset(
+            course_id.strip()
+            for course_id in os.getenv("UC13_DEMO_COURSES", "course-c,course-d").split(",")
+            if course_id.strip()
+        )
+        return Principal(
+            role=role,
+            department_id=os.getenv("UC13_DEMO_DEPARTMENT", "department-a"),
+            taught_course_ids=course_ids,
+        )
+
+    raise HTTPException(status_code=401, detail="Authenticated principal required")
 
 
 # Supports NFR-SEC-01 by restricting visible courses according to the user's role.
