@@ -192,3 +192,33 @@ UC-14 เปิดจากหน้าแรกได้ พร้อม checkl
 ### สรุป
 
 UC-15 ดำเนินการเสร็จแล้วตาม requirement และ plan โดยคงความเข้ากันของ UC-13 และ UC-14 ไว้ ไม่เพิ่ม workflow อนุมัติกลาง และตรวจสอบ RBAC, audit log, lifecycle, และ published visibility ตาม spec
+
+---
+
+## [2026-10-03] [09:56 UTC] คำสั่ง: /tasks specs/16-16-track-payment/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-16 ติดตามและตรวจสอบการจ่ายเงิน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึด traceability, ไม่เพิ่ม requirement หรือ ID ใหม่, และคง Open Question Q-01 ไว้เป็นงานที่ต้องรอคำตอบ
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/16-16-track-payment/tasks.md](specs/16-16-track-payment/tasks.md)
+- จำนวน task ทั้งหมด: 7 task
+- จำนวน task ที่รอ Q-xx: 1 task (T-04 รอ Q-01)
+- Status ของ spec อยู่ที่ Draft v1 จึงมีคำเตือนว่า still requires clarification; task ที่เกี่ยวข้องกับคำถาม Q-01 ถูกคงไว้เป็นสถานะรอ Q-01 ตามกฎไม่เดา
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-03 เพราะต้องรวม RBAC, Audit Log, และการจำกัด scope ของข้อมูลการเงินให้สอดคล้องกับ 4 บทบาทที่กำหนดไว้
+- AC ที่ทดสอบยากที่สุดคือ AC-PAY-04 และ AC-PAY-05 เพราะต้องใช้ role-scoped data และ audit trail ที่สามารถตรวจได้จริงในสภาพแวดล้อมที่มีผู้ใช้งานหลายบทบาทพร้อมกัน
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-PAY-04: ใช้ fixture 3 role (Lab Boy, Instructor, Department Staff) และตรวจว่าคำขอเข้าถึงข้อมูลจ่ายเงินของแต่ละ role คืนผลตามสิทธิ์เท่านั้น โดยไม่มีข้อมูลข้ามภาควิชา/ข้ามคน
+- AC-PAY-05: ตั้งค่า audit log แล้วเรียกดูรายการ 3-5 ครั้งจาก role เดียวกัน ตรวจว่า log record มี actor, timestamp, resource, access outcome, และไม่ซ้ำ/หายระหว่างการเรียกดู
+- AC-PAY-02: ใช้ incoming financial record ที่มีสถานะ "ยังไม่จ่าย" และ "ข้อมูลผิดปกติ" ตรวจว่ารายการติด flag ชัดเจนและไม่ถูกบิดเบือนใน UI
+
+### สรุป
+
+การแยก task สำหรับ UC-16 เสร็จสิ้นตาม spec และ plan โดยคง Open Question Q-01 ไว้เป็น task ที่ต้องรอคำยืนยัน และไม่ได้เพิ่ม requirement นอก scope

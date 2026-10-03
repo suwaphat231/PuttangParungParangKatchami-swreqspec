@@ -84,6 +84,18 @@ export const announcementApi = {
   },
 }
 
+export const paymentTrackingApi = {
+  getContext() {
+    return request('/uc13/context')
+  },
+  listPayments(filters = {}) {
+    return request(`/uc16/payments${queryString(filters)}`)
+  },
+  getPayment(paymentId) {
+    return request(`/uc16/payments/${encodeURIComponent(paymentId)}`)
+  },
+}
+
 export const api = {
   async getSlots({ dateFrom, packageCode }) {
     const q = new URLSearchParams({ date_from: dateFrom, package_code: packageCode })

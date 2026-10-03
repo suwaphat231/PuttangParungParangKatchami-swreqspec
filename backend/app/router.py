@@ -13,6 +13,13 @@ from app.announcement_service import (
     update_announcement_record,
 )
 from app.authorization import Course, Principal, Role, get_current_principal, visible_courses
+from app.payment_service import (
+    PAYMENT_STORE,
+    PaymentRecord,
+    append_audit_entry,
+    filter_payment_records,
+    matches_display_scope,
+)
 from app.worker_status import (
     DEMO_STORE,
     WorkerFilters,
@@ -378,6 +385,49 @@ def get_uc13_context(
             for course in visible
         ],
     }
+
+
+# Supports FR-PAY-01, FR-PAY-02, FR-PAY-03, FR-PAY-04, and FR-PAY-05.
+@router.get("/uc16/payments")
+def list_payments(
+    student_id: str | None = Query(default=None),
+    full_name: str | None = Query(default=None),
+    course_id: str | None = Query(default=None),
+    semester: str | None = Query(default=None),
+    academic_year: str | None = Query(default=None),
+    status: str | None = Query(default=None),
+    department_id: str | None = Query(default=None),
+    principal: Principal = Depends(get_current_principal),
+) -> list[dict[str, object]]:
+    visible = filter_payment_records(
+        PAYMENT_STORE,
+        principal,
+        student_id=student_id,
+        full_name=full_name,
+        course_id=course_id,
+        semester=semester,
+        academic_year=academic_year,
+        status=status,
+        department_id=department_id,
+    )
+    for record in visible:
+        append_audit_entry(record, principal)
+    return [record.to_dict() for record in visible]
+
+
+# Supports FR-PAY-02 and FR-PAY-05 by returning the latest payment state for an authorized record.
+@router.get("/uc16/payments/{payment_id}")
+def get_payment_detail(
+    payment_id: str,
+    principal: Principal = Depends(get_current_principal),
+) -> dict[str, object]:
+    record = next((entry for entry in PAYMENT_STORE if entry.payment_id == payment_id), None)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Payment record not found")
+    if not matches_display_scope(record, principal):
+        raise HTTPException(status_code=403, detail="Payment access denied")
+    append_audit_entry(record, principal)
+    return record.to_dict()
 
 
 # Supports FR-WKS-01, FR-WKS-02, and NFR-SEC-01 for the status list API.
