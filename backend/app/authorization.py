@@ -6,19 +6,21 @@ from enum import Enum
 from fastapi import HTTPException, Request
 
 
-# Supports NFR-SEC-01.
+# Supports FR-OFC-01 and NFR-SEC-01 for the trusted role model.
 class Role(str, Enum):
+    STUDENT = "Student"
     DEPARTMENT_STAFF = "Department Staff"
     INSTRUCTOR = "Instructor"
     ADMIN = "Admin"
 
 
-# Supports NFR-SEC-01 by carrying the user's authorized department or courses.
+# Supports FR-OFC-01 and NFR-SEC-01 by carrying the trusted identity.
 @dataclass(frozen=True)
 class Principal:
     role: Role
     department_id: str | None = None
     taught_course_ids: frozenset[str] = frozenset()
+    student_id: str | None = None
 
 
 # Supports NFR-SEC-01 by representing the course boundary used for visibility.
@@ -28,7 +30,7 @@ class Course:
     department_id: str
 
 
-# Supports NFR-SEC-01 by accepting identity only from trusted request state.
+# Supports FR-OFC-01 and NFR-SEC-01 by accepting identity only from trusted request state.
 def get_current_principal(request: Request) -> Principal:
     principal = getattr(request.state, "principal", None)
     if isinstance(principal, Principal):
@@ -40,6 +42,7 @@ def get_current_principal(request: Request) -> Principal:
         and runtime_environment in {"development", "test"}
     ):
         role_by_name = {
+            "student": Role.STUDENT,
             "department_staff": Role.DEPARTMENT_STAFF,
             "instructor": Role.INSTRUCTOR,
             "admin": Role.ADMIN,
@@ -57,6 +60,7 @@ def get_current_principal(request: Request) -> Principal:
             role=role,
             department_id=os.getenv("UC13_DEMO_DEPARTMENT", "department-a"),
             taught_course_ids=course_ids,
+            student_id=os.getenv("UC13_DEMO_STUDENT_ID"),
         )
 
     raise HTTPException(status_code=401, detail="Authenticated principal required")

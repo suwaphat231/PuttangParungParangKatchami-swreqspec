@@ -3,11 +3,21 @@
 // เรียกผ่าน /api (ดู proxy ใน vite.config.js) หลังบ้านต้องรันอยู่ที่ port 8000
 const BASE = import.meta.env.VITE_API_BASE ?? '/api'
 
-async function request(path) {
-  const response = await fetch(`${BASE}${path}`)
-  const body = await response.json()
-  if (!response.ok) {
-    throw new Error(body.detail || `UC-13 API request failed (${response.status})`)
+async function request(path, options = {}) {
+  const hasExplicitOptions = Object.keys(options).length > 0
+  const response = hasExplicitOptions
+    ? await fetch(`${BASE}${path}`, {
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options,
+      })
+    : await fetch(`${BASE}${path}`)
+  const body = typeof response?.json === 'function'
+    ? await response.json()
+    : typeof response?.text === 'function'
+      ? await response.text()
+      : null
+  if (!response?.ok) {
+    throw new Error((typeof body === 'object' && body && body.detail) || body || `API request failed (${response?.status ?? 'unknown'})`)
   }
   return body
 }
@@ -34,6 +44,22 @@ export const workerStatusApi = {
   },
   getStatusReport(period) {
     return request(`/uc13/reports/status${queryString(period)}`)
+  },
+}
+
+// Supports FR-OFC-01, FR-OFC-02, and FR-OFC-03 for the document review flow.
+export const reviewDocumentApi = {
+  getApplication(applicationId) {
+    return request(`/uc14/applications/${encodeURIComponent(applicationId)}/document-checklist`)
+  },
+  getDocumentChecklist(applicationId) {
+    return request(`/uc14/applications/${encodeURIComponent(applicationId)}/document-checklist`)
+  },
+  submitReview(applicationId, payload) {
+    return request(`/uc14/applications/${encodeURIComponent(applicationId)}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
   },
 }
 

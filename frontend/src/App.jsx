@@ -1,6 +1,6 @@
-import WorkerStatusPage from './pages/WorkerStatusPage.jsx'
-import { workerStatusApi } from './api/client.js'
+import ReviewStudentDocumentsPage from './pages/ReviewStudentDocumentsPage.jsx'
+import { reviewDocumentApi } from './api/client.js'
 
-export default function App({ api = workerStatusApi } = {}) {
-  return <WorkerStatusPage api={api} />
+export default function App({ api = reviewDocumentApi } = {}) {
+  return <ReviewStudentDocumentsPage api={api} />
 }
