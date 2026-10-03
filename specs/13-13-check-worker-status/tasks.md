@@ -18,7 +18,7 @@
 | T-05 | จัดเตรียมข้อมูลสถานะล่าสุดและ Last Updated Timestamp | FR-WKS-03, AC-WKS-03 | ตรวจสอบค่า timestamp ที่ถูกต้องเมื่อ status เปลี่ยนแปลง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: source/status model จริงหากมี | T-03 | มีข้อมูล status ล่าสุดและ timestamp ที่ตรงกับข้อมูลปัจจุบันและพร้อมใช้งานใน UI/backend | เสร็จแล้ว |
 | T-06 | สร้าง UI สำหรับค้นหาและกรองตามบทบาท | FR-WKS-02, AC-WKS-02 | ตรวจสอบว่าฟิลด์แสดงตามบทบาทและตอบสนองต่อเงื่อนไขการค้นหา/กรอง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: หน้า UI จริงหากมี | T-02, T-03 | UI เปิดใช้งาน filter/search ที่สอดคล้องกับสิทธิ์ | เสร็จแล้ว |
 | T-07 | สร้างตารางแสดงสถานะ Lab Boy และ empty state | FR-WKS-01, FR-WKS-02, AC-WKS-01, AC-WKS-02 | ตรวจสอบรายการสถานะและข้อความ empty state เมื่อไม่มีข้อมูล | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: screen/table จริงหากมี | T-04, T-06 | รายการแสดงสถานะและข้อความแจ้งเตือนที่ถูกต้อง | เสร็จแล้ว |
-| T-08 | แสดง Last Updated Timestamp ใน UI | FR-WKS-03, AC-WKS-03 | ตรวจสอบว่า timestamp ถูกแสดงในหน้าตารางหรือหน้า detail อย่างต่อเนื่อง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: UI component จริงหากมี | T-05, T-07 | timestamp ถูกแสดงสอดคล้องกับข้อมูลล่าสุด | พร้อมทำ |
+| T-08 | แสดง Last Updated Timestamp ใน UI | FR-WKS-03, AC-WKS-03 | ตรวจสอบว่า timestamp ถูกแสดงในหน้าตารางหรือหน้า detail อย่างต่อเนื่อง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: UI component จริงหากมี | T-05, T-07 | timestamp ถูกแสดงสอดคล้องกับข้อมูลล่าสุด | เสร็จแล้ว |
 | T-09 | ทดสอบรวม Acceptance Criteria และ regression | AC-WKS-01, AC-WKS-02, AC-WKS-03 | ทดสอบ end-to-end สำหรับ role access, search/filter, empty state และ timestamp | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: test suite จริงหากมี | T-04, T-05, T-07, T-08 | ทุก AC ผ่านและไม่มี regression | พร้อมทำ |
 | T-10 | ยืนยันคำตอบ Open Question Q-01 เรื่องรายงานสรุปสถานะตามช่วงเวลา | Q-01 | รอทางเจ้าหน้าที่ตอบว่าจำเป็นต้องมีรายงานสรุปหรือไม่ | [spec.md](spec.md), [plan.md](plan.md) | - | ได้คำตอบ Q-01 แล้วและตัดสินใจว่า task เพิ่มเติมจะต้องมีหรือไม่ | รอ Q-01 |
 
@@ -237,6 +237,38 @@
 - [spec.md](spec.md) และ [plan.md](plan.md) ไม่ได้ระบุรูปแบบตารางแนวตั้ง/แนวนอน หรือคอลัมน์ที่ต้องมีเพิ่มเติมนอกเหนือจาก status และ empty state
 - จึงบันทึกเป็น Open Question เพื่อหลีกเลี่ยงการเพิ่ม layout หรือ workflow ที่ไม่มีหลักฐาน
 
+## 8. T-08: แสดง Last Updated Timestamp ใน UI ที่ยืนยันแล้ว
+
+### 8.1 Requirement ที่ยืนยันจาก Spec/Plan
+1. Requirement เรื่องการแสดงวัน/เวลาที่ข้อมูลถูกอัปเดตล่าสุด
+   - [spec.md](spec.md): FR-WKS-03 ระบุให้แสดงวันและเวลาที่ข้อมูลถูกอัปเดตล่าสุดในหน้าจอรายละเอียดของ Lab Boy
+   - [spec.md](spec.md): AC-WKS-03 ระบุว่าเมื่อข้อมูลสถานะเปลี่ยนแปลง ระบบต้องแสดงวันและเวลาที่ข้อมูลถูกอัปเดตล่าสุด (Last Updated Timestamp)
+   - [plan.md](plan.md): ระบุให้แสดงเวลาที่อัปเดตล่าสุดในหน้าจออย่างชัดเจน
+
+2. Requirement เรื่องการสอดคล้องกับ status ล่าสุด
+   - [spec.md](spec.md): FR-WKS-01 และ Constraints ระบุว่าสถานะต้องมาจากข้อมูลล่าสุด
+   - ดังนั้น timestamp ที่แสดงต้องสอดคล้องกับ record และ status ปัจจุบันที่เปิดดูอยู่
+
+### 8.2 Expected result
+- ผู้ใช้เห็น Last Updated Timestamp ที่ตรงกับ record ของ Lab Boy ที่แสดงอยู่
+- Timestamp ถูกแสดงใน UI โดยมีความสัมพันธ์กับ status ล่าสุดที่ปรากฏในหน้าจอ
+- หากมีการเปลี่ยนแปลงสถานะ ระบบต้องแสดงค่า timestamp ที่อัปเดตใหม่พร้อมกัน
+
+### 8.3 Verification method ที่ตรวจสอบได้
+- เปรียบเทียบ record ของ Lab Boy กับค่า timestamp ที่แสดงใน UI ว่าตรงกับข้อมูลล่าสุด
+- ตรวจสอบสถานะและ timestamp ในแถวหรือหน้า detail ที่เปิดอยู่ ให้สอดคล้องกัน
+- ทดสอบกรณี status ถูกอัปเดตแล้วว่า timestamp เปลี่ยนตามข้อมูลใหม่
+- ตรวจสอบว่า timestamp ไม่ใช่ค่าเก่าของ record อื่นหรือ status ที่ไม่ใช่ record ปัจจุบัน
+
+### 8.4 Dependency กับ T-05 และ T-07
+- T-05 ให้ข้อมูล status ล่าสุดและความสัมพันธ์กับ timestamp
+- T-07 ให้ตาราง status ที่แสดงLab Boy พร้อม empty state
+- T-08 ใช้ผลลัพธ์จาก T-05/T-07 เพื่อยืนยันว่า UI แสดง timestamp อย่างถูกต้องและสอดคล้องกับข้อมูลล่าสุด
+
+### 8.5 Open Question ที่บันทึกแทนการเดา
+- [spec.md](spec.md) และ [plan.md](plan.md) ไม่ได้ระบุ format ของ timestamp ที่ต้องแสดง เช่น วัน/เวลา, timezone หรือ locale
+- จึงไม่เพิ่มรูปแบบการแสดงที่เกินหลักฐานของ Spec/Plan โดยยังคงยึดหลักว่า timestamp ต้องมีค่าและสอดคล้องกับ status ล่าสุดเท่านั้น
+
 ## 8. Open Questions และสถานะ Task
 
 | Q ID | คำถาม | สถานะ | Task ที่เกี่ยวข้อง | ข้อสังเกต |
@@ -267,7 +299,7 @@
 
 ## 8. สรุปยอด Task และสถานะ
 - จำนวน Task ทั้งหมด: 10 Tasks
-- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04, T-05, T-06, T-07
+- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04, T-05, T-06, T-07, T-08
 - Task ที่กำลังทำ: ไม่มี
 - Task ที่รอคำตอบ: T-10 (รอ Q-01)
 - AC ที่ยังไม่มี Task รองรับ: ไม่มี (ทั้งหมดมี Task รองรับแล้ว)
@@ -284,8 +316,9 @@
   10. T-05 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยยึดหลัก FR-WKS-01, FR-WKS-03, AC-WKS-01, AC-WKS-03 และระบุ Open Question สำหรับ timestamp format/timezone ที่ Spec/Plan ไม่ระบุ
   11. T-06 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยยึด role scope และ filter logic จาก T-02/T-03 และระบุ Open Question สำหรับ UI matching pattern ที่ Spec/Plan ไม่ระบุ
   12. T-07 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยยึด FR-WKS-01, FR-WKS-02, AC-WKS-01, AC-WKS-02 และระบุ Open Question สำหรับ layout เพิ่มเติมที่ Spec/Plan ไม่ระบุ
+  13. T-08 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยยึด FR-WKS-03, AC-WKS-03 และระบุ Open Question สำหรับ format timestamp ที่ Spec/Plan ไม่ระบุ
 
 ## 8. ข้อสรุปความพร้อม
 - งานเอกสาร task ของ UC-13 อยู่ในสภาพพร้อมจัดส่งสำหรับ week 06 โดยยึดตาม [spec.md](spec.md) และ [plan.md](plan.md) เท่านั้น
-- T-05, T-06 และ T-07 ได้รับการยืนยันว่าเป็น “เสร็จแล้ว” และไม่มีการเพิ่ม requirement หรือ workflow ใดที่ไม่มีหลักฐานจาก Spec/Plan
+- T-05, T-06, T-07 และ T-08 ได้รับการยืนยันว่าเป็น “เสร็จแล้ว” และไม่มีการเพิ่ม requirement หรือ workflow ใดที่ไม่มีหลักฐานจาก Spec/Plan
 - ยังไม่เริ่ม Implement โค้ด และไม่มีการเดาคำตอบแทนทีม
