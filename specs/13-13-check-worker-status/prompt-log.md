@@ -10,7 +10,7 @@
 
 ## 3. จำนวน Task
 - Total tasks: 10
-- Tasks completed: 4 (T-01, T-02, T-03, T-04)
+- Tasks completed: 5 (T-01, T-02, T-03, T-04, T-05)
 - Tasks in progress: 0
 - Tasks pending answer: 1 (T-10, รอ Q-01)
 - Acceptance criteria covered: 3/3
@@ -32,13 +32,15 @@
 - ตรวจสอบและปิด T-02 แล้ว โดยยืนยัน role-based access matrix ว่าตรงกับ Student/Lab Boy, Instructor, Department Staff, Admin ตาม Spec/Plan
 - ตรวจสอบและปิด T-03 แล้ว โดยสรุป logic ค้นหา/กรอง Lab Boy ตาม FR-WKS-02/AC-WKS-02 และระบุ Open Question สำหรับ exact/partial match ที่ Spec/Plan ไม่ระบุชัดเจน
 - ตรวจสอบและปิด T-04 แล้ว เพื่อยืนยัน access enforcement และ empty-state handling ตาม RBAC จาก T-02 และ FR-WKS-02/AC-WKS-02
+- ตรวจสอบและปิด T-05 แล้ว โดยยืนยัน requirement ว่า status ต้องเป็นข้อมูลล่าสุด และ Last Updated Timestamp ต้องสอดคล้องกับข้อมูลที่แสดงตาม FR-WKS-03 / AC-WKS-03
 - ระบุ Open Question Q-01 ไว้เพื่อไม่ให้เดาคำตอบแทนทีม
+- ระบุ Open Question สำหรับ timestamp format/timezone/trigger ที่ Spec/Plan ไม่ระบุไว้เพื่อหลีกเลี่ยงการเดา workflow
 - จัดทำ log นี้เพื่อสรุปผลการตรวจสอบและการปรับปรุง
 
 ## 6. สรุปแบบสั้น
 - Task ทั้งหมด: 10
-- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04
+- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04, T-05
 - Task ที่กำลังทำ: ไม่มี
 - Task ที่ต้องรอคำตอบ: T-10 (Q-01)
 - AC ที่ยังไม่มี Task รองรับ: ไม่มี
-- สถานะ: แก้ไขเสร็จแล้วตามเกณฑ์ Week 06 โดยอิงจาก Spec และ Plan เท่านั้น
+- สถานะ: แก้ไขเสร็จแล้วตามเกณฑ์ Week 06 โดยอิงจาก Spec และ Plan เท่านั้น และ T-05 ปิดเป็น “เสร็จแล้ว”

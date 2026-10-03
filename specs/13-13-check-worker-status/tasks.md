@@ -15,7 +15,7 @@
 | T-02 | กำหนด role-based access scope | AC-WKS-01, NFR-SEC-01 | ตรวจสอบบทบาท Student / Instructor / Department Staff / Admin และขอบเขตข้อมูลที่อนุญาต | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: โครงสร้าง role model จริงหากมี | T-01 | ระบุสิทธิ์และขอบเขตข้อมูลชัดเจนสำหรับทุกบทบาท | เสร็จแล้ว |
 | T-03 | ระบุ logic ค้นหา/กรอง Lab Boy ตามเงื่อนไข | FR-WKS-02, AC-WKS-02 | ทดสอบเงื่อนไขค้นหา: รหัสนักศึกษา, ชื่อ-นามสกุล, รายวิชา, ภาคการศึกษา, ช่วงเวลาปฏิบัติงาน, สถานะ | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: source query/filter จริงหากมี | T-02 | กำหนดเงื่อนไขการกรองและผลลัพธ์ที่ตอบสนองต่อ req ชัดเจน | เสร็จแล้ว |
 | T-04 | บังคับสิทธิ์เข้าถึงข้อมูลและจัดการกรณีไม่พบข้อมูล | FR-WKS-02, AC-WKS-01, AC-WKS-02 | ทดสอบ role restriction และกรณี empty result พร้อมข้อความ “ไม่พบข้อมูลผู้ปฏิบัติงานตามเงื่อนไขที่ระบุ” | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: API/query layer จริงหากมี | T-03 | ระบบคืนค่าเป็นรายการที่มีสิทธิ์และแสดงข้อความเมื่อไม่พบข้อมูล | เสร็จแล้ว |
-| T-05 | จัดเตรียมข้อมูลสถานะล่าสุดและ Last Updated Timestamp | FR-WKS-03, AC-WKS-03 | ตรวจสอบค่า timestamp ที่ถูกต้องเมื่อ status เปลี่ยนแปลง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: source/status model จริงหากมี | T-03 | มีข้อมูล status ล่าสุดและ timestamp ที่พร้อมใช้งานใน UI/backend | พร้อมทำ |
+| T-05 | จัดเตรียมข้อมูลสถานะล่าสุดและ Last Updated Timestamp | FR-WKS-03, AC-WKS-03 | ตรวจสอบค่า timestamp ที่ถูกต้องเมื่อ status เปลี่ยนแปลง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: source/status model จริงหากมี | T-03 | มีข้อมูล status ล่าสุดและ timestamp ที่ตรงกับข้อมูลปัจจุบันและพร้อมใช้งานใน UI/backend | เสร็จแล้ว |
 | T-06 | สร้าง UI สำหรับค้นหาและกรองตามบทบาท | FR-WKS-02, AC-WKS-02 | ตรวจสอบว่าฟิลด์แสดงตามบทบาทและตอบสนองต่อเงื่อนไขการค้นหา/กรอง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: หน้า UI จริงหากมี | T-02, T-03 | UI เปิดใช้งาน filter/search ที่สอดคล้องกับสิทธิ์ | พร้อมทำ |
 | T-07 | สร้างตารางแสดงสถานะ Lab Boy และ empty state | FR-WKS-01, FR-WKS-02, AC-WKS-01, AC-WKS-02 | ตรวจสอบรายการสถานะและข้อความ empty state เมื่อไม่มีข้อมูล | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: screen/table จริงหากมี | T-04, T-06 | รายการแสดงสถานะและข้อความแจ้งเตือนที่ถูกต้อง | พร้อมทำ |
 | T-08 | แสดง Last Updated Timestamp ใน UI | FR-WKS-03, AC-WKS-03 | ตรวจสอบว่า timestamp ถูกแสดงในหน้าตารางหรือหน้า detail อย่างต่อเนื่อง | [spec.md](spec.md), [plan.md](plan.md), ต้องยืนยัน: UI component จริงหากมี | T-05, T-07 | timestamp ถูกแสดงสอดคล้องกับข้อมูลล่าสุด | พร้อมทำ |
@@ -98,7 +98,51 @@
 - Open Question:
   - Spec/Plan ไม่ระบุว่าต้องมี message code, localization หรือเงื่อนไขยกเว้นสำหรับกรณี permission denied ต่างจาก empty result จึงคงไว้เป็น Open Question เพื่อหลีกเลี่ยงการเดา workflow เพิ่มเติม
 
-## 5. Traceability สรุปท้ายไฟล์
+## 5. T-05: Status Freshness และ Last Updated Timestamp ที่ยืนยันแล้ว
+
+### 5.1 Requirement ที่ยืนยันจาก Spec/Plan
+1. Requirement เรื่องการแสดงสถานะล่าสุดของ Lab Boy
+   - [spec.md](spec.md): FR-WKS-01 ระบุให้ระบบแสดงสถานะปัจจุบันของ Lab Boy ตามสถานะมาตรฐาน
+   - [spec.md](spec.md): Constraints section ระบุชัดเจนว่า “สถานะต้องมาจากข้อมูลล่าสุด”
+   - [spec.md](spec.md): AC-WKS-01 ระบุว่าเมื่อเจ้าหน้าที่เปิดดูรายการสถานะ ระบบต้องแสดงสถานะล่าสุดของ Lab Boy ตามสิทธิ์ภาควิชา
+   - [plan.md](plan.md): ขั้นตอนการพัฒนาและ checklist ระบุให้ดึงสถานะปัจจุบันพร้อมวันเวลาอัปเดตล่าสุด
+
+2. Requirement เรื่อง Last Updated Timestamp ตาม FR-WKS-03 และ AC-WKS-03
+   - [spec.md](spec.md): FR-WKS-03 ระบุให้แสดงวันและเวลาที่ข้อมูลถูกอัปเดตล่าสุดในหน้าจอรายละเอียดของ Lab Boy
+   - [spec.md](spec.md): AC-WKS-03 ระบุว่าเมื่อข้อมูลสถานะเปลี่ยนแปลง ระบบต้องแสดงวันและเวลาที่ข้อมูลถูกอัปเดตล่าสุด (Last Updated Timestamp)
+   - [plan.md](plan.md): ระบุให้แสดงเวลาที่อัปเดตล่าสุดในหน้าจออย่างชัดเจน
+
+### 5.2 ข้อมูลที่ต้องมีสำหรับ status และ timestamp
+- Status field ต้องมีข้อมูลสถานะปัจจุบันของ Lab Boy จากสถานะมาตรฐานที่กำหนดใน [spec.md](spec.md):
+  - คัดเลือกแล้ว
+  - กำลังปฏิบัติงาน
+  - ปฏิบัติงานเสร็จสิ้น
+  - ยกเลิก/พ้นสภาพ
+- Timestamp field ต้องมีข้อมูลวันและเวลาที่ข้อมูลนั้นถูกอัปเดตล่าสุด โดยต้องสัมพันธ์กับ record ของ Lab Boy ที่กำลังแสดงอยู่
+- ข้อมูลทั้งสองต้องอยู่ภายใต้ขอบเขตบทบาทที่ได้รับอนุญาตจาก T-02 และ T-04 ตาม NFR-SEC-01
+
+### 5.3 Expected result
+- ผู้ใช้เห็นสถานะปัจจุบันของ Lab Boy ที่ตรงกับข้อมูลล่าสุดตามบทบาทและขอบเขตที่สามารถเข้าถึงได้
+- ผู้ใช้เห็น Last Updated Timestamp ที่ตรงกับ record และข้อมูล status ที่กำลังแสดงอยู่
+- เมื่อ status เปลี่ยนแปลง ระบบต้องใช้ค่า timestamp ที่สอดคล้องกับข้อมูลล่าสุดนั้น และไม่แสดง timestamp ของข้อมูลเก่า
+
+### 5.4 Verification method ที่ตรวจสอบได้
+- สร้าง dataset ที่มี status เปลี่ยนแปลงแล้วตรวจสอบว่าตัวแปร status ที่แสดงบนหน้าจอเป็นค่าใหม่ล่าสุด
+- ตรวจสอบว่า timestamp ที่แสดงบน record เดียวกันมีค่าใหม่ล่าสุดและสัมพันธ์กับ status ที่ปรากฏ
+- ทดสอบบน record ที่มีการอัปเดตข้อมูลให้แน่ใจว่าตัวเลข timestamp เปลี่ยนตามข้อมูลที่อัปเดตใหม่
+- ตรวจสอบว่าข้อมูลเป็นไปตาม scope ของบทบาทตาม T-02/T-04 ไม่ใช่ข้อมูลจาก Lab Boy คนอื่น
+
+### 5.5 Dependency กับ T-03 และ T-04
+- T-03 ให้เงื่อนไขการค้นหา/กรอง Lab Boy และผลลัพธ์ที่ตรงตาม role scope
+- T-04 ให้การบังคับสิทธิ์เข้าถึงข้อมูลและ empty state ในกรณีไม่มีข้อมูล
+- T-05 ยึดผลลัพธ์จาก T-03/T-04 แล้วเพิ่มเติมว่าข้อมูล status และ timestamp ที่แสดงต้องเป็นข้อมูลล่าสุดและสอดคล้องกัน
+
+### 5.6 Open Question ที่บันทึกแทนการเดา
+- [spec.md](spec.md) และ [plan.md](plan.md) ไม่ได้ระบุ format ของ timestamp ที่ต้องแสดง เช่น รูปแบบวันที่/เวลา, timezone หรือ locale
+- [spec.md](spec.md) และ [plan.md](plan.md) ไม่ได้ระบุเงื่อนไขว่าต้องอัปเดต timestamp เมื่อใด เช่น เมื่อเริ่มงาน, เมื่อสิ้นสุดงาน, หรือเมื่อมีการยกเลิก/พ้นสภาพ
+- เพราะฉะนั้นจึงบันทึกเป็น Open Question เพื่อไม่ให้สร้าง requirement หรือ workflow ที่ไม่มีหลักฐานจาก Spec/Plan
+
+## 6. Traceability สรุปท้ายไฟล์
 
 | AC ID | Req / FR | Task ที่ตรวจสอบ | หมายเหตุ |
 |---|---|---|---|
@@ -106,13 +150,13 @@
 | AC-WKS-02 | FR-WKS-02 | T-03, T-04, T-06, T-07, T-09 | ครอบคลุมด้วย search/filter และ empty state |
 | AC-WKS-03 | FR-WKS-03 | T-05, T-08, T-09 | ครอบคลุมด้วย Last Updated Timestamp |
 
-## 6. Open Questions และสถานะ Task
+## 7. Open Questions และสถานะ Task
 
 | Q ID | คำถาม | สถานะ | Task ที่เกี่ยวข้อง | ข้อสังเกต |
 |---|---|---|---|---|
 | Q-01 | ต้องมีรายงานสรุปสถานะตามช่วงเวลาหรือไม่? | รอ Q-01 | T-10 | ยังไม่มีหลักฐานเพียงพอให้เพิ่มฟังก์ชันรายงานสรุป เนื่องจาก Spec ไม่ได้ระบุ feature นี้เป็น scope ของ UC-13 |
 
-## 7. ตรวจสอบขอบเขตและ Dependency
+## 8. ตรวจสอบขอบเขตและ Dependency
 
 ### 7.1 ขอบเขตที่ยอมรับ
 - ครอบคลุมตาม Spec: status display, search/filter, role-based access, last updated timestamp
@@ -136,7 +180,8 @@
 
 ## 8. สรุปยอด Task และสถานะ
 - จำนวน Task ทั้งหมด: 10 Tasks
-- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04
+- Task ที่เสร็จแล้ว: T-01, T-02, T-03, T-04, T-05
+- Task ที่กำลังทำ: ไม่มี
 - Task ที่รอคำตอบ: T-10 (รอ Q-01)
 - AC ที่ยังไม่มี Task รองรับ: ไม่มี (ทั้งหมดมี Task รองรับแล้ว)
 - ข้อผิดพลาดที่พบและแก้ไข:
@@ -149,7 +194,9 @@
   7. T-03 ยังไม่มีข้อกำหนดเรื่อง matching semantics และ empty-state verification ที่ชัดเจนใน Spec/Plan → ระบุเป็น Open Question และยืนยันตาม FR-WKS-02/AC-WKS-02
   8. T-04 ต้องแยกความแตกต่างระหว่าง access denied และ empty result ให้ชัดเจน โดย Spec/Plan ระบุเฉพาะข้อความ empty result และ RBAC จึงคงไว้เป็น Open Question สำหรับ workflow แสดงผลเมื่อไม่มีสิทธิ์เข้าถึง
   9. T-04 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยไม่สร้างฟังก์ชันหรือ workflow ที่ไม่มีหลักฐาน
+  10. T-05 ได้รับการยืนยันว่าแล้วเสร็จตาม Spec/Plan โดยยึดหลัก FR-WKS-01, FR-WKS-03, AC-WKS-01, AC-WKS-03 และระบุ Open Question สำหรับ timestamp format/timezone ที่ Spec/Plan ไม่ระบุ
 
 ## 8. ข้อสรุปความพร้อม
 - งานเอกสาร task ของ UC-13 อยู่ในสภาพพร้อมจัดส่งสำหรับ week 06 โดยยึดตาม [spec.md](spec.md) และ [plan.md](plan.md) เท่านั้น
+- T-05 ได้รับการยืนยันว่าเป็น “เสร็จแล้ว” และไม่มีการเพิ่ม requirement หรือ workflow ใดที่ไม่มีหลักฐานจาก Spec/Plan
 - ยังไม่เริ่ม Implement โค้ด และไม่มีการเดาคำตอบแทนทีม
