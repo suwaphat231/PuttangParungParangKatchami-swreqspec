@@ -132,3 +132,63 @@
 ### ข้อสรุป
 
 UC-14 เปิดจากหน้าแรกได้ พร้อม checklist, audit trail, validation และ role scope ตาม spec โดยไม่ stage ไฟล์ build/cache ที่เกิดจากการทดสอบ
+
+---
+
+## [2026-10-03] [09:45 UTC] คำสั่ง: /tasks specs/15-15-create-recruitment-announcement/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-15 จัดทำประกาศรับสมัคร
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึดหลัก traceability และไม่เพิ่ม requirement / ID ใหม่
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/15-15-create-recruitment-announcement/tasks.md](specs/15-15-create-recruitment-announcement/tasks.md)
+- จำนวน task ทั้งหมด: 8 task
+- จำนวน task ที่รอ Q-xx: 0 task
+- Status ของ spec อยู่ที่ Draft v2 จึงถือว่า clarified แล้วและไม่จำเป็นต้องหยุดเพื่อรอคำถามเพิ่มเติม
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-04 เพราะต้องรวมประวัติ audit log, metadata ของผู้จัดทำ/ผู้เผยแพร่, และ append-only behavior ให้สอดคล้องกับ NFR-AUD-01 และ AC-ANN-03 พร้อมกัน
+- task ที่ทดสอบยากที่สุดคือ AC-ANN-02 เพราะต้องคุยกับ vəziความไม่ครบและค่าที่ขาดหลายฟิลด์พร้อมกัน จึงต้องมี test case สำหรับ missing field combinations และ message ที่แสดงรายการฟิลด์ที่ขาดอย่างชัดเจน
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-ANN-02: ใช้ scenario ที่ส่งประกาศเมื่อขาดเฉพาะ 1 ฟิลด์, 2 ฟิลด์, และครบทุกฟิลด์; ตรวจว่า API เรียกคืนข้อผิดพลาดและ UI แสดงรายการที่ขาดทุกรอบอย่างถูกต้อง
+- AC-ANN-03: ใช้ fixture ของผู้ใช้ 2 role (Department Staff และ Admin) ตรวจว่า operator_id, operator_role, timestamp, changed_fields ถูกบันทึกอย่างครบถ้วนและ immutable โดยเพิ่ม log entry ใหม่ไม่ลบ/แก้ข้อมูลเดิม
+- AC-ANN-01: ใช้บททดสอบสร้าง Draft ตาม template พร้อม check status = Draft และการซ่อนข้อมูลจากนักศึกษาในช่วงยังไม่ได้เผยแพร่
+
+### สรุป
+
+การแยก tasks สำหรับ UC-15 เสร็จสิ้นตาม spec และ plan โดยไม่เพิ่ม requirement อื่นนอก scope และไม่มี task ใดที่ต้องรอ Open Question เนื่องจาก Q-01 ได้รับการยืนยันแล้วว่าทำงานแบบ RBAC โดยไม่มี approval ขั้นกลาง
+
+---
+
+## [2026-10-03] [09:50 UTC] คำสั่ง: Implement UC-15 recruitment announcement (T-01 ถึง T-08)
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-15 จัดทำประกาศรับสมัคร
+- ขอบเขต: ปฏิบัติตาม `spec.md`, `plan.md`, `tasks.md`, และ `AGENTS.md` โดยไม่เพิ่ม feature นอก scope และไม่สร้าง ID ใหม่
+
+### ผลการทำงาน
+
+- T-01: เพิ่ม backend store และ contract สำหรับ announcement model
+- T-02: สร้างประกาศแบบ Draft โดยใช้ template และ status Draft
+- T-03: ตรวจ required publish fields ก่อนเผยแพร่ พร้อม error payload ที่ระบุ missing_fields
+- T-04: เพิ่ม audit log append-only พร้อม operator_id, operator_role, timestamp, changed_fields
+- T-05: เพิ่ม lifecycle Draft → Published → Expired และ refresh expiry ตาม end_date
+- T-06: สร้าง frontend form สำหรับ Draft and publish workflow
+- T-07: ต่อหน้าจอกับ API จริง และแสดงการปฏิเสธ/เผยแพร่ตาม state
+- T-08: เพิ่ม acceptance tests backend/frontend สำหรับ AC-ANN-01 ถึง AC-ANN-03
+
+### ผลการทดสอบ
+
+- Backend: `cd backend && pytest -q` ผ่าน 26 tests
+- Frontend: `cd frontend && npm test -- --run` ผ่าน 14 tests ใน 5 files
+- Frontend build: `cd frontend && npm run build` ผ่าน
+- Diagnostics ของไฟล์ที่เกี่ยวข้อง: ไม่พบ errors
+
+### สรุป
+
+UC-15 ดำเนินการเสร็จแล้วตาม requirement และ plan โดยคงความเข้ากันของ UC-13 และ UC-14 ไว้ ไม่เพิ่ม workflow อนุมัติกลาง และตรวจสอบ RBAC, audit log, lifecycle, และ published visibility ตาม spec

@@ -63,6 +63,27 @@ export const reviewDocumentApi = {
   },
 }
 
+export const announcementApi = {
+  listAnnouncements(filters = {}) {
+    return request(`/uc15/announcements${queryString(filters)}`)
+  },
+  getAnnouncement(announcementId) {
+    return request(`/uc15/announcements/${encodeURIComponent(announcementId)}`)
+  },
+  createAnnouncement(payload) {
+    return request('/uc15/announcements', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+  },
+  publishAnnouncement(announcementId) {
+    return request(`/uc15/announcements/${encodeURIComponent(announcementId)}/publish`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    })
+  },
+}
+
 export const api = {
   async getSlots({ dateFrom, packageCode }) {
     const q = new URLSearchParams({ date_from: dateFrom, package_code: packageCode })

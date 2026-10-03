@@ -3,6 +3,15 @@ from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from app.announcement_service import (
+    ANNOUNCEMENT_STORE,
+    AnnouncementStore,
+    create_announcement_record,
+    ensure_access,
+    is_publishable,
+    list_missing_publish_fields,
+    update_announcement_record,
+)
 from app.authorization import Course, Principal, Role, get_current_principal, visible_courses
 from app.worker_status import (
     DEMO_STORE,
@@ -205,6 +214,139 @@ def submit_review(
         "audit_log": list(application["audit_log"]),
         "notifications": notifications,
     }
+
+
+# Supports UC-15 by managing the in-memory announcement store used for Draft/Published lifecycle checks.
+def get_announcement_store() -> AnnouncementStore:
+    ANNOUNCEMENT_STORE.refresh_expired()
+    return ANNOUNCEMENT_STORE
+
+
+# Supports FR-ANN-01 and NFR-SEC-01 for creating a Draft announcement.
+@router.post("/uc15/announcements")
+def create_announcement(
+    payload: dict[str, object],
+    principal: Principal = Depends(get_current_principal),
+    store: AnnouncementStore = Depends(get_announcement_store),
+) -> dict[str, object]:
+    if principal.role not in {Role.DEPARTMENT_STAFF, Role.ADMIN}:
+        raise HTTPException(status_code=403, detail="Only Department Staff and Admin can create announcements")
+
+    normalised = dict(payload)
+    if principal.role is Role.DEPARTMENT_STAFF:
+        department_id = str(normalised.get("department_id") or principal.department_id or "").strip()
+        if not department_id or department_id != principal.department_id:
+            raise HTTPException(status_code=403, detail="Department staff can only create announcements for their own department")
+        normalised["department_id"] = department_id
+    if principal.role is Role.ADMIN:
+        department_id = str(normalised.get("department_id") or principal.department_id or "").strip()
+        if department_id:
+            normalised["department_id"] = department_id
+
+    requested_status = str(normalised.get("status", "Draft") or "Draft").strip() or "Draft"
+    if requested_status == "Published":
+        missing = list_missing_publish_fields(normalised)
+        if missing:
+            raise HTTPException(status_code=422, detail={"missing_fields": missing})
+
+    record = create_announcement_record(normalised, principal)
+    if requested_status == "Published" and record.status == "Draft":
+        record.status = "Published"
+        record.published_by = principal.role.value
+        record.published_at = record.updated_at
+    store.create(record)
+    return record.to_dict()
+
+
+# Supports FR-ANN-01 and NFR-SEC-01 by listing only the announcements the user can see.
+@router.get("/uc15/announcements")
+def list_announcements(
+    principal: Principal = Depends(get_current_principal),
+    store: AnnouncementStore = Depends(get_announcement_store),
+) -> list[dict[str, object]]:
+    if principal.role is Role.STUDENT:
+        records = [record for record in store.all() if record.status == "Published"]
+        return [record.to_dict() for record in records]
+    if principal.role is Role.DEPARTMENT_STAFF:
+        records = [
+            record for record in store.all() if record.department_id == principal.department_id
+        ]
+        return [record.to_dict() for record in records]
+    if principal.role is Role.ADMIN:
+        return [record.to_dict() for record in store.all()]
+    raise HTTPException(status_code=403, detail="Announcement access denied")
+
+
+# Supports FR-ANN-01 and FR-ANN-03 by returning the announcement with the audit trail.
+@router.get("/uc15/announcements/{announcement_id}")
+def get_announcement(
+    announcement_id: str,
+    principal: Principal = Depends(get_current_principal),
+    store: AnnouncementStore = Depends(get_announcement_store),
+) -> dict[str, object]:
+    record = store.get(announcement_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+    if principal.role is Role.STUDENT and record.status != "Published":
+        raise HTTPException(status_code=403, detail="Announcement access denied")
+    ensure_access(principal, record)
+    return record.to_dict()
+
+
+# Supports FR-ANN-01 and FR-ANN-03 by allowing draft updates without exposing unpublished records.
+@router.put("/uc15/announcements/{announcement_id}")
+def update_announcement(
+    announcement_id: str,
+    payload: dict[str, object],
+    principal: Principal = Depends(get_current_principal),
+    store: AnnouncementStore = Depends(get_announcement_store),
+) -> dict[str, object]:
+    record = store.get(announcement_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+    ensure_access(principal, record)
+    if principal.role is Role.DEPARTMENT_STAFF and record.department_id != principal.department_id:
+        raise HTTPException(status_code=403, detail="Department staff can only edit their own department")
+    if principal.role is Role.STUDENT:
+        raise HTTPException(status_code=403, detail="Students cannot edit announcements")
+    record = update_announcement_record(record, payload, principal)
+    store.update(record)
+    return record.to_dict()
+
+
+# Supports FR-ANN-02 and FR-ANN-03 by validating required fields before publishing.
+@router.post("/uc15/announcements/{announcement_id}/publish")
+def publish_announcement(
+    announcement_id: str,
+    payload: dict[str, object] | None = None,
+    principal: Principal = Depends(get_current_principal),
+    store: AnnouncementStore = Depends(get_announcement_store),
+) -> dict[str, object]:
+    record = store.get(announcement_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Announcement not found")
+    ensure_access(principal, record)
+    if principal.role is Role.STUDENT:
+        raise HTTPException(status_code=403, detail="Students cannot publish announcements")
+    if payload:
+        record = update_announcement_record(record, payload, principal)
+        store.update(record)
+    missing = is_publishable(record)
+    if missing:
+        raise HTTPException(status_code=422, detail={"missing_fields": missing})
+    if record.status != "Published":
+        record.status = "Published"
+        record.published_by = "department-staff-001" if principal.role is Role.DEPARTMENT_STAFF else "admin-001"
+        record.published_at = record.updated_at or record.created_at
+        record.audit_log = list(record.audit_log) + [{
+            "action": "published",
+            "operator_id": record.published_by,
+            "operator_role": principal.role.value,
+            "timestamp": record.published_at,
+            "changed_fields": ["status"],
+        }]
+    store.update(record)
+    return record.to_dict()
 
 
 # Supports NFR-SEC-01 without introducing database access in T-01.
