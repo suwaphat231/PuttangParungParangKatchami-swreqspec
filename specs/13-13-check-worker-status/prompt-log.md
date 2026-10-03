@@ -10,6 +10,8 @@
 
 ## 3. จำนวน Task
 - Total tasks: 10
+- Tasks completed: 2 (T-01, T-02)
+- Tasks in progress: 0
 - Tasks pending answer: 1 (T-10, รอ Q-01)
 - Acceptance criteria covered: 3/3
 - Acceptance criteria without task support: 0
@@ -26,10 +28,15 @@
 - เพิ่ม traceability สำหรับ AC-WKS-01 ถึง AC-WKS-03
 - เพิ่มสถานะ Q-01 เป็นรอคำตอบแทนการเดา
 - ยืนยัน scope ว่าไม่เกิน UC-13 และไม่เพิ่มฟังก์ชันนอกขอบเขต
+- ตรวจสอบและปิด T-01 ไปแล้วหลังยืนยัน requirement, traceability และ scope ตาม Spec/Plan
+- ตรวจสอบและปิด T-02 แล้ว โดยยืนยัน role-based access matrix ว่าตรงกับ Student/Lab Boy, Instructor, Department Staff, Admin ตาม Spec/Plan
+- ระบุ Open Question Q-01 ไว้เพื่อไม่ให้เดาคำตอบแทนทีม
 - จัดทำ log นี้เพื่อสรุปผลการตรวจสอบและการปรับปรุง
 
 ## 6. สรุปแบบสั้น
 - Task ทั้งหมด: 10
+- Task ที่เสร็จแล้ว: T-01, T-02
+- Task ที่กำลังทำ: ไม่มี
 - Task ที่ต้องรอคำตอบ: T-10 (Q-01)
 - AC ที่ยังไม่มี Task รองรับ: ไม่มี
 - สถานะ: แก้ไขเสร็จแล้วตามเกณฑ์ Week 06 โดยอิงจาก Spec และ Plan เท่านั้น
