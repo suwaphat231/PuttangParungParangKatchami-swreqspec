@@ -192,7 +192,6 @@ UC-14 เปิดจากหน้าแรกได้ พร้อม checkl
 ### สรุป
 
 UC-15 ดำเนินการเสร็จแล้วตาม requirement และ plan โดยคงความเข้ากันของ UC-13 และ UC-14 ไว้ ไม่เพิ่ม workflow อนุมัติกลาง และตรวจสอบ RBAC, audit log, lifecycle, และ published visibility ตาม spec
-
 ---
 
 ## [2026-10-03] [09:56 UTC] คำสั่ง: /tasks specs/16-16-track-payment/spec.md
@@ -218,6 +217,66 @@ UC-15 ดำเนินการเสร็จแล้วตาม requiremen
 - AC-PAY-04: ใช้ fixture 3 role (Lab Boy, Instructor, Department Staff) และตรวจว่าคำขอเข้าถึงข้อมูลจ่ายเงินของแต่ละ role คืนผลตามสิทธิ์เท่านั้น โดยไม่มีข้อมูลข้ามภาควิชา/ข้ามคน
 - AC-PAY-05: ตั้งค่า audit log แล้วเรียกดูรายการ 3-5 ครั้งจาก role เดียวกัน ตรวจว่า log record มี actor, timestamp, resource, access outcome, และไม่ซ้ำ/หายระหว่างการเรียกดู
 - AC-PAY-02: ใช้ incoming financial record ที่มีสถานะ "ยังไม่จ่าย" และ "ข้อมูลผิดปกติ" ตรวจว่ารายการติด flag ชัดเจนและไม่ถูกบิดเบือนใน UI
+
+---
+
+## [2026-10-03] [09:58 UTC] คำสั่ง: /tasks specs/022-notify-user/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: แจ้งเตือนผู้ใช้งาน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึดหลัก traceability, ไม่เพิ่ม requirement หรือ ID ใหม่, และคง Q-01 ไว้ในสถานะที่ได้รับคำตอบแล้วเนื่องจาก spec ระบุว่าช่องทางรองรับเฉพาะ notification ภายในระบบเท่านั้น
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/022-notify-user/tasks.md](specs/022-notify-user/tasks.md)
+- จำนวน task ทั้งหมด: 6 task
+- จำนวน task ที่รอ Q-xx: 0 task
+- Status ของ spec อยู่ที่ Draft v1 แต่ Q-01 ได้ถูกตอบแล้วว่า "notification ในระบบเท่านั้น" จึงไม่จำเป็นต้องค้างงานเพราะคำถามดังกล่าวถูก clarify แล้ว
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-04 เพราะต้องรวม logic เลือกช่องทาง, การบันทึกสถานะ, และ retry ให้สอดคล้องกับ AC-MSG-02 และ AC-MSG-03 พร้อมกัน
+- AC ที่ทดสอบยากที่สุดคือ AC-MSG-03 เพราะต้องจำลองสถานะช่องทางไม่พร้อมและค่า failed/queued ที่ต่างกันพร้อมกัน รวมถึง retry policy และ audit trail ของการพยายามส่ง
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-MSG-03: ใช้ fixture 3 กรณีคือ (1) ส่งสำเร็จทันที, (2) ช่องทางไม่พร้อมและระบบบันทึก failed/queued, (3) retry ตาม policy และตรวจว่ามี timestamp และเหตุผลของการพยายามส่งครบถ้วน
+- AC-MSG-02: ใช้ผู้ใช้ที่เปิดใช้งาน notification และผู้ใช้ที่ปิดการแจ้งเตือน/ไม่มีข้อมูลช่องทาง จากนั้นตรวจว่า API/UI เลือกช่องทางที่อนุญาตและไม่ส่งเข้าสู่ช่องทางที่ปิด
+- AC-MSG-04: ใช้ข้อความที่มีข้อมูลส่วนบุคคลหลัก เช่น ชื่อ, รหัสนักศึกษา, ผลการสมัคร แล้วตรวจว่าภาพรวมข้อความลดข้อมูลให้เหลือเฉพาะสิ่งที่จำเป็นต่อเหตุการณ์
+
+### สรุป
+
+การแยก tasks สำหรับ UC-22 เสร็จสิ้นตาม spec และ plan โดยไม่มีการเพิ่ม requirement หรือ ID ใหม่ และไม่มี task ใดที่ต้องรอ Open Question เนื่องจาก Q-01 ได้รับการยืนยันแล้วว่าช่องทางที่รองรับเป็น notification ภายในระบบเท่านั้น
+
+---
+
+## [2026-10-03] [10:15 UTC] คำสั่ง: /tasks specs/019-check-work-time/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-19 ตรวจสอบวันและเวลาปฏิบัติงาน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยใช้ traceability ครบทุก AC และไม่เพิ่ม requirement หรือ ID ใหม่
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/019-check-work-time/tasks.md](specs/019-check-work-time/tasks.md)
+- จำนวน task ทั้งหมด: 7 task
+- จำนวน task ที่รอ Q-xx: 0 task
+- Status ของ spec อยู่ที่ Draft v2 จึงถือว่า clarified แล้วและไม่มีงานค้างที่ต้องรอคำถามเพิ่มเติม
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-03 เพราะต้องรวม overlap logic, policy ของวันหยุดและช่วงที่ห้ามปฏิบัติงาน, และเหตุผลที่ชัดเจนให้ครบทั้งแบบ partial overlap และ full-day blocking
+- AC ที่ทดสอบยากที่สุดคือ AC-CAL-02 และ AC-CAL-03 เพราะต้องจำลองข้อมูลปฏิทินที่มีวันหยุดและสถานะไม่พร้อมใช้งานพร้อมกัน โดยต้องตรวจว่าผลลัพธ์เป็น FAIL ทันทีและไม่อนุญาตให้ผ่านแม้มีบางส่วนของช่วงระหว่างที่ไม่ได้รับอนุญาต
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-CAL-02: ใช้ fixture 3 กรณี: ช่วงปฏิบัติงานไม่ทับวันหยุด, ทับเพียงบางส่วน, และทับทั้งวัน; ตรวจว่าผลตอบกลับเป็น FAIL เมื่อ overlap เกิดขึ้นแม้เพียงบางส่วน และ reason ระบุวันหยุดหรือช่วงที่ห้ามปฏิบัติงานอย่างชัดเจน
+- AC-CAL-03: ใช้ mock calendar source ที่คืนค่า null, stale timestamp, และ unavailable payload; ตรวจว่าระบบส่ง FAIL ทันทีและไม่ให้ status = PASS ในทุกกรณี
+- AC-CAL-04 / AC-CAL-05: ใช้ข้อมูลปฏิทินปกติที่เป็นปัจจุบันและช่วงที่อนุญาตอย่างเดียว ตรวจว่า response JSON มี status, reason, calendarVersion, effectiveDate และไม่มีข้อมูลที่ขาดหาย
+
+### สรุป
+
+งานแยก task สำหรับ UC-19 เสร็จสมบูรณ์ตาม spec และ plan โดยยึด traceability ระหว่าง requirement → AC → task และไม่เพิ่ม requirement นอก scope หรือสร้าง ID ใหม่
 
 ### สรุป
 
@@ -316,3 +375,142 @@ Branch ในสถานะที่พร้อมดำเนินการ�
 ### สรุป
 
 แก้ conflict ครบและตรวจสอบ tests ผ่าน เตรียมรวมผลลัพธ์เข้ากับ `main`
+
+---
+
+## [2026-10-03] [10:00 UTC] คำสั่ง: /tasks specs/018-approve-access/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-18 อนุมัติสิทธิ์การเข้าใช้งาน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึด traceability, ไม่เพิ่ม requirement หรือ ID ใหม่, และคง Open Questions ไว้เป็นงานที่ค้าง
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/018-approve-access/tasks.md](specs/018-approve-access/tasks.md)
+- จำนวน task ทั้งหมด: 5 task
+- จำนวน task ที่รอ Q-xx: 1 task (T-05 รอ Q-01)
+- Status ของ spec อยู่ที่ Draft v2; จึงเตือนว่า requirement ยังไม่มีการ clarify บางส่วนและ task ที่เกี่ยวข้องกับ Q-01 ถูกคงไว้เป็นสถานะรอ Q-01 ตามกฎไม่เดา
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-02 เพราะต้องรวม validation ของ role matrix, การปฏิเสธคำขอที่ไม่ได้รับอนุญาต, และข้อความแจ้งข้อผิดพลาดที่ต้องสอดคล้องกับ AC-IAM-02
+- AC ที่ทดสอบยากที่สุดคือ AC-IAM-05 เพราะต้องจำลองผู้ใช้ที่ไม่มี approver privilege และตรวจว่าระบบปฏิเสธการอนุมัติ/ปฏิเสธอย่างเคร่งครัด โดยไม่บันทึกผลการพิจารณาใด ๆ
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-IAM-05: ใช้ fixture 2 role (normal user และ approver) แล้วลองอนุมัติ/ปฏิเสธจาก user ที่ไม่ใช่ approver ตรวจว่า response ปฏิเสธทันทีและไม่มี audit entry ใหม่
+- AC-IAM-02: ใช้คำขอที่มีบทบาทหรือสิทธิ์อยู่นอกรายการอนุญาต 3 แบบ (บทบาทผิด, สิทธิ์ผิด, ทั้งสองผิด) ตรวจว่า message และ state ที่ส่งกลับตรงตาม requirement
+- AC-IAM-03 และ AC-IAM-04: ใช้ workflow approve/reject แบบต่อเนื่องใน same request เพื่อยืนยันว่าสถานะ, ผู้อนุมัติ, เวลา, และเหตุผลถูกบันทึกอย่างครบถ้วนและไม่ละเมิด lockout rule
+
+### สรุป
+
+แยก tasks สำหรับ UC-18 เสร็จแล้วตาม spec และ plan โดยใช้ traceability ของ FR → AC → Task และคงงานที่เกี่ยวกับ Open Question ไว้เป็นสถานะรอ Q-01 เพื่อหลีกเลี่ยงการเดาผลลัพธ์ที่ยังไม่ผ่าน clarify
+
+---
+
+## [2026-10-03] [10:50 UTC] คำสั่ง: /tasks specs/020-send-notification/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-20 ส่งคำขอแจ้งเตือน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึด traceability, ไม่เพิ่ม requirement หรือ ID ใหม่, และคง warning ว่า spec ยังอยู่ใน Draft v1 จึงควร clarify ก่อน production implementation
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/020-send-notification/tasks.md](specs/020-send-notification/tasks.md)
+- จำนวน task ทั้งหมด: 6 task
+- จำนวน task ที่รอ Q-xx: 0 task
+- Status ของ spec อยู่ที่ Draft v1 จึงมีคำเตือนว่า still requires clarification ก่อนเริ่ม implement จริงจัง แต่ task ถูกแยกตาม requirement และ plan ที่มีอยู่เพื่อให้ทีมใช้ต่อได้ทันที
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-03 เพราะต้องรวม asynchronous dispatch, non-blocking flow, และ contract การส่งคำขอให้มั่นใจว่าธุรกรรมหลักไม่หยุดรอผลจากระบบแจ้งเตือน
+- AC ที่ทดสอบยากที่สุดคือ AC-NOT-01 เพราะต้องตรวจทั้ง payload ที่มีข้อมูลจำเป็นเพียงพอและประสิทธิภาพที่ธุรกรรมหลักต้องไม่ติดค้างรอ external delivery
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-NOT-01: ใช้ fixtures ของเหตุการณ์ที่ต้องแจ้งเตือน (สมัคร/อนุมัติ/แจ้งผล) และตรวจว่า payload มี event, recipient, metadata ที่จำเป็นเพียงพอ และธุรกรรมหลักคืนผลก่อน external response
+- AC-NOT-02: mock ระบบแจ้งเตือนให้ล้ม 3 รอบแรก แล้วตรวจว่า item ถูกเก็บใน queue/history และ retry กลับมาทำงานตาม backoff 1s/2s/4s ตาม policy
+- AC-NOT-01/02: ควรมีการทดสอบทั้งชุด request/response payload และชุด retry behavior การล้มเหลวเพื่อยืนยันความต่อเนื่องของระบบ
+
+### สรุป
+
+การแยก task สำหรับ UC-20 เสร็จสิ้นตาม spec, plan, และกฎ traceability ของระบบ โดยไม่สร้าง requirement หรือ ID ใหม่ และยังคงย้ำ warning ว่าสเปคยังอยู่ใน Draft v1 จึงควรมีการ clarify ก่อนเริ่มพัฒนาในสภาพแวดล้อม production จริง
+
+---
+
+## [2026-10-03] [10:45 UTC] คำสั่ง: /tasks specs/018-approve-access/spec.md (แก้รอบที่ 1)
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-18 อนุมัติสิทธิ์การเข้าใช้งาน
+- ขอบเขต: ปรับ `tasks.md` ตามคำตัดสินของทีม: Q-01 ต้องมีสถานะชัดเจนรอ T-05, Q-02 แก้ได้เลย, Q-03 ขยายคำถามให้ชัดเจนขึ้น, Q-04 แจ้งผ่านระบบแจ้งเตือนภายในระบบเท่านั้น
+
+### การแก้ไข
+
+- ปรับจำนวน task จาก 5 เป็น 6 โดยเพิ่ม T-06 สำหรับ workflow แก้ไขข้อมูลผู้ใช้ผิดพลาดโดย Admin/ผู้ดูแลระบบโดยไม่ต้องอนุมัติใหม่
+- คง T-05 ไว้เป็นงานที่ต้องรอ Q-01 ตามกฎไม่เดา
+- ขยายข้อความ Q-03 ให้ชัดเจนว่าเป็นเรื่อง dual approval และนโยบาย IAM ที่ต้องตัดสินใจ
+- บันทึก Q-04 ว่าเป็น “แจ้งผ่านระบบแจ้งเตือนภายในระบบเท่านั้น” และไม่เกี่ยวข้องกับอีเมลภายนอก
+- รักษา traceability ให้ยึด FR / AC / ASM ใน spec และไม่เพิ่ม requirement / ID ใหม่
+
+### ผลการทำงาน
+
+- ไฟล์ที่อัปเดต: [specs/018-approve-access/tasks.md](specs/018-approve-access/tasks.md)
+- สรุปใหม่: 6 task ทั้งหมด, 1 task รอ Q-xx
+
+### สรุป
+
+การปรับแก้ tasks.md เป็นไปตามคำตอบที่ทีมให้ไว้ โดยคง Q-01 เป็น blocker ที่ถูกต้อง, ยอมรับ Q-02 เป็นงานที่สามารถทำต่อได้ทันที, และบันทึกเงื่อนไข Q-03/Q-04 ให้ชัดเจนก่อนเริ่มพัฒนา
+
+---
+
+## [2026-10-03] [11:02 UTC] คำสั่ง: /tasks specs/021-check-payment/spec.md (แก้รอบที่ 1)
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-21 ตรวจสอบการจ่ายเงิน
+- ขอบเขต: ปรับ `tasks.md` ตามคำตอบที่ทีมให้ไว้สำหรับ Q-01 ถึง Q-03 โดยไม่เพิ่ม requirement หรือ ID ใหม่ และยกเลิกสถานะรอคำถามที่ได้ปิดแล้ว
+
+### การแก้ไข
+
+- Q-01: กำหนดให้ paid, pending, failed, cancelled, refunded แมปเป็นสถานะเดียวกันใน LAB BOY และ status ที่ไม่รู้จักให้ reject + audit
+- Q-02 และ Q-03: กำหนดให้ timestamp เป็นหลัก, ใช้ event_id/sequence_number เป็นข้อมูลเสริมสำหรับ duplicate check, และ timestamp เก่ากว่าให้ถือว่า stale ไม่ update
+- ปรับ summary และ task status ใน [specs/021-check-payment/tasks.md](specs/021-check-payment/tasks.md) ให้เป็นพร้อมทำแทนการรอ Q-xx
+- รักษา traceability ตาม FR / AC / NFR ใน spec โดยไม่เพิ่ม requirement ใหม่
+
+### ผลการทำงาน
+
+- ไฟล์ที่อัปเดต: [specs/021-check-payment/tasks.md](specs/021-check-payment/tasks.md)
+- สรุปใหม่: 7 task ทั้งหมด, 0 task รอ Q-xx
+
+### สรุป
+
+การแก้ไข tasks.md ครั้งนี้ยืนยันว่า Q-01 ถึง Q-03 ได้รับคำตอบแล้ว จึงไม่มี task ใดที่ค้างรอคำถามอีกต่อไป และทุก task สามารถเริ่มทำต่อได้ตามหลัก traceability ที่วางไว้
+
+---
+
+## [2026-10-03] [10:55 UTC] คำสั่ง: /tasks specs/021-check-payment/spec.md
+
+- เครื่องมือ: GitHub Copilot ใน VS Code Codespaces
+- Feature: UC-21 ตรวจสอบการจ่ายเงิน
+- ขอบเขต: แตก `spec.md` และ `plan.md` เป็น `tasks.md` โดยยึด traceability, ไม่เพิ่ม requirement หรือ ID ใหม่, และคง Open Questions Q-01 ถึง Q-03 ไว้เป็นงานที่ต้องรอคำตอบ
+
+### ผลการทำงาน
+
+- สร้างไฟล์ [specs/021-check-payment/tasks.md](specs/021-check-payment/tasks.md)
+- จำนวน task ทั้งหมด: 7 task
+- จำนวน task ที่รอ Q-xx: 3 task
+- Status ของ spec อยู่ที่ Draft v1 จึงมีคำเตือนว่า requirement ยังต้อง clarification ก่อน production implementation แต่ task ถูกแยกตาม spec และ plan ที่มีอยู่โดยไม่เดาแนวทางใหม่
+
+### สิ่งที่ได้จากการแยกงาน
+
+- task ที่ยากที่สุดคือ T-05 เพราะต้องผสานการแมปสถานะจากระบบการเงินกับ idempotent update และการคงสถานะเดิมเมื่อข้อมูลไม่เหมาะสมพร้อมกัน
+- AC ที่ทดสอบยากที่สุดคือ AC-FIN-02 เพราะต้องจำลอง callback ที่ส่ง status paid และตรวจสอบว่า mapping ของ LAB BOY ไม่ถูกบิดเบือนจากข้อมูลซ้ำหรือ stale callback
+
+### ข้อเสนอการทดสอบแบบย่อสำหรับทีม
+
+- AC-FIN-02: ใช้ fixture 2 กรณีคือ callback paid ที่ถูกต้องและ callback paid ที่เป็น duplicate/stale แล้วตรวจว่าผลสุดท้ายยังเป็น paid และไม่ถูก overwrite ด้วยข้อมูลเก่า
+- AC-FIN-03: ใช้ reference ผิดหรือ amount ผิด และตรวจว่าระบบปฏิเสธการอัปเดตไม่เปลี่ยนสถานะเดิมและบันทึก mismatch reason
+- AC-FIN-01: ใช้ callback กลับมา 3 ครั้งพร้อม reference เดียวกันและตรวจว่าไม่สร้าง payment record ใหม่และ status เดิมยังคงสอดคล้องกับข้อมูลล่าสุด
+
+### สรุป
+
+การแยก task สำหรับ UC-21 เสร็จสิ้นตาม spec และ plan โดยคง Open Questions ให้เป็น task ที่ต้องรอคำตอบตามกฎและทำให้ทุก AC มี task ตรวจรับอย่างชัดเจน
