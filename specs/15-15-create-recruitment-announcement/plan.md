@@ -1,4 +1,4 @@
-# Implementation Plan: UC-15 จัดทำประกาศรับสมัคร
+# Plan: UC-15 จัดทำประกาศรับสมัคร
 Spec Target: [specs/15-15-create-recruitment-announcement/spec.md](specs/15-15-create-recruitment-announcement/spec.md) (v2)
 
 ## 1. การรองรับเงื่อนไขใน Spec (Constraints & Scope)
@@ -7,22 +7,14 @@ Spec Target: [specs/15-15-create-recruitment-announcement/spec.md](specs/15-15-c
 - **สิทธิ์การเผยแพร่ (RBAC / NFR-SEC-01):** เฉพาะเจ้าหน้าที่ภาควิชาและ Admin ที่มีสิทธิ์เปลี่ยนสถานะเป็น `Published` (นักศึกษาเห็นเฉพาะ `Published`)
 - **การบันทึกประวัติ (NFR-AUD-01):** บันทึก action, operator_id, operator_role, timestamp, และ changed_fields ลงตาราง append-only `announcement_audit_logs`
 
-## 2. ขั้นตอนการพัฒนา (Implementation Tasks)
-- [ ] **ส่วนประมวลผลข้อมูล (Backend):**
-  - สร้างฟังก์ชันสร้างและบันทึกประกาศแบบ Draft ตาม template
-  - ตรวจสอบข้อมูลบังคับก่อนเปลี่ยนสถานะเป็น Published
-  - บังคับให้แสดงข้อผิดพลาดหากข้อมูลไม่ครบก่อนเผยแพร่
-  - จัดการ lifecycle ของประกาศ: Draft → Published → Expired / Archived
-  - สร้าง Scheduled Job (Cron) เพื่อเปลี่ยนสถานะเป็น `Expired` เมื่อเลย `end_date` อัตโนมัติ
-  - บันทึก audit log แบบ append-only เมื่อมีการสร้าง, แก้ไข, หรือเผยแพร่ประกาศ
-  - ตรวจสอบ RBAC ก่อนอนุญาตให้แก้ไขและเผยแพร่ประกาศ
-- [ ] **ส่วนหน้าจอผู้ใช้งาน (Frontend):**
-  - หน้าสร้าง/แก้ไขประกาศแบบ Draft
-  - ฟอร์มกรอกข้อมูลประกาศตาม template พร้อม Checklist builder สำหรับเอกสารบังคับ
-  - validation สำหรับฟิลด์บังคับก่อนเผยแพร่
-  - ปุ่มหรือ workflow สำหรับเปลี่ยนสถานะเป็น Published
-  - การแสดงสถานะประกาศและข้อความแจ้งเตือนเมื่อข้อมูลไม่ครบ
-  - การแสดงประวัติการเปลี่ยนแปลงภายใน audit log
+## 2. รายการ task
+- [ ] **T-01:** จัดทำและตรวจสอบการสร้างประกาศ Draft ตาม template
+- [ ] **T-02:** ตรวจสอบข้อมูลบังคับก่อนเปลี่ยนสถานะเป็น Published
+- [ ] **T-03:** จัดการ lifecycle ของประกาศ: Draft → Published → Expired / Archived
+- [ ] **T-04:** บังคับใช้สิทธิ์การเปิดเผยและแก้ไขประกาศตาม role
+- [ ] **T-05:** บันทึก audit log แบบ append-only สำหรับการสร้าง แก้ไข และเผยแพร่ประกาศ
+- [ ] **T-06:** กำหนดกระบวนการเปลี่ยนสถานะเป็น Expired เมื่อพ้นวันปิดรับสมัคร
+- [ ] **T-07:** ทดสอบ acceptance criteria ทั้งหมด
 
 ## 3. รายการตรวจสอบ (Acceptance Criteria Checklist)
 - [ ] **AC-ANN-01:** สร้างและบันทึกประกาศ Draft ได้ตาม template มีสถานะถูกต้อง และซ่อนจากนักศึกษา
@@ -36,10 +28,8 @@ Spec Target: [specs/15-15-create-recruitment-announcement/spec.md](specs/15-15-c
 - สร้าง traceability ที่สามารถตรวจสอบได้จาก requirement → implementation → test
 
 ## 5. Status
-- [x] วิเคราะห์ requirement และคลี่คลายความกำกวม
+- [x] วิเคราะห์ requirement และคลี่คลายความกำกวมของ spec v2
 - [x] ปรับ spec.md เป็นเวอร์ชัน v2
 - [x] ตรวจสอบ traceability ให้ถูกต้อง
-- [x] สร้างแผนพัฒนาที่สอดคล้องกับ spec v2
-
-## 6. Next Action
-เริ่มพัฒนาตามแผนโดยเริ่มจาก Backend สำหรับ validation, RBAC, และ audit log ก่อน แล้วตามด้วย Frontend และตรวจสอบ AC ทุกข้อหลังการส่งมอบ
+- [x] ระบุ task ตาม acceptance criteria
+- [ ] รอข้อมูลการกำหนดเวลาสำหรับ Scheduled Job ก่อนเริ่ม task ที่เกี่ยวข้อง
