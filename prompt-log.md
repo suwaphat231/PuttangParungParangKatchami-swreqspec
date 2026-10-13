@@ -97,3 +97,33 @@
 - TC ID ที่เสนอ: `TC-STS-02-1`, `TC-STS-02-2`, `TC-STS-02-3`
 - ผลลัพธ์: เสนอ 3 แถว ครบทางปกติ ทางขอบ และทางผิด ทุกแถวสถานะ `ร่าง`; ยังไม่ได้เขียนหรือรันโค้ด test
 - ข้อจำกัด/คำถาม: spec ไม่ได้ระบุค่าขอบเขตเวลาและพฤติกรรมเมื่อไม่มีใบสมัคร จึงระบุไว้ในแถวทดสอบและยังไม่เดาคำตอบแทนทีม
+
+---
+
+## 2569-10-13 คำสั่ง: /testcases AC-STS-02 /specs/003-view-application-status รอบเขียน test
+
+- โหมด: เขียน test เนื่องจากแถว `TC-STS-02-1`, `TC-STS-02-2` และ `TC-STS-02-3` เปลี่ยนเป็นสถานะ `ใช้ได้`
+- ไฟล์ที่สร้าง: `frontend/src/__tests__/TC-STS-02.test.jsx`
+- TC ที่เขียน: `test_TC_STS_02_1_shows_latest_status_and_bangkok_time`, `test_TC_STS_02_2_handles_day_boundary_update_time`; `TC-STS-02-3` เป็น `test.todo` เนื่องจากแถวระบุ `spec ไม่ได้บอก` และให้คนยืนยันพฤติกรรม
+- ผล test ใหม่: ผ่าน 2 ตัว, todo 1 ตัว
+- ผล `cd frontend && npm test`: test files ผ่าน 2, ไม่ผ่าน 1; tests ผ่าน 3, ไม่ผ่าน 1, todo 1
+- สาเหตุที่ไม่ผ่าน: `frontend/src/api/client.test.js` เดิมเรียก `workerStatusApi` ที่เป็น `undefined` ไม่เกี่ยวกับ AC-STS-02 และไม่ได้แก้โค้ดระบบหรือ test เดิม
+
+---
+
+## 2569-10-13 คำสั่ง: /testcases AC-STS-02 /specs/003-view-application-status ตรวจซ้ำ
+
+- โหมด: เขียน test; พบว่า test สำหรับ `TC-STS-02-1`, `TC-STS-02-2` และ `TC-STS-02-3` มีอยู่แล้ว จึงไม่สร้างซ้ำ
+- ผล `npm test`: test files ผ่าน 2, ไม่ผ่าน 1; tests ผ่าน 3, ไม่ผ่าน 1, todo 1
+- ผล AC-STS-02: ผ่าน 2 ตัว (`TC-STS-02-1`, `TC-STS-02-2`) และ `TC-STS-02-3` เป็น todo ตามพฤติกรรมที่ spec ไม่ได้บอก
+- สาเหตุที่ไม่ผ่าน: `frontend/src/api/client.test.js` เดิมเรียก `workerStatusApi` ที่เป็น `undefined` ไม่เกี่ยวกับ AC-STS-02; ไม่ได้แก้โค้ดระบบหรือ test เดิม
+
+---
+
+## 2569-10-13 คำสั่ง: /verify /specs/003-view-application-status/
+
+- ผล test: backend ผ่าน 7 ตัว ไม่ผ่าน 0 ตัว มี warning 1; frontend ผ่าน 3 ตัว ไม่ผ่าน 1 ตัว และ todo 1 ตัว
+- ไฟล์ที่สร้าง: `specs/003-view-application-status/rtm.md`
+- ตารางตามรอยไปข้างหน้า: 13 แถว, สถานะ `ครบ` 0, `ยังไม่ถึง` 11, `รอ Q-xx` 0, `ช่องโหว่` 2
+- ข้อค้นพบใหม่: F-001 flow ดูสถานะยังไม่มีหน้า/API/backend endpoint ที่เชื่อมใช้งานจริง; F-002 test AC-STS-02 กรณีขอบใช้ expected แบบเดียวกับ component และกรณีผิดเป็น todo; F-003 fallback สถานะ/เวลาใน component เป็นพฤติกรรมที่ spec ไม่ได้กำหนด
+- test frontend ที่ไม่ผ่าน: `frontend/src/api/client.test.js` เรียก `workerStatusApi` ที่เป็น `undefined` เป็น test ของ UC-13/ฟีเจอร์อื่น จึงไม่จัดเป็นข้อค้นพบของ SPEC-03
