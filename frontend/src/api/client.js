@@ -18,3 +18,11 @@ export const api = {
     return { status: res.status, body: await res.json() }
   },
 }
+
+export const workerStatusApi = {
+  async listWorkers({ student_id, department_id } = {}) {
+    const q = new URLSearchParams({ student_id, department_id })
+    const res = await fetch(`${BASE}/uc13/workers?${q}`)
+    return res.json()
+  },
+}

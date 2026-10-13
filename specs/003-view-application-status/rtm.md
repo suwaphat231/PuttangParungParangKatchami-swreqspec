@@ -1,13 +1,13 @@
 # RTM: ดูสถานะการสมัคร
 อ้างอิง: spec.md Draft v2 | tasks.md | test-cases.md
-สร้างด้วย /verify เมื่อ 2569-10-13 | test: backend 7 ผ่าน 0 ไม่ผ่าน; frontend 3 ผ่าน 1 ไม่ผ่าน 1 todo
+สร้างด้วย /verify รอบ 2 เมื่อ 2569-10-13 | test: backend 7 ผ่าน 0 ไม่ผ่าน; frontend 4 ผ่าน 0 ไม่ผ่าน 1 todo
 
 ## 1. ตามรอยไปข้างหน้า (requirement ไป โค้ด ไป test)
 
 | ID | AC | task | โค้ด (ไฟล์: ฟังก์ชัน) | test (ผล) | สถานะ |
 |---|---|---|---|---|---|
 | FR-STS-01 | AC-STS-01 | T-02 (พร้อมทำ) | ไม่มีโค้ดของรายการใบสมัครใน SPEC-03 | ไม่มี test ของ AC-STS-01 | ยังไม่ถึง |
-| FR-STS-02 | AC-STS-02 | T-03 (เสร็จ รอทีมตรวจ) | `frontend/src/components/ApplicationStatusDetail.jsx`: `ApplicationStatusDetail` แสดง status และเวลา `Asia/Bangkok` แต่ยังไม่มีหน้า/API ที่เรียกใช้ | `test_TC_STS_02_1_shows_latest_status_and_bangkok_time` ผ่าน; `test_TC_STS_02_2_handles_day_boundary_update_time` ผ่าน; `test_TC_STS_02_3_handles_missing_application` todo | ช่องโหว่ F-001, F-002 |
+| FR-STS-02 | AC-STS-02 | T-03 (เสร็จ รอทีมตรวจ) | `frontend/src/components/ApplicationStatusDetail.jsx`: `ApplicationStatusDetail` แสดง status และเวลา `Asia/Bangkok` แต่ยังไม่มีหน้า/API ที่เรียกใช้ | `test_TC_STS_02_1_shows_latest_status_and_bangkok_time` ผ่าน; `test_TC_STS_02_2_handles_day_boundary_update_time` ผ่าน; `test_TC_STS_02_3_handles_missing_application` todo | ช่องโหว่ F-001 |
 | FR-STS-03 | AC-STS-03 | T-04 (พร้อมทำ) | ไม่มีโค้ดของเหตุผลและรายการที่ต้องแก้ใน flow ของ SPEC-03 | ไม่มี test ของ AC-STS-03 | ยังไม่ถึง |
 | FR-STS-04 | AC-STS-04 | T-01, T-05 (พร้อมทำ) | ไม่มี model/query/page ของชุดสถานะ 6 ค่าใน SPEC-03 | ไม่มี test ของ AC-STS-04 | ยังไม่ถึง |
 | FR-STS-05 | AC-STS-05 | T-02, T-05 (พร้อมทำ) | ไม่มีรายการใบสมัครหรือ filter ตามประกาศใน SPEC-03 | ไม่มี test ของ AC-STS-05 | ยังไม่ถึง |
@@ -25,7 +25,7 @@
 | โค้ด (ไฟล์: ฟังก์ชัน หรือ endpoint) | อ้าง ID | ตรงกับข้อความใน spec ไหม | หมายเหตุ |
 |---|---|---|---|
 | `frontend/src/components/ApplicationStatusDetail.jsx`: `ApplicationStatusDetail` | FR-STS-02, AC-STS-02 | ตรงบางส่วน | แสดง status และจัดรูปเวลา `Asia/Bangkok` ตาม requirement แต่ไม่โหลดข้อมูลและไม่ได้เชื่อมกับหน้าใช้งานจริง |
-| `frontend/src/components/ApplicationStatusDetail.jsx`: fallback `status` และ `formattedTime` | ไม่มี ID ใน SPEC-03 | ไม่พบข้อกำหนดตรง | กำหนดค่าเริ่มต้น `ยื่นแล้ว` และ `—` เมื่อข้อมูลไม่ครบ ซึ่ง spec ไม่ได้กำหนดพฤติกรรมนี้ |
+| `frontend/src/components/ApplicationStatusDetail.jsx`: `status` และ `formattedTime` | FR-STS-02, AC-STS-02 | ตรงบางส่วน | แสดงค่าจาก `application` และไม่กำหนด fallback ใหม่เมื่อข้อมูลไม่ครบ |
 | `frontend/src/App.jsx`: `App` | ไม่มี ID ใน SPEC-03 | ไม่ตรง | เป็นหน้าเริ่มต้นของระบบจองคิวตรวจสุขภาพ ไม่แสดงสถานะการสมัคร |
 | `frontend/src/api/client.js`: `api.getSlots` | FR-BKG-01, FR-BKG-06 | ไม่ใช่ SPEC-03 | เป็น API ของฟีเจอร์จองคิว ไม่เกี่ยวกับดูสถานะการสมัคร |
 | `frontend/src/api/client.js`: `api.createBooking` | FR-BKG-04 | ไม่ใช่ SPEC-03 | เป็น API ของฟีเจอร์จองคิว ไม่เกี่ยวกับดูสถานะการสมัคร |
@@ -55,13 +55,12 @@
 | F-ID | ชนิด | อยู่ที่ | ขัดกับ | รายละเอียด | ทีมตัดสิน |
 |---|---|---|---|---|---|
 | F-001 | โค้ดไม่มี FR | `frontend/src/App.jsx`, ไม่มี `frontend/src/pages/ApplicationStatusPage.jsx`, ไม่มี `frontend/src/api/applicationStatus.js`, ไม่มี backend endpoint ใบสมัคร | FR-STS-02, FR-STS-06, AC-STS-02, AC-STS-06 | มีเพียง `ApplicationStatusDetail` ที่รับข้อมูลผ่าน prop แต่ไม่มี flow เปิดหน้า โหลดข้อมูลล่าสุด หรือเชื่อม API ทำให้พฤติกรรมตาม AC ยังใช้จริงไม่ได้ แม้ T-03 ระบุว่าเสร็จ รอทีมตรวจ | |
-| F-002 | test อ่อน | `frontend/src/__tests__/TC-STS-02.test.jsx`, `TC-STS-02-2`, `TC-STS-02-3` | AC-STS-02 | test กรณีขอบคำนวณ expected ด้วย `Intl.DateTimeFormat` แบบเดียวกับ component จึงไม่ได้ตรวจ expected Asia/Bangkok ที่เป็นอิสระ และกรณีผิดเป็น `todo` ไม่มี assert; แถว TC-STS-02-3 ระบุพฤติกรรมว่า spec ไม่ได้บอก จึงยังไม่มีผลตรวจจริง | |
-| F-003 | โค้ดไม่มี FR | `frontend/src/components/ApplicationStatusDetail.jsx`: fallback `status` และ `formattedTime` | ไม่มี ID ใน SPEC-03 | โค้ดตัดสินใจแทน spec เมื่อข้อมูลสถานะหรือเวลาไม่ครบด้วย `ยื่นแล้ว` และ `—` ขณะที่ spec ไม่ได้กำหนดผลลัพธ์กรณีข้อมูลไม่ครบ | |
 
-หมายเหตุ: `frontend/src/api/client.test.js` ไม่ผ่านเพราะ `workerStatusApi` เป็น `undefined` แต่เป็น test ของ UC-13/ฟีเจอร์อื่น ไม่ได้นับเป็นข้อค้นพบของ SPEC-03 ใน RTM นี้
+หมายเหตุ: test ของ UC-13 ใน `frontend/src/api/client.test.js` แก้แล้วและผ่าน; ไม่ได้นับเป็นข้อค้นพบของ SPEC-03 ใน RTM นี้
 
 ## 4. แก้แล้ว
 
 | F-ID | แก้อย่างไร | รู้ได้อย่างไร |
 |---|---|---|
-| - | ไม่มี | ไม่มี rtm เดิมของ SPEC-03 ให้เปรียบเทียบ |
+| F-002 | เปลี่ยน test ขอบเขตให้ใช้จุดเปลี่ยนวันจริง `17:00:00Z` และ expected เวลา `Asia/Bangkok` แบบค่าคงที่ ไม่คำนวณซ้ำด้วย formatter เดียวกับ component; กรณีที่ spec ไม่ได้บอกยังคงเป็น todo | test `TC-STS-02-1` และ `TC-STS-02-2` ผ่าน; ไม่มีข้อกล่าวหาเดิมเรื่อง expected ซ้ำกับ component แล้ว |
+| F-003 | ลบ fallback `ยื่นแล้ว` และ `—` ที่ spec ไม่ได้กำหนดออกจาก `ApplicationStatusDetail` | โค้ดปัจจุบันใช้ค่าจาก `application` โดยตรง และ test AC-STS-02 ผ่าน |

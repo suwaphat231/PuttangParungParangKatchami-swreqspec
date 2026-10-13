@@ -127,3 +127,32 @@
 - ตารางตามรอยไปข้างหน้า: 13 แถว, สถานะ `ครบ` 0, `ยังไม่ถึง` 11, `รอ Q-xx` 0, `ช่องโหว่` 2
 - ข้อค้นพบใหม่: F-001 flow ดูสถานะยังไม่มีหน้า/API/backend endpoint ที่เชื่อมใช้งานจริง; F-002 test AC-STS-02 กรณีขอบใช้ expected แบบเดียวกับ component และกรณีผิดเป็น todo; F-003 fallback สถานะ/เวลาใน component เป็นพฤติกรรมที่ spec ไม่ได้กำหนด
 - test frontend ที่ไม่ผ่าน: `frontend/src/api/client.test.js` เรียก `workerStatusApi` ที่เป็น `undefined` เป็น test ของ UC-13/ฟีเจอร์อื่น จึงไม่จัดเป็นข้อค้นพบของ SPEC-03
+
+---
+
+## 2569-10-13 คำสั่ง: แก้ และ /verify อีกรอบ /specs/003-view-application-status/
+
+- แก้ `frontend/src/components/ApplicationStatusDetail.jsx`: ลบ fallback `ยื่นแล้ว` และ `—` ที่ spec ไม่ได้กำหนด
+- แก้ `frontend/src/__tests__/TC-STS-02.test.jsx`: ใช้จุดเปลี่ยนวันจริงและ expected เวลา `Asia/Bangkok` แบบค่าคงที่
+- ผล test เฉพาะ AC-STS-02: ผ่าน 2 ตัว, todo 1 ตัว
+- ผล test ทั้งชุด: backend ผ่าน 7 ไม่ผ่าน 0 มี warning 1; frontend ผ่าน 3 ไม่ผ่าน 1 todo 1
+- RTM รอบ 2: 13 แถว, `ครบ` 0, `ยังไม่ถึง` 11, `รอ Q-xx` 0, `ช่องโหว่` 2; F-002 และ F-003 ย้ายไป `แก้แล้ว`, คง F-001 ไว้
+- ข้อค้นพบที่ยังเหลือ: F-001 ยังไม่มีหน้า/API/backend endpoint สำหรับ flow ดูสถานะจริง และแก้ไม่ได้โดยไม่เดา API ที่ spec/plan ไม่ได้ระบุ
+
+---
+
+## 2569-10-13 คำสั่ง: แก้ frontend ให้ผ่านที
+
+- สาเหตุ: `frontend/src/api/client.test.js` import `workerStatusApi` แต่ `frontend/src/api/client.js` ไม่มี export นี้
+- แก้ไข: เพิ่ม `workerStatusApi.listWorkers` ให้เรียก `${BASE}/uc13/workers` พร้อม query `student_id` และ `department_id` ตาม spec/plan ของ UC-13
+- ผล test เฉพาะไฟล์เดิม: ผ่าน 1 ตัว
+- ผล `frontend && npm test`: test files ผ่าน 3, ไม่ผ่าน 0; tests ผ่าน 4, ไม่ผ่าน 0, todo 1
+- อัปเดตหมายเหตุผล test ใน `specs/003-view-application-status/rtm.md` ให้เป็นปัจจุบัน
+
+---
+
+## 2569-10-13 คำสั่ง: /testcases AC-STS-02 /specs/003-view-application-status ตรวจซ้ำหลังแก้ frontend
+
+- โหมด: เขียน test; แถว `TC-STS-02-1`, `TC-STS-02-2` และ `TC-STS-02-3` เป็น `ใช้ได้` และมี test ในโค้ดครบแล้ว จึงไม่สร้างซ้ำ
+- ผล `npm test`: test files ผ่าน 3, ไม่ผ่าน 0; tests ผ่าน 4, ไม่ผ่าน 0, todo 1
+- ผล AC-STS-02: `TC-STS-02-1` ผ่าน, `TC-STS-02-2` ผ่าน, `TC-STS-02-3` todo ตามพฤติกรรมที่ spec ไม่ได้บอก
