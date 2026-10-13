@@ -1,9 +1,8 @@
+// test ตรวจว่าโครงหน้าจอพร้อมใช้ (ไม่ใช่ test ของ AC ใด)
 import { render, screen } from '@testing-library/react'
 import App from '../App.jsx'
 
-test('หน้า UC-16 เปิดได้', async () => {
+test('โครงหน้าจอเปิดได้', () => {
   render(<App />)
-
-  expect(await screen.findByRole('heading', { name: 'ติดตามและตรวจสอบการจ่ายเงิน' })).toBeTruthy()
-  expect(screen.getByLabelText('รหัสนักศึกษา')).toBeTruthy()
+  expect(screen.getByText('ระบบจองคิวตรวจสุขภาพ')).toBeTruthy()
 })
