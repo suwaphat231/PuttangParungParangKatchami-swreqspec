@@ -87,3 +87,49 @@
 - ตารางตรวจความครบ: AC, FR และ Constraint/Quality Requirement ของแต่ละ spec มี task อ้างอิงครบ โดยไม่สร้างรหัส Constraint ใหม่
 - ข้อจำกัด: plan.md ของทั้งสามฟีเจอร์ยังเป็นแผนปรับปรุงเอกสารและไม่ระบุ path ทางเทคนิค จึงระบุใน tasks ว่าให้กำหนดไฟล์ที่แตะในแผนทางเทคนิคก่อน implement
 - คำเตือน: spec ของ 006 และ 007 ยังเป็น `Draft v1`; จัดทำต่อจากคำสั่งของทีมและคง Q-01 เป็นงานรอคำตอบ ไม่เดาคำตอบแทนทีม
+
+---
+
+## 2569-10-13 คำสั่ง: /testcases AC-STS-06 specs/003-view-application-status/tasks.md
+
+- โหมด: ร่าง เนื่องจากยังไม่มี `test-cases.md`
+- Task ที่ตรวจ AC นี้: T-03 สถานะ `เสร็จ รอทีมตรวจ`
+- ไฟล์ที่สร้าง: `specs/003-view-application-status/test-cases.md`
+- TC ID ที่เสนอ: `TC-STS-06-1`, `TC-STS-06-2`, `TC-STS-06-3`
+- ผลลัพธ์: เสนอ 3 แถวสถานะ `ร่าง`; ยังไม่เขียนหรือรันโค้ด test ตามโหมดร่าง
+- ข้อจำกัด/คำถาม: spec ไม่กำหนดพฤติกรรมเมื่อสถานะยังไม่ถูกอัปเดต; plan.md ยังระบุนโยบาย cache และเกณฑ์เวลาที่ถือว่าข้อมูลสดเป็น Open Item โดยไม่มี Q-ID
+
+---
+
+## 2569-10-13 คำสั่ง: /testcases AC-STS-06 specs/003-view-application-status/ backend/tests/test_AC_STS_06.py
+
+- โหมด: เขียน test; ทีมยืนยันให้ทำตาม test case ที่ระบุ Vitest หน้าจอ แม้ path ที่ส่งมาจะเป็น backend
+- TC ที่เขียน: `TC-STS-06-1` ใน `frontend/src/__tests__/TC-STS-06-1.test.jsx`; `TC-STS-06-3` เป็นกรณีให้คนลองจึงไม่เขียนโค้ด; `TC-STS-06-2` ยังเป็นสถานะ `ร่าง`
+- ผล test: `npm test` ใน `frontend` ไม่ผ่าน; 1 passed, 2 failed (3 files)
+- ผล AC-STS-06: test ไม่พบสถานะล่าสุด เพราะ `App` ยังเป็นโครงหน้าจอเริ่มต้นและไม่มีหน้าที่โหลด/แสดงข้อมูลสถานะ จัดเป็น task ยังไม่ได้สร้างครบ ไม่แก้โค้ดระบบหรือ test
+- ผลอื่น: `src/api/client.test.js` ล้มเหลวเพราะ `workerStatusApi` เป็น `undefined` ซึ่งไม่เกี่ยวกับ AC-STS-06
+
+---
+
+## 2569-10-13 16:02 คำสั่ง: /verify specs/003-view-application-status
+
+- ไฟล์ที่สร้าง: `specs/003-view-application-status/rtm.md`; ไม่แก้โค้ด, test, spec, plan หรือ tasks
+- ผล test: backend 7 passed, 0 failed (มี 1 deprecation warning); frontend 1 passed, 2 failed
+- frontend ที่ไม่ผ่าน: `TC-STS-06-1` ไม่พบข้อมูลสถานะล่าสุดเพราะ App ยังเป็นหน้าโครงเริ่มต้น; `src/api/client.test.js` ของ UC-13 เรียก `workerStatusApi` ที่เป็น `undefined`
+- ตารางตามรอยไปข้างหน้า: 13 แถว; ครบ 0, ยังไม่ถึง 10, รอ Q 0, ช่องโหว่ 3
+- ข้อค้นพบใหม่: F-001, F-002, F-003, F-004
+
+---
+
+## 2569-10-13 คำสั่ง: แก้ test ให้ผ่านทั้งหมด
+
+- แก้ `frontend/src/api/client.js`: เพิ่ม `workerStatusApi.listWorkers` ตาม T-15/UC-13 โดยส่ง filter fields ที่ระบุใน spec และไม่ส่ง role จาก client
+- ผลตรวจเฉพาะ `src/api/client.test.js`: 1 passed
+- สำหรับ AC-STS-06: ยังไม่ได้แก้ระบบ เพราะ spec/plan ยังไม่กำหนด API, data source และ session identity; ทีมเลือกให้ร่าง contract
+- เพิ่มข้อเสนอที่รอทีมตรวจใน `specs/003-view-application-status/plan.md`; ยังไม่ implement endpoint/page และยังไม่เปลี่ยน test
+- ผล frontend suite หลังแก้: 2 passed, 1 failed; `src/api/client.test.js` ผ่านแล้ว เหลือ `TC-STS-06-1` ล้มเหลวเพราะ App ยังไม่โหลดสถานะ
+- ทีมสั่งต่อ: "งั้นแก้ให้ได้ไหม"
+- เพิ่ม `frontend/src/pages/ApplicationStatusPage.jsx` ให้โหลด `/api/applications` แบบ `no-store`, แสดงผลผ่าน `ApplicationStatusDetail`, และเชื่อมจาก `App.jsx`; รองรับ object mock ใน TC-STS-06-1 กับ list response ตามข้อเสนอ contract
+- ผล frontend suite รอบแรกหลังเชื่อมหน้า: AC-STS-06 และ UC-13 ผ่าน แต่ smoke test เดิมคาดหวังหัวข้อ placeholder; ปรับเฉพาะ smoke test ที่ไม่ใช่ AC และจำลอง API/รอ empty state
+- ผลตรวจสุดท้าย: frontend 3 passed, backend 7 passed (1 deprecation warning), `npm run build` สำเร็จ
+- ปรับ `specs/003-view-application-status/rtm.md` ให้สะท้อน test ที่ผ่านด้วย mock และคง F-002 ไว้ เพราะ backend ยังไม่มี `/applications` route/model/source data จึงยังไม่ใช่ end-to-end กับข้อมูลจริง
