@@ -44,3 +44,12 @@ class AuditLog(Base):
     action: Mapped[str] = mapped_column(String(50))
     hn: Mapped[str] = mapped_column(String(20))
     accessed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class StudentVerification(Base):
+    __tablename__ = "student_verifications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    student_id: Mapped[str] = mapped_column(String(50), index=True)
+    student_name: Mapped[str] = mapped_column(String(200))
+    student_status: Mapped[str] = mapped_column(String(50))
