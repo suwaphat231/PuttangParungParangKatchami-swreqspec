@@ -199,3 +199,35 @@
 - โหมด: เขียน test; แถว `TC-STS-02-1`, `TC-STS-02-2` และ `TC-STS-02-3` เป็น `ใช้ได้` และมี test ในโค้ดครบแล้ว จึงไม่สร้างซ้ำ
 - ผล `npm test`: test files ผ่าน 3, ไม่ผ่าน 0; tests ผ่าน 4, ไม่ผ่าน 0, todo 1
 - ผล AC-STS-02: `TC-STS-02-1` ผ่าน, `TC-STS-02-2` ผ่าน, `TC-STS-02-3` todo ตามพฤติกรรมที่ spec ไม่ได้บอก
+
+## 2569-10-13 16:56 คำสั่ง: /verify specs/003-view-application-status
+
+- ผล test: `cd backend && pytest -v` ผ่าน 7 ไม่ผ่าน 0 มี warning 1; `cd frontend && npm test` ผ่าน 2 ไม่ผ่าน 3 และ todo 1
+- ตารางตามรอยไปข้างหน้า: 13 แถว; ครบ 0, ยังไม่ถึง 10, รอ Q-xx 0, ช่องโหว่ 3
+- ข้อค้นพบเดิมที่ยังอยู่: F-001 backend ไม่มี route/model/source data ของใบสมัคร; F-003 test AC-STS-06 ยังไม่ตั้งสถานะเก่าก่อนเปิดหน้า
+- ข้อค้นพบใหม่: F-005 component ไม่ render status ทำให้ test AC-STS-02 ทั้งสองกรณีและ AC-STS-06 ไม่ผ่าน; F-006 Then ของ TC-STS-02-1 ระบุ UTC ขัดกับ AC ที่กำหนด Asia/Bangkok
+- F-002 และ F-004 ย้ายไป `แก้แล้ว`; แก้เฉพาะ `rtm.md` และเพิ่มบันทึกนี้ ไม่แก้ source, test, spec, plan หรือ tasks
+- หมายเหตุ: การรัน test ทำให้ไฟล์ cache ที่ tracked เปลี่ยนสถานะ; ไม่ได้แก้เนื้อหา test และคงไฟล์ cache ไว้ตามสภาพ
+- หมายเหตุ: การรัน test ทำให้ไฟล์ cache ที่ tracked เปลี่ยนสถานะ; ไม่ได้แก้เนื้อหา test และคงไฟล์ cache ไว้ตามสภาพ
+
+## 2569-10-13 คำสั่ง: แก้ AC-STS-06 และเคลียร์ F-005/F-006 /specs/003-view-application-status
+
+- `frontend/src/components/ApplicationStatusDetail.jsx`: render `application.status` โดยตรง ไม่มี fallback; format เวลาเป็น Asia/Bangkok ตามเดิม
+- ตรวจ `ApplicationStatusPage` เรียก API เมื่อ mount และ `applicationStatusApi.listApplications` ใช้ `cache: 'no-store'`; ไม่ต้องแก้สองไฟล์นี้
+- `test-cases.md`: เปลี่ยน Then ของ `TC-STS-02-1` จาก UTC เป็น Asia/Bangkok ให้ตรง AC-STS-02 และ executable test
+- ผล targeted frontend tests: 3 passed, 0 failed, 1 todo; ผล frontend suite: 5 passed, 0 failed, 1 todo
+- RTM: 13 แถว; ครบ 1, ยังไม่ถึง 10, รอ Q-xx 0, ช่องโหว่ 2; F-005 และ F-006 ย้ายไป `แก้แล้ว`; F-001/F-003 ยังคงอยู่
+- ไม่แก้ `.test.jsx` หรือคำสั่ง `expect()`; ไม่แก้ spec, plan หรือ tasks
+
+## 2569-10-13 17:11 คำสั่ง: /verify specs/003-view-application-status (ตรวจซ้ำ)
+
+- ผล test: `cd backend && pytest -v` ผ่าน 7 ไม่ผ่าน 0 มี warning 1; `cd frontend && npm test` ผ่าน 5 ไม่ผ่าน 0 และ todo 1
+- ตารางตามรอยไปข้างหน้า: 13 แถว; ครบ 1, ยังไม่ถึง 10, รอ Q-xx 0, ช่องโหว่ 2
+- ข้อค้นพบเดิมที่ยังอยู่: F-001 backend ไม่มี route/model/source data ใบสมัคร; F-003 test AC-STS-06 ยังไม่จำลองสถานะเก่าก่อนเปิดหน้า
+- F-005/F-006 ยังคงอยู่ใน `แก้แล้ว`; ไม่พบข้อค้นพบใหม่
+- อ่าน source และ tests ทั้งหมด; ไม่แก้โค้ด, test, spec, plan หรือ tasks
+
+## 2569-10-13 คำสั่ง: เปลี่ยนสถานะ TC-STS-06-2 เป็นใช้ได้
+
+- เปลี่ยนสถานะของแถว `TC-STS-06-2` ใน `specs/003-view-application-status/test-cases.md` จาก `ร่าง` เป็น `ใช้ได้` ตามคำขอ
+- ไม่แก้ไฟล์ executable test หรือคำสั่ง `expect()`
