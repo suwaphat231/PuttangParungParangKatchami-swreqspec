@@ -6,7 +6,7 @@ export default function ApplicationStatusDetail({ application }) {
   }
 
   const updatedAt = application.updated_at || application.updatedAt;
-  const status = application.status || 'ยื่นแล้ว';
+  const status = application.status;
   const validDate = updatedAt ? new Date(updatedAt) : null;
   const formattedTime = validDate
     ? new Intl.DateTimeFormat('th-TH', {
@@ -14,7 +14,7 @@ export default function ApplicationStatusDetail({ application }) {
         dateStyle: 'medium',
         timeStyle: 'medium',
       }).format(validDate)
-    : '—';
+    : null;
 
   return (
     <section aria-label="application-status-detail">
