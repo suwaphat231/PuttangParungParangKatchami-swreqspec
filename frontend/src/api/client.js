@@ -19,10 +19,26 @@ export const api = {
   },
 }
 
+const workerStatusFilterKeys = [
+  'student_id',
+  'full_name',
+  'department_id',
+  'course_id',
+  'semester',
+  'academic_year',
+  'work_period_from',
+  'work_period_to',
+  'status',
+]
+
 export const workerStatusApi = {
-  async listWorkers({ student_id, department_id } = {}) {
-    const q = new URLSearchParams({ student_id, department_id })
-    const res = await fetch(`${BASE}/uc13/workers?${q}`)
+  async listWorkers(filters = {}) {
+    const params = new URLSearchParams()
+    workerStatusFilterKeys.forEach((key) => {
+      const value = filters[key]
+      if (value !== undefined && value !== null && value !== '') params.set(key, value)
+    })
+    const res = await fetch(`${BASE}/uc13/workers?${params}`)
     return res.json()
   },
 }
