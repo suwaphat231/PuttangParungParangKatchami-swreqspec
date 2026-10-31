@@ -44,8 +44,8 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-11 requirement 1 | FR-EVL-01 | AC-EVL-01 |
-| UC-11 requirement 2 | FR-EVL-02 | AC-EVL-02 |
-| UC-11 requirement 3 | FR-EVL-03 |  |
-| NFR-AUD-01 | Quality Requirements |  |
-| NFR-SEC-01 | Quality Requirements |  |
+| UC-11 requirement 1 | FR-EVL-01 | ไม่มี AC ที่ระบุ |
+| UC-11 requirement 2 | FR-EVL-02 | AC-EVL-01 |
+| UC-11 requirement 3 | FR-EVL-03 | AC-EVL-02 |
+| NFR-AUD-01 | Quality Requirements | ไม่มี AC ที่ระบุ |
+| NFR-SEC-01 | Quality Requirements | ไม่มี AC ที่ระบุ |
