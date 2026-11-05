@@ -1,9 +1,13 @@
 # Read-only API ค้นหารายการจ่ายเงิน (FR-PAY-01, FR-PAY-02)
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.payments.auth import PaymentPrincipal, get_payment_user
-from app.payments.schemas import PaymentRecord
-from app.payments.service import search_payment_records
+from app.payments.schemas import PaymentRecord, PaymentTrackingRecord
+from app.payments.service import (
+    get_follow_up_payment_records,
+    get_payment_tracking_record,
+    search_payment_records,
+)
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
@@ -23,3 +27,23 @@ def list_payments(
             payment_reference=payment_reference,
         )
     )
+
+
+@router.get("/follow-up", response_model=list[PaymentTrackingRecord])
+def list_payment_follow_up(
+    user: PaymentPrincipal = Depends(get_payment_user),
+) -> list[PaymentTrackingRecord]:
+    """คืนรายการ UNPAID/ABNORMAL ที่ต้องติดตามต่อแบบอ่านอย่างเดียว (FR-PAY-03)."""
+    return list(get_follow_up_payment_records())
+
+
+@router.get("/{payment_id}", response_model=PaymentTrackingRecord)
+def read_payment_status(
+    payment_id: str,
+    user: PaymentPrincipal = Depends(get_payment_user),
+) -> PaymentTrackingRecord:
+    """คืนสถานะล่าสุดของรายการพร้อมยอดเงินและเวลาโดยไม่แก้ข้อมูล (FR-PAY-02)."""
+    record = get_payment_tracking_record(payment_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Payment record not found")
+    return record

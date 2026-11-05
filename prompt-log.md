@@ -388,3 +388,14 @@
 - ผล test ทั้งโปรเจกต์หลัง T-05: Backend `pytest` -> 25 passed, 1 warning; Frontend -> 8 passed, 1 todo, 5 files passed
 - `git diff --check` ผ่าน; T-05 ใช้ Mock Finance Data ที่ระบุ `data_source=MOCK`; ไม่มี write route
 - สถานะ T-05: `เสร็จ รอทีมตรวจ`
+
+## 2569-11-05 /implement-all เฟส 3: T-06
+
+- Implement `GET /payments/{payment_id}` อ่าน record พร้อม status ล่าสุดและ `requires_follow_up`; `GET /payments/follow-up` คืนเฉพาะ UNPAID/ABNORMAL
+- ไฟล์โค้ด: `backend/app/payments/router.py`, `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_01.py` (สร้าง), `backend/tests/test_AC_PAY_02.py`
+- Acceptance tests ตรวจ timezone `+07:00`, amount/currency/status/source, 404, follow-up flags, data source, ข้อมูลต้นทางไม่เปลี่ยน, ปฏิเสธผู้ไม่มี token และ methods ที่ไม่ใช่ GET ได้ 405
+- ผล test เฉพาะ T-06: `pytest -q tests/test_AC_PAY_01.py tests/test_AC_PAY_02.py` -> 6 passed, 1 warning ก่อนเพิ่มกรณีไม่มี token
+- ผล test ทั้งโปรเจกต์หลัง T-06: Backend `pytest` -> 32 passed, 1 warning; Frontend -> 8 passed, 1 todo, 5 files passed
+- `git diff --check` ผ่าน; ไม่มีการแก้ Frontend; ทุก route คืนข้อมูลจาก Mock Finance Data ที่ติดป้าย `MOCK`
+- สถานะ T-06: `เสร็จ รอทีมตรวจ`; เพิ่มจุดตรวจเฟส 3 พร้อมคำสั่งรันและ Given/When/Then
+- หยุดที่จุดตรวจเฟส 3 ตาม workflow; ยังไม่เริ่ม T-07/เฟส 4

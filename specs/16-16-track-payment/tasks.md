@@ -58,7 +58,7 @@
 - รองรับ: FR-PAY-02, FR-PAY-03
 - ตรวจด้วย: AC-PAY-01, AC-PAY-02
 - ไฟล์ที่แตะ: `backend/app/payments/router.py`, `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_01.py` (สร้าง), `backend/tests/test_AC_PAY_02.py`
-- สถานะ: รอ T-02, T-03 และ T-05
+- สถานะ: เสร็จ รอทีมตรวจ
 - ต้องทำหลัง: T-02, T-03, T-05
 - ข้อจำกัด: API อ่านอย่างเดียว ไม่มีการแก้ไขยอดเงินหรือเปลี่ยนสถานะ; แสดง source เป็น MOCK ตามจริง
 - เสร็จเมื่อ: API คืนสถานะล่าสุดตาม AC-PAY-01 และ flag รายการตาม AC-PAY-02 โดยไม่แก้ข้อมูลต้นทาง และ test ผ่าน
@@ -95,6 +95,13 @@
 ลำดับ: T-05 → T-06
 - จุดเริ่มเฟส: หลัง T-03 เสร็จและทีมยืนยัน endpoint path ที่ใช้กับ UC-16
 - Endpoint ที่ยืนยัน: `GET /payments` ค้นหา/กรอง; `GET /payments/{payment_id}` อ่านสถานะล่าสุด; `GET /payments/follow-up` รายการที่ต้องติดตาม
+
+### จุดตรวจเฟส 3
+- คำสั่งเริ่มระบบ: `cd backend && APP_ENV=local PAYMENT_DEMO_AUTH_TOKENS='{"demo-token":{"user_id":"hr-demo","role":"HR"}}' uvicorn app.main:app --reload`
+- Given: ระบบใช้ Mock Finance Data และ token HR ใน mapping ฝั่ง server
+- When: เรียก `GET /payments?worker_id=MOCK-WORKER-001`, `GET /payments/MOCK-PAY-001` และ `GET /payments/follow-up` พร้อม `Authorization: Bearer demo-token`
+- Then: ค้นหาได้ตาม exact filter; รายละเอียดคืนยอด, สกุลเงิน, สถานะและเวลา `+07:00` พร้อม `data_source=MOCK`; follow-up คืนเฉพาะ UNPAID/ABNORMAL พร้อม `requires_follow_up=true`; `POST`/`PUT` ไม่เปิดให้แก้ข้อมูล; audit ของการอ่านถูกบันทึก
+- ตรวจเพิ่ม: ลองไม่มี token หรือ token ของ Student/Worker ต้องถูกปฏิเสธ; ตรวจตาราง `payment_audit_logs` มีผลการอนุญาต/ปฏิเสธโดยไม่เก็บ token
 
 ## เฟส 4: ตรวจรับ
 ลำดับ: T-07

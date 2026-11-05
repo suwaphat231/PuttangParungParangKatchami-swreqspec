@@ -42,3 +42,22 @@ def search_payment_records(
             if record.payment_reference == payment_reference
         )
     return records
+
+
+# รองรับ FR-PAY-02, FR-PAY-03, AC-PAY-01 และ AC-PAY-02
+def get_payment_tracking_record(payment_id: str) -> PaymentTrackingRecord | None:
+    """อ่านสถานะล่าสุดของรายการที่ระบุและเพิ่ม flag ติดตามโดยไม่แก้ข้อมูลต้นทาง."""
+    for record in build_tracking_records(get_mock_finance_records()):
+        if record.payment_id == payment_id:
+            return record
+    return None
+
+
+# รองรับ FR-PAY-03 และ AC-PAY-02
+def get_follow_up_payment_records() -> tuple[PaymentTrackingRecord, ...]:
+    """คืนเฉพาะรายการ UNPAID/ABNORMAL ที่ต้องติดตามต่อ."""
+    return tuple(
+        record
+        for record in build_tracking_records(get_mock_finance_records())
+        if record.requires_follow_up
+    )
