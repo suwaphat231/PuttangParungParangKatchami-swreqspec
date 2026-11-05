@@ -353,3 +353,4 @@
 - `git diff --check` ผ่าน; `vitest.baseline.config.js` เป็นไฟล์ชั่วคราวที่ลบหลังทดสอบ ไม่ได้แก้ tracked Vitest cache
 - สถานะ T-03: `เสร็จ รอทีมตรวจ`; ยังไม่มี HTTP payment routes เพราะเป็นงาน T-05/T-06
 - รายละเอียดที่ยืนยันก่อน implement: token provisioning ผ่าน environment JSON map และเลือกตารางฐานข้อมูล audit แยก; ไม่ได้เดารูปแบบเก็บ audit หรืออ้างว่าเป็น real identity provider
+- เพิ่มจุดตรวจเฟส 2 ใน tasks.md เพื่อให้ทีมตรวจ AC-PAY-04/05 ได้ด้วย test route โดยไม่กล่าวอ้างว่ามี HTTP payment endpoint ก่อน T-05/T-06

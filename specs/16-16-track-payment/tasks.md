@@ -82,7 +82,14 @@
 
 ## เฟส 2: Authorization และ Audit Log
 ลำดับ: T-03
-- จุดเริ่มเฟส: หลังทีมยืนยัน module/claim role ที่เชื่อถือได้จาก identity provider
+- จุดเริ่มเฟส: หลัง T-01 เสร็จและทีมยืนยัน demo auth กับรูปแบบตาราง Audit Log
+
+### จุดตรวจเฟส 2
+- คำสั่ง: `cd backend && pytest -q tests/test_AC_PAY_04.py tests/test_AC_PAY_05.py`
+- Given: test ตั้ง `APP_ENV=test` พร้อม server-side token mapping ของ HR, Manager, Executive, Student และ Worker
+- When: เรียก test route ด้วย token ที่ถูกต้อง/ไม่ถูกต้อง และตรวจ `payment_audit_logs`
+- Then: HR/Manager/Executive ได้รับอนุญาต; Student/Worker และคำขอไม่มี token ถูกปฏิเสธ; ทุกผลมี user ID (ถ้าระบุตัวตนได้), เวลา, resource และผล ALLOWED/DENIED โดยไม่มี token ในตาราง
+- ข้อจำกัด: T-03 ยังไม่เปิด HTTP payment endpoint ใน app จริง; การตรวจผ่าน test route จนกว่า T-05/T-06 จะเพิ่ม API
 
 ## เฟส 3: Read-only Backend API
 ลำดับ: T-05 → T-06
