@@ -29,7 +29,7 @@
 - รองรับ: FR-PAY-04, FR-PAY-05, NFR-SEC-01, NFR-AUD-01
 - ตรวจด้วย: AC-PAY-04, AC-PAY-05
 - ไฟล์ที่แตะ: `backend/app/config.py`, `backend/app/payments/auth.py` (สร้าง), `backend/app/payments/audit.py` (สร้าง), `backend/app/db/models.py`, `backend/app/db/migrations/002_payment_audit_log.py` (สร้าง), `backend/tests/test_AC_PAY_04.py` (สร้าง), `backend/tests/test_AC_PAY_05.py` (สร้าง)
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - ต้องทำหลัง: T-01
 - สิทธิ์ที่ยืนยัน: HR และ Manager/Executive อ่านได้แบบ Read-only; Student และผู้ปฏิบัติงานทั่วไปถูกปฏิเสธ
 - Auth สำหรับสาธิต: `PAYMENT_DEMO_AUTH_TOKENS` เป็น JSON map จาก bearer token ไป `user_id`/role; ใช้ได้เฉพาะ `APP_ENV=local` หรือ `test` และค่าเริ่มต้น `APP_ENV=production`; ห้ามรับ role จาก request และห้ามบันทึก token
@@ -38,7 +38,7 @@
 
 ### T-04 กำหนดรูปแบบการแสดงยอดเงินตามคำตอบ Q-01
 - รองรับ: ASM-01, Q-01
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - รูปแบบที่ยืนยัน: API แยก `amount` และ `finance_status`; client ที่นำไปแสดงใช้รูปแบบ `ยอดเงิน | สถานะการจ่ายเงิน` เช่น `15,000 บาท | ชำระแล้ว`
 - ขอบเขตปัจจุบัน: คงรูปแบบข้อมูล/การแสดงผลที่ยืนยันไว้ แต่ไม่พัฒนา Frontend/UI สำหรับ UC-16
 - ต้องทำหลัง: ไม่มี

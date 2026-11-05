@@ -354,3 +354,22 @@
 - สถานะ T-03: `เสร็จ รอทีมตรวจ`; ยังไม่มี HTTP payment routes เพราะเป็นงาน T-05/T-06
 - รายละเอียดที่ยืนยันก่อน implement: token provisioning ผ่าน environment JSON map และเลือกตารางฐานข้อมูล audit แยก; ไม่ได้เดารูปแบบเก็บ audit หรืออ้างว่าเป็น real identity provider
 - เพิ่มจุดตรวจเฟส 2 ใน tasks.md เพื่อให้ทีมตรวจ AC-PAY-04/05 ได้ด้วย test route โดยไม่กล่าวอ้างว่ามี HTTP payment endpoint ก่อน T-05/T-06
+
+## 2569-11-05 ตรวจรับจุดตรวจเฟส 2: T-03
+
+- คำสั่ง: `cd backend && PYTHONDONTWRITEBYTECODE=1 pytest -q tests/test_AC_PAY_04.py tests/test_AC_PAY_05.py`
+- ผล: `11 passed, 1 warning`; warning เป็น Starlette deprecation ของ `httpx` ใน TestClient
+- สิทธิ์: HR/Manager/Executive ได้รับอนุญาต; Student/Worker ถูกปฏิเสธ; ไม่มี token ถูกปฏิเสธ; มี test ยืนยันว่า `X-Role: HR` อย่างเดียวไม่ได้รับสิทธิ์
+- Audit: test ตรวจ user ID, timestamp, resource, ผล ALLOWED/DENIED สำหรับ allow/deny และกรณีไม่มีตัวตน; schema `payment_audit_logs` ไม่มีคอลัมน์ token
+- Production gate: test ตั้ง `APP_ENV=production` พร้อม mapping แล้วได้ 401; demo token ใช้ได้เฉพาะ local/test
+- Git: commits `c7277f6` (T-03) และ `0cdbee5` (จุดตรวจเฟส 2) อยู่ใน `git log --oneline`; สถานะก่อนปรับเอกสารมีเฉพาะ Frontend ที่ยังไม่ stage: Vitest result cache และ `PaymentStatusBadge.jsx` modified, `PaymentStatusBadge.test.jsx` untracked
+- ผลตรวจรับ: ผ่าน; เปลี่ยน T-03 เป็น `เสร็จ`; ยังไม่เริ่มเฟส 3 และยังต้องยืนยัน endpoint path สำหรับ T-05/T-06
+
+## 2569-11-05 ตรวจรับ T-04 และ baseline ก่อนทำ API
+
+- ตรวจโค้ด/การทดสอบ format เดิมของ Q-01: `PaymentStatusBadge` แสดง amount กับสถานะในรูป `15,000 บาท | ชำระแล้ว`; test ครอบคลุม PAID, ไม่มี amount และ ABNORMAL
+- ไม่แก้ Frontend; รันเพื่อตรวจของเดิมเท่านั้น
+- Baseline Backend: `PYTHONDONTWRITEBYTECODE=1 pytest` -> 21 passed, 1 warning
+- Baseline Frontend: `npx vitest run --config vitest.baseline.config.js` -> 8 passed, 1 todo, 5 files passed
+- ผลตรวจ T-04: ผ่าน; เปลี่ยนสถานะเป็น `เสร็จ`
+- T-05/T-06 ยังไม่เริ่ม: endpoint path และ API surface ยังเป็น Open Decision ใน plan/tasks และผู้ใช้ย้ำไม่ให้เดา API
