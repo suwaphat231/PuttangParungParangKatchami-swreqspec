@@ -25,6 +25,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 - รายการที่ยังไม่จ่ายหรือผิดปกติต้องถูกทำเครื่องหมายชัดเจนเพื่อให้เจ้าหน้าที่ดำเนินการต่อ
 - สำหรับการสาธิต UC-16 ให้ตรวจ Bearer Token จาก server-side mapping ใน `PAYMENT_DEMO_AUTH_TOKENS` รูปแบบ JSON ที่จับคู่ token กับ `user_id` และ role; เปิดใช้ได้เฉพาะ `APP_ENV=local` หรือ `APP_ENV=test` และค่าเริ่มต้นต้องปิดแบบ production
 - บันทึกการอนุญาต/ปฏิเสธของ UC-16 ลงตาราง Audit Log แยก โดยเก็บผู้ใช้ เวลา resource/item และผลการตรวจสิทธิ์; ห้ามบันทึก bearer token และห้ามรับ role จาก request
+- API สำหรับ UC-16 ใช้ `GET /payments` ค้นหา/กรอง, `GET /payments/{payment_id}` อ่านสถานะล่าสุดรายรายการ และ `GET /payments/follow-up` อ่านรายการที่ต้องติดตาม; ทุก endpoint เป็น Read-only
 
 ## Requirements
 - FR-PAY-01 ระบบต้องแสดงรายการจ่ายเงินที่เกี่ยวข้องกับผู้ปฏิบัติงานที่เลือกได้ตามตัวกรองที่กำหนด; ค้นหา `worker_id` และ `payment_reference` แบบ exact match และ `worker_name` แบบ partial match    <- UC-16 requirement 1

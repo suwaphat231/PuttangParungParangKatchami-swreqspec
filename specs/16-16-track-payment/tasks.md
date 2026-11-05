@@ -48,7 +48,7 @@
 - รองรับ: FR-PAY-01, FR-PAY-02
 - ตรวจด้วย: AC-PAY-03
 - ไฟล์ที่แตะ: `backend/app/main.py`, `backend/app/payments/router.py` (สร้าง), `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_03.py` (สร้าง)
-- สถานะ: รอ T-01 และ T-03
+- สถานะ: พร้อมทำ
 - ต้องทำหลัง: T-01, T-03
 - เงื่อนไขค้นหา: `worker_id` exact match, `worker_name` partial match, `payment_reference` exact match
 - ข้อจำกัด: API อ่านอย่างเดียวและต้องระบุ `data_source=MOCK` เมื่อใช้ provider จำลอง; ไม่มี Frontend/UI
@@ -93,7 +93,8 @@
 
 ## เฟส 3: Read-only Backend API
 ลำดับ: T-05 → T-06
-- จุดเริ่มเฟส: หลัง T-03 เสร็จ และยืนยัน endpoint path ที่ใช้กับ UC-16
+- จุดเริ่มเฟส: หลัง T-03 เสร็จและทีมยืนยัน endpoint path ที่ใช้กับ UC-16
+- Endpoint ที่ยืนยัน: `GET /payments` ค้นหา/กรอง; `GET /payments/{payment_id}` อ่านสถานะล่าสุด; `GET /payments/follow-up` รายการที่ต้องติดตาม
 
 ## เฟส 4: ตรวจรับ
 ลำดับ: T-07

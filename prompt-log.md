@@ -373,3 +373,9 @@
 - Baseline Frontend: `npx vitest run --config vitest.baseline.config.js` -> 8 passed, 1 todo, 5 files passed
 - ผลตรวจ T-04: ผ่าน; เปลี่ยนสถานะเป็น `เสร็จ`
 - T-05/T-06 ยังไม่เริ่ม: endpoint path และ API surface ยังเป็น Open Decision ใน plan/tasks และผู้ใช้ย้ำไม่ให้เดา API
+
+## 2569-11-05 คำตอบทีม: endpoint UC-16
+
+- ทีมยืนยันชุด endpoint สำหรับเฟส 3: `GET /payments` (ค้นหา/กรอง), `GET /payments/{payment_id}` (สถานะล่าสุดรายรายการ), `GET /payments/follow-up` (รายการที่ต้องติดตาม)
+- ทุก endpoint เป็น Read-only; ไม่เพิ่ม endpoint แก้ยอดเงินหรือสถานะ
+- อัปเดต spec/plan/tasks ให้บันทึก contract นี้; T-05 พร้อมทำหลัง T-01/T-03, T-06 รอ T-05

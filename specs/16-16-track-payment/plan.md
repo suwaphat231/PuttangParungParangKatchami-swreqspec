@@ -37,7 +37,7 @@ Spec Target: [specs/16-16-track-payment/spec.md](specs/16-16-track-payment/spec.
 ลำดับ: T-05 → T-06
 - T-05 เพิ่ม API ค้นหาและรายการจ่ายเงินตาม AC-PAY-03 หลัง T-03
 - T-06 เพิ่ม API อ่านสถานะล่าสุดและรายการที่ต้องติดตามตาม AC-PAY-01/02 หลัง T-02, T-03 และ T-05
-- Endpoint path เป็น technical decision ที่ต้องยืนยันก่อนเริ่ม T-05 หากยังไม่มี pattern/ข้อสรุปที่ใช้กับ UC-16
+- Endpoint path ที่ทีมยืนยัน: `GET /payments` (ค้นหา/กรอง), `GET /payments/{payment_id}` (อ่านสถานะล่าสุดรายรายการ), `GET /payments/follow-up` (รายการที่ต้องติดตาม)
 
 ### เฟส 4: ตรวจรับ
 ลำดับ: T-07
