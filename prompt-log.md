@@ -47,6 +47,15 @@
 
 ---
 
+## 2569-11-05 11.24 คำสั่ง: Q-01 specs/16-16-track-payment/spec.md
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: บันทึกคำตอบว่า “แสดงยอดเงินพร้อมสถานะการจ่ายเงิน” ใน Q-01 ของ spec
+- ไฟล์ที่แก้: `specs/16-16-track-payment/spec.md`
+- สถานะ: ระบุคำตอบชัดเจนแล้ว ไม่ต้องรอ Clarification เพิ่ม
+
+---
+
 ## 2569-10-13 คำสั่ง: /testcases AC-check-05 /workspaces/PuttangParungParangKatchami-swreqspec/specs/005-checkstudentstatus
 
 - โหมด: ร่าง เนื่องจากยังไม่มี `test-cases.md` และยังไม่มี task ที่ระบุสถานะ
@@ -231,3 +240,86 @@
 
 - เปลี่ยนสถานะของแถว `TC-STS-06-2` ใน `specs/003-view-application-status/test-cases.md` จาก `ร่าง` เป็น `ใช้ได้` ตามคำขอ
 - ไม่แก้ไฟล์ executable test หรือคำสั่ง `expect()`
+
+---
+
+## 2569-11-05 11:24 คำสั่ง: /implement T-04 specs/16-16-track-payment/tasks.md
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: เปลี่ยน T-04 จาก `รอคำตอบ Q-01` เป็น `พร้อมทำ` และระบุรูปแบบการแสดงยอดเงินตามข้อสรุปทีมว่า "แสดงยอดเงินพร้อมสถานะการจ่ายเงิน"
+- ไฟล์ที่แก้: `specs/16-16-track-payment/tasks.md`, `specs/16-16-track-payment/plan.md`
+- การตรวจ dependency: plan.md ไม่พบ dependency ที่ค้างอยู่สำหรับ T-04; T-04 เป็น task ที่พร้อมทำและไม่มี prerequisite ที่ยังไม่เสร็จ
+- รูปแบบที่ยืนยัน: `ยอดเงิน [บาท] | สถานะการจ่ายเงิน` เช่น `15,000 บาท | ชำระแล้ว`
+
+## 2569-11-05 11:31 คำสั่ง: /implement T-04 specs/16-16-track-payment/tasks.md (ทดสอบเฉพาะ T-04)
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: เพิ่มฟังก์ชันจัดรูปแบบยอดเงินพร้อมสถานะการจ่ายเงินใน `frontend/src/components/PaymentStatusBadge.jsx` และเขียน test ใน `frontend/src/components/PaymentStatusBadge.test.jsx`
+- โครงสร้างที่แก้: `PaymentStatusBadge` รองรับ prop `amount` และแสดงผลเป็น `15,000 บาท | ชำระแล้ว` เมื่อมียอดเงิน; ถ้าไม่มียอดเงินจะแสดงสถานะอย่างเดียว
+- ผล test: `cd frontend && npm test -- --run src/components/PaymentStatusBadge.test.jsx` -> 1 file passed, 3 tests passed
+- สถานะ T-04: เปลี่ยนเป็น `เสร็จ รอทีมตรวจ`
+
+## 2569-11-05 11:34 คำสั่ง: ตรวจสอบความพร้อม T-01 specs/16-16-track-payment/tasks.md
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: ตรวจสอบ dependency จาก `spec.md` และ `plan.md` แล้วพบว่า T-01 ไม่มี prerequisite และไม่ขึ้นกับ Q-01 หรือ task อื่น
+- ความเห็น: T-01 เป็น task แรกในลำดับงานและไม่มี `ต้องทำหลัง` หรือ dependency ที่ค้างอยู่ จึงมีสถานะพร้อมทำ
+- ไฟล์ที่แก้: `specs/16-16-track-payment/tasks.md`
+- สถานะ T-01: เปลี่ยนเป็น `พร้อมทำ`
+
+## 2569-11-05 11:37 คำสั่ง: แก้ T-01 ใน tasks.md ตามกติกา /implement
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: เพิ่มข้อมูล `ไฟล์ที่แตะ` และ `เสร็จเมื่อ` ให้ T-01 ครบตามข้อกำหนดของ /implement โดยไม่เริ่ม code implementation
+- พิจารณาโครงสร้างที่มีอยู่จริงของ repo ก่อนระบุ path: `backend/app/main.py`, `backend/app/booking/router.py`, `backend/app/booking/service.py`, `backend/tests/conftest.py`
+- เหตุผล: มี FastAPI app entry point และ router/service patterns ใน repo จึงใช้ไฟล์ที่มีอยู่จริงเป็นฐานของ API contract และ data flow สำหรับ task นี้ โดยไม่สร้างไฟล์ใหม่ที่ไม่จำเป็น
+- ไฟล์ที่แก้: `specs/16-16-track-payment/tasks.md`
+
+## 2569-11-05 11:39 คำสั่ง: บันทึกข้อกำหนด T-01 จากคำตอบทีม
+
+- ผลตรวจ: backend ปัจจุบันยังไม่มี API หรือแหล่งเชื่อมต่อระบบการเงิน; หยุดก่อน Implement เพื่อไม่สร้างข้อมูลจำลองหรืออ้างว่าเป็นข้อมูลจริง
+- คำตอบทีม: `worker_id` exact match, `worker_name` partial match, `payment_reference` exact match
+- API fields ต่อรายการ: `payment_id`, `worker_id`, `worker_name`, `payment_reference`, `amount`, `currency`, `finance_status`, `status_updated_at`, `last_synced_at`
+- Mapping ที่ยืนยัน: `PAID` = `ชำระแล้ว`, `UNPAID` = `ยังไม่ได้จ่าย`, `ABNORMAL` = `มีความผิดปกติ`; สถานะจริงอื่นต้อง map จากค่าต้นทางโดยรักษาความหมาย
+- เวลา: ต้องระบุ timezone จาก contract/แหล่งข้อมูลจริง; หากไม่มีให้ถามทีม ไม่กำหนดค่าเอง
+- ปรับ T-01 เป็น `รอการยืนยันแหล่งเชื่อมต่อระบบการเงินจริง`; ยังไม่ระบุไฟล์ที่จะ Implementation จนกว่าจะตรวจแหล่งเชื่อมต่อและ path จริง
+- ไฟล์ที่แก้: `specs/16-16-track-payment/tasks.md`, `prompt-log.md`; ไม่มีการแก้โค้ดหรือรันทดสอบ
+
+## 2569-11-05 11:45 คำสั่ง: ตรวจความพร้อม T-02, T-03, T-05, T-06 UC-16
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `AGENTS.md` และโครงสร้าง backend/frontend จริง
+- `plan.md` มีลำดับงานระดับสูง แต่ไม่มี dependency ราย task, file list หรือ technical design; dependencies ใน `tasks.md` จึงบันทึกตามสิ่งที่จำเป็นจาก FR/AC และการใช้ข้อมูลจริง
+- T-02: รอ T-01 และแหล่งข้อมูลการเงินจริง เพราะต้องระบุรายการจากสถานะจริงตาม FR-PAY-03/AC-PAY-02; ห้ามใช้ demo data เป็นข้อมูลการเงินจริง
+- T-03: รอ endpoint จาก T-01 และการยืนยันบทบาท/ขอบเขตสิทธิ์ เนื่องจาก spec ยังไม่ระบุชื่อ role หรือ permission scope; ยังระบุไฟล์ implementation ไม่ได้อย่างปลอดภัย
+- T-05: คงเป็นงาน UI ของ Agent; ระบุ frontend paths ตามโครงสร้างที่มีอยู่ (`App.jsx`, `pages/`, `api/`) และไฟล์ UI/API/test ที่ต้องสร้าง; รอ T-01 และตรวจรับ T-04 ก่อนต่อข้อมูลจริง
+- T-06: คงเป็นงาน UI Read-only ของ Agent; อาศัย T-01/T-02 และตรวจรับ T-04; UI ห้ามเขียนหรือเปลี่ยนสถานะการจ่ายเงินต้นทาง
+- ผล readiness: ไม่มี T-02, T-03, T-05 หรือ T-06 ที่ผ่านเงื่อนไขพร้อม Implement ในขณะนี้; จึงไม่มี task ใดถูกเปลี่ยนเป็น `พร้อมทำ`
+- ไฟล์ที่แก้: `specs/16-16-track-payment/tasks.md`, `prompt-log.md`; ไม่แก้ `spec.md`/`plan.md`, ไม่แก้โค้ด และไม่รันทดสอบเพราะเป็นการตรวจความพร้อมเท่านั้น
+
+## 2569-11-05 11:48 คำสั่ง: บันทึกข้อสรุปและตรวจความพร้อม UC-16 T-01 ถึง T-07
+
+- แก้ `specs/16-16-track-payment/spec.md` เพื่อบันทึกข้อสรุปของทีมไว้ภายใต้ FR/AC/ASM เดิม: HR และ Manager/Executive อ่านได้เท่านั้น, Student/ผู้ปฏิบัติงานทั่วไปถูกปฏิเสธ, Audit Log บันทึกผู้ใช้/เวลา/รายการ/ผลอนุญาตหรือปฏิเสธ, UI แจ้งแหล่งข้อมูลไม่พร้อมและห้ามใช้ mock เมื่อไม่มี finance API
+- อัปเดต T-02 ถึง T-07 ใน `tasks.md`: ระบุสถานะและ dependency ตามข้อเท็จจริง, กำหนดบทบาท UI ให้ Agent ใน T-05/T-06, กำหนดเกณฑ์การค้นหา/Read-only/Audit และคงไฟล์ที่ยังเลือกไม่ได้เป็น pending จนกว่า dependency จะพร้อม
+- สถานะพร้อมทำ: ไม่มี task เนื่องจาก T-01 ยังรอการเชื่อมต่อระบบการเงินจริง; T-02/T-03/T-05/T-06/T-07 ติด dependency และ T-04 เสร็จรอทีมตรวจ
+- ไม่เริ่ม Implement และไม่รันทดสอบ เพราะไม่มี task ที่ผ่าน readiness gate และการเปลี่ยนแปลงรอบนี้เป็นการอัปเดตข้อกำหนด/แผนงาน
+- ไฟล์ที่แก้: `specs/16-16-track-payment/spec.md`, `specs/16-16-track-payment/tasks.md`, `prompt-log.md`
+
+## 2569-11-05 11:54 คำสั่ง: ปรับแนวทาง UC-16 เป็น Backend-only พร้อม Mock Finance Data
+
+- คำตอบทีม: อนุญาต Mock Finance Data สำหรับพัฒนา/ทดสอบ โดยติดป้ายแยกจากข้อมูลจริง; ไม่อ้างว่าเชื่อมระบบการเงินจริง
+- คำตอบทีม: Mock timestamp ใช้ timezone `Asia/Bangkok`; ใช้ identity provider เดิมหากมี role claim
+- ตรวจ `backend/app/auth/idp.py`: dependency ปัจจุบันยืนยัน HN อย่างเดียว ไม่มี role claim; T-03 จึงยังรอ module/claim ที่เชื่อถือได้
+- Baseline ก่อน implement: `cd backend && pytest` ผ่าน 7 tests, 1 warning; `cd frontend && npm test` ผ่าน 8 tests, 1 todo
+- ปรับ `spec.md`: ระบุขอบเขต Backend-only, Mock Finance Data ที่ชัดเจนว่าเป็น simulation, AC แบบ API/read-only, roles และ audit fields ตามข้อสรุปทีม
+- ปรับ `plan.md` และ `tasks.md`: แบ่ง 4 เฟส; เฟส 1 มี T-01/T-02; ตั้ง T-01 เป็น `พร้อมทำ`, T-02 รอ T-01; T-03 รอ role claim; T-05/T-06 เป็น Backend API ไม่มี UI และรอ auth; T-07 รอทุก task
+- จุดตัดสินใจคงค้าง: role claim/module จาก identity provider; endpoint path ก่อน T-05
+- ยังไม่แก้โค้ดในบันทึกนี้; baseline ที่รันเป็นการตรวจฐานก่อน implement
+
+## 2569-11-05 12:01 คำสั่ง: /implement-all เฟส 1 T-01 จัดทำ contract API และ Mock Finance Data
+
+- ไฟล์ที่สร้าง: `backend/app/payments/__init__.py`, `backend/app/payments/schemas.py`, `backend/app/payments/mock_finance.py`, `backend/tests/test_T01_payment_contract.py`
+- ผลลัพธ์: สร้าง immutable Pydantic contract/provider พร้อมข้อมูล Mock Finance Data 3 สถานะ, amount, THB, worker fields, `data_source=MOCK`, timestamps ระบุ `Asia/Bangkok`
+- ไม่ได้สร้าง API route ใน T-01 เพื่อไม่ให้ปล่อยข้อมูลการเงินก่อน T-03 มี authorization; ยังไม่มีการเชื่อมต่อระบบการเงินจริง
+- Test หลัง T-01: `cd backend && pytest` -> 9 passed, 1 warning; `cd frontend && npm test` -> 8 passed, 1 todo
+- สถานะ T-01: `เสร็จ รอทีมตรวจ`; T-02 ยังรอ T-01 จนปิด commit task นี้ตาม workflow
+- สิ่งที่เกือบต้องเดา: identity role claim ยังไม่มี แต่ไม่กระทบ provider/contract ของ T-01; คง T-03 ไว้รอยืนยันและไม่เพิ่ม auth จำลอง
