@@ -332,3 +332,24 @@
 - ผล test หลัง T-02: `cd backend && pytest` -> 10 passed, 1 warning; `cd frontend && npm test` -> 8 passed, 1 todo
 - สถานะ T-02: `เสร็จ รอทีมตรวจ`
 - ไม่แตะ Frontend และไม่อ้าง Mock Finance Data ว่าเป็นข้อมูลจริง
+
+## 2569-11-05 คำตอบทีม: ตรวจจุดตรวจเฟส 1 ผ่าน
+
+- ทีมยืนยันผลตรวจเฟส 1 ว่าผ่าน; เปลี่ยนสถานะ T-01 และ T-02 เป็น `เสร็จ`
+- ทีมยืนยันว่า identity provider ยังไม่มี module path, user ID claim หรือ role/permission claim
+- T-03 และงาน API ที่ต้องป้องกันด้วย role ยังคงรอข้อมูล identity ที่เชื่อถือได้; จะไม่ใช้ role จาก request header หรือค่าที่ผู้เรียกกำหนดเอง
+- ทีมเลือกแนวทาง demo-only server-side bearer token mapping สำหรับ T-03; ยังไม่เริ่ม implementation เพราะต้องยืนยันวิธี provision/configure token ก่อน
+- ทีมยืนยันใช้ environment variable `PAYMENT_DEMO_AUTH_TOKENS` เป็น JSON map สำหรับ token, `user_id` และ role; ขอบเขตเป็น local/test เท่านั้น และ production ต้องปิดใช้งานเสมอ
+- ทีมเลือกเก็บ Audit Log ในตารางฐานข้อมูลแยกสำหรับ UC-16 แทนการใช้ application log; ตารางเดิมของการจองผูกกับ HN และไม่รองรับผลอนุญาต/ปฏิเสธ
+
+## 2569-11-05 /implement-all เฟส 2: T-03
+
+- ไฟล์ implementation: `backend/app/config.py`, `backend/app/payments/auth.py`, `backend/app/payments/audit.py`, `backend/app/db/models.py`, `backend/app/db/migrations/002_payment_audit_log.py`, `backend/tests/test_AC_PAY_04.py`, `backend/tests/test_AC_PAY_05.py`
+- เอกสารที่ปรับตามข้อสรุปทีม: `specs/16-16-track-payment/spec.md`, `specs/16-16-track-payment/plan.md`, `specs/16-16-track-payment/tasks.md`
+- Auth ใช้ `PAYMENT_DEMO_AUTH_TOKENS` เฉพาะ `APP_ENV=local|test`; ค่าเริ่มต้นเป็น `production`; ตรวจ role จาก mapping ฝั่ง server เท่านั้น และไม่บันทึก bearer token
+- Audit บันทึก user ID (nullable เมื่อระบุตัวตนไม่ได้), UTC timestamp, resource path และผล `ALLOWED`/`DENIED` ลง `payment_audit_logs` แยกจาก audit ของการจอง
+- ผล test เฉพาะ T-03: `pytest -q tests/test_AC_PAY_04.py tests/test_AC_PAY_05.py` -> 9 passed ก่อนเพิ่มกรณี local/header
+- ผล test ทั้งโปรเจกต์รอบสุดท้าย: Backend `pytest` -> 21 passed, 1 warning; Frontend `npx vitest run --config vitest.baseline.config.js` -> 8 passed, 1 todo (5 files passed)
+- `git diff --check` ผ่าน; `vitest.baseline.config.js` เป็นไฟล์ชั่วคราวที่ลบหลังทดสอบ ไม่ได้แก้ tracked Vitest cache
+- สถานะ T-03: `เสร็จ รอทีมตรวจ`; ยังไม่มี HTTP payment routes เพราะเป็นงาน T-05/T-06
+- รายละเอียดที่ยืนยันก่อน implement: token provisioning ผ่าน environment JSON map และเลือกตารางฐานข้อมูล audit แยก; ไม่ได้เดารูปแบบเก็บ audit หรืออ้างว่าเป็น real identity provider

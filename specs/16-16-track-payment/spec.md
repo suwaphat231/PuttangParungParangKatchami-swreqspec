@@ -23,6 +23,8 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 - อนุญาตให้ใช้ Mock Finance Data สำหรับพัฒนาและทดสอบ Backend โดยต้องระบุชัดว่าเป็นข้อมูลจำลองและแยกจากข้อมูลจริง; ห้ามอ้างว่าเชื่อมต่อระบบการเงินจริงแล้ว
 - ขอบเขตการพัฒนารอบนี้เป็น Backend API และ Business Logic ไม่พัฒนา Frontend หรือหน้า UI ของ UC-16
 - รายการที่ยังไม่จ่ายหรือผิดปกติต้องถูกทำเครื่องหมายชัดเจนเพื่อให้เจ้าหน้าที่ดำเนินการต่อ
+- สำหรับการสาธิต UC-16 ให้ตรวจ Bearer Token จาก server-side mapping ใน `PAYMENT_DEMO_AUTH_TOKENS` รูปแบบ JSON ที่จับคู่ token กับ `user_id` และ role; เปิดใช้ได้เฉพาะ `APP_ENV=local` หรือ `APP_ENV=test` และค่าเริ่มต้นต้องปิดแบบ production
+- บันทึกการอนุญาต/ปฏิเสธของ UC-16 ลงตาราง Audit Log แยก โดยเก็บผู้ใช้ เวลา resource/item และผลการตรวจสิทธิ์; ห้ามบันทึก bearer token และห้ามรับ role จาก request
 
 ## Requirements
 - FR-PAY-01 ระบบต้องแสดงรายการจ่ายเงินที่เกี่ยวข้องกับผู้ปฏิบัติงานที่เลือกได้ตามตัวกรองที่กำหนด; ค้นหา `worker_id` และ `payment_reference` แบบ exact match และ `worker_name` แบบ partial match    <- UC-16 requirement 1

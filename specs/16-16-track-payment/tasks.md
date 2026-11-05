@@ -10,7 +10,7 @@
 - รองรับ: FR-PAY-01, FR-PAY-02, ASM-01
 - ตรวจด้วย: test พื้นฐานของ contract/provider (ไม่มี AC ตรงโดยตรง)
 - ไฟล์ที่แตะ: `backend/app/payments/__init__.py` (สร้าง), `backend/app/payments/schemas.py` (สร้าง), `backend/app/payments/mock_finance.py` (สร้าง), `backend/tests/test_T01_payment_contract.py` (สร้าง)
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - ต้องทำหลัง: ไม่มี
 - Contract fields: `payment_id`, `worker_id`, `worker_name`, `payment_reference`, `amount`, `currency`, `finance_status`, `status_updated_at`, `last_synced_at`, `data_source`
 - ข้อมูลจำลองต้องมีสถานะ `PAID`, `UNPAID`, `ABNORMAL`, ยอดเงินและข้อมูลผู้ปฏิบัติงาน; `data_source` ต้องระบุ `MOCK`; timestamp ใช้ timezone `Asia/Bangkok`
@@ -21,19 +21,20 @@
 - รองรับ: FR-PAY-03
 - ตรวจด้วย: AC-PAY-02
 - ไฟล์ที่แตะ: `backend/app/payments/schemas.py`, `backend/app/payments/service.py` (สร้าง), `backend/tests/test_AC_PAY_02.py` (สร้าง)
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: business logic ทำเครื่องหมาย `UNPAID` และ `ABNORMAL` ว่าต้องติดตามต่อ และไม่ทำเครื่องหมาย `PAID`; ไม่แก้ข้อมูลต้นทาง; test AC-PAY-02 ผ่าน
 
 ### T-03 บังคับสิทธิ์และบันทึก Audit Log
 - รองรับ: FR-PAY-04, FR-PAY-05, NFR-SEC-01, NFR-AUD-01
 - ตรวจด้วย: AC-PAY-04, AC-PAY-05
-- ไฟล์ที่แตะ: รอยืนยัน module/claim ที่เชื่อถือได้จาก identity provider ก่อนระบุไฟล์ implementation; `backend/app/auth/idp.py` ที่มีอยู่ปัจจุบันให้ HN แต่ไม่มี role claim
-- สถานะ: รอการยืนยัน role claim จาก identity provider
+- ไฟล์ที่แตะ: `backend/app/config.py`, `backend/app/payments/auth.py` (สร้าง), `backend/app/payments/audit.py` (สร้าง), `backend/app/db/models.py`, `backend/app/db/migrations/002_payment_audit_log.py` (สร้าง), `backend/tests/test_AC_PAY_04.py` (สร้าง), `backend/tests/test_AC_PAY_05.py` (สร้าง)
+- สถานะ: เสร็จ รอทีมตรวจ
 - ต้องทำหลัง: T-01
 - สิทธิ์ที่ยืนยัน: HR และ Manager/Executive อ่านได้แบบ Read-only; Student และผู้ปฏิบัติงานทั่วไปถูกปฏิเสธ
-- Audit Log: ผู้ใช้งาน, วันเวลา, รายการที่เข้าถึง, ผลการอนุญาตหรือปฏิเสธ
-- เสร็จเมื่อ: ผู้มี role ที่อนุญาตอ่านได้, role ที่ไม่อนุญาตถูกปฏิเสธ, ทุกผลการเข้าถึงถูกบันทึกข้อมูล Audit Log ครบ และ test AC-PAY-04/05 ผ่าน
+- Auth สำหรับสาธิต: `PAYMENT_DEMO_AUTH_TOKENS` เป็น JSON map จาก bearer token ไป `user_id`/role; ใช้ได้เฉพาะ `APP_ENV=local` หรือ `test` และค่าเริ่มต้น `APP_ENV=production`; ห้ามรับ role จาก request และห้ามบันทึก token
+- Audit Log: ตาราง `payment_audit_logs` แยก เก็บ user ID (nullable เมื่อระบุตัวตนไม่ได้), วันเวลา UTC, resource/item และผล `ALLOWED`/`DENIED`
+- เสร็จเมื่อ: HR/MANAGER/EXECUTIVE ได้รับอนุญาต, STUDENT/WORKER และ token ที่ไม่ถูกต้องถูกปฏิเสธ; demo auth ปิดเมื่อไม่ใช่ local/test; ทุกผลการอนุญาต/ปฏิเสธถูกบันทึกลงตารางโดยไม่เก็บ token; migration และ test AC-PAY-04/05 ผ่าน
 
 ### T-04 กำหนดรูปแบบการแสดงยอดเงินตามคำตอบ Q-01
 - รองรับ: ASM-01, Q-01

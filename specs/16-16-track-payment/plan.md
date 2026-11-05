@@ -12,7 +12,9 @@ Spec Target: [specs/16-16-track-payment/spec.md](specs/16-16-track-payment/spec.
 - Timestamp ใน Mock Finance Data ใช้ timezone `Asia/Bangkok` ตามที่ทีมยืนยัน; ห้ามอนุมาน timezone ของระบบการเงินจริงจาก mock
 - ค่า API ที่ใช้ตอบต้องแยก `amount` และ `finance_status`; ไม่สร้าง endpoint สำหรับแก้ไขยอดหรือสถานะ
 - API ที่คืนข้อมูลการเงินต้องผ่านการตรวจ role และบันทึก Audit Log; ห้ามปล่อยข้อมูลก่อน T-03 พร้อม
-- Identity provider ปัจจุบันใน `backend/app/auth/idp.py` คืน HN เท่านั้นและไม่มี role claim; T-03 รอทีมยืนยัน module/claim ที่เชื่อถือได้จาก identity provider
+- demo auth สำหรับ UC-16 ใช้ server-side JSON map จาก `PAYMENT_DEMO_AUTH_TOKENS`; map token ไป `user_id`/role โดยไม่รับ role จาก request
+- demo auth ใช้ได้เฉพาะ `APP_ENV=local` หรือ `APP_ENV=test`; ค่า `APP_ENV` เริ่มต้นเป็น `production` เพื่อปิด demo auth แบบ fail-closed และ auth module แยกจาก `backend/app/auth/idp.py`
+- Audit Log สำหรับ UC-16 ใช้ตาราง `payment_audit_logs` แยกจากตาราง audit ของการจอง เก็บ actor, timestamp, resource และผล ALLOWED/DENIED โดยไม่เก็บ token
 
 ## เฟสและ Dependency
 
@@ -28,7 +30,8 @@ Spec Target: [specs/16-16-track-payment/spec.md](specs/16-16-track-payment/spec.
 
 ### เฟส 2: การยืนยันสิทธิ์และ Audit Log
 ลำดับ: T-03
-- T-03 ต้องรอการยืนยัน role claim/module จาก identity provider; ห้ามใช้ role ที่ผู้เรียกส่งมาเองแทน identity ที่เชื่อถือได้
+- T-03 ใช้ demo-only server-side bearer token mapping ตามที่ทีมยืนยัน; production ปิดใช้งาน และห้ามใช้ role ที่ผู้เรียกส่งมาเอง
+- T-03 สร้างตาราง audit แยก พร้อมบันทึกผลทั้งอนุญาตและปฏิเสธ
 
 ### เฟส 3: Read-only Backend API
 ลำดับ: T-05 → T-06
@@ -45,5 +48,6 @@ Spec Target: [specs/16-16-track-payment/spec.md](specs/16-16-track-payment/spec.
 - [x] ยืนยันว่า Mock Finance Data ใช้พัฒนา/ทดสอบได้และต้องระบุว่าเป็นข้อมูลจำลอง
 - [x] ยืนยัน timezone ของ Mock Finance Data เป็น `Asia/Bangkok`
 - [x] กำหนดการพัฒนารอบนี้เป็น Backend-only
-- [ ] ยืนยัน role claim/module จาก identity provider ก่อน T-03
+- [x] ยืนยัน demo-only server-side bearer token mapping ผ่าน environment สำหรับ local/test และปิดใน production
+- [x] ยืนยันตาราง Audit Log แยกสำหรับ UC-16
 - [ ] ยืนยัน endpoint path ก่อน T-05
