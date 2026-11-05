@@ -34,3 +34,8 @@ class PaymentRecord(BaseModel):
         if value.utcoffset() is None:
             raise ValueError("timestamp must include a timezone")
         return value
+
+
+# รองรับ FR-PAY-03 และ AC-PAY-02
+class PaymentTrackingRecord(PaymentRecord):
+    requires_follow_up: bool

@@ -21,7 +21,7 @@
 - รองรับ: FR-PAY-03
 - ตรวจด้วย: AC-PAY-02
 - ไฟล์ที่แตะ: `backend/app/payments/schemas.py`, `backend/app/payments/service.py` (สร้าง), `backend/tests/test_AC_PAY_02.py` (สร้าง)
-- สถานะ: รอ T-01
+- สถานะ: เสร็จ รอทีมตรวจ
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: business logic ทำเครื่องหมาย `UNPAID` และ `ABNORMAL` ว่าต้องติดตามต่อ และไม่ทำเครื่องหมาย `PAID`; ไม่แก้ข้อมูลต้นทาง; test AC-PAY-02 ผ่าน
 

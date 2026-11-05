@@ -323,3 +323,12 @@
 - Test หลัง T-01: `cd backend && pytest` -> 9 passed, 1 warning; `cd frontend && npm test` -> 8 passed, 1 todo
 - สถานะ T-01: `เสร็จ รอทีมตรวจ`; T-02 ยังรอ T-01 จนปิด commit task นี้ตาม workflow
 - สิ่งที่เกือบต้องเดา: identity role claim ยังไม่มี แต่ไม่กระทบ provider/contract ของ T-01; คง T-03 ไว้รอยืนยันและไม่เพิ่ม auth จำลอง
+
+## 2569-11-05 12:03 คำสั่ง: /implement-all เฟส 1 T-02 ระบุสถานะและรายการที่ต้องดำเนินการต่อ
+
+- ไฟล์ที่แก้: `backend/app/payments/schemas.py`, `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_02.py`
+- ผลลัพธ์: เพิ่ม `requires_follow_up` ในผล tracking; `UNPAID` และ `ABNORMAL` เป็น true, `PAID` เป็น false; ข้อมูลต้นทางยัง immutable และไม่มีการเปลี่ยนยอด/สถานะ
+- Test ที่เพิ่ม: `test_AC_PAY_02_marks_unpaid_and_abnormal_payments_for_follow_up`
+- ผล test หลัง T-02: `cd backend && pytest` -> 10 passed, 1 warning; `cd frontend && npm test` -> 8 passed, 1 todo
+- สถานะ T-02: `เสร็จ รอทีมตรวจ`
+- ไม่แตะ Frontend และไม่อ้าง Mock Finance Data ว่าเป็นข้อมูลจริง
