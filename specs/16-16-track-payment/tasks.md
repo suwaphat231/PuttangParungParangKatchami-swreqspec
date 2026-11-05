@@ -48,7 +48,7 @@
 - รองรับ: FR-PAY-01, FR-PAY-02
 - ตรวจด้วย: AC-PAY-03
 - ไฟล์ที่แตะ: `backend/app/main.py`, `backend/app/payments/router.py` (สร้าง), `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_03.py` (สร้าง)
-- สถานะ: พร้อมทำ
+- สถานะ: เสร็จ รอทีมตรวจ
 - ต้องทำหลัง: T-01, T-03
 - เงื่อนไขค้นหา: `worker_id` exact match, `worker_name` partial match, `payment_reference` exact match
 - ข้อจำกัด: API อ่านอย่างเดียวและต้องระบุ `data_source=MOCK` เมื่อใช้ provider จำลอง; ไม่มี Frontend/UI

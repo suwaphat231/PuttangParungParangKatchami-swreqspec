@@ -379,3 +379,12 @@
 - ทีมยืนยันชุด endpoint สำหรับเฟส 3: `GET /payments` (ค้นหา/กรอง), `GET /payments/{payment_id}` (สถานะล่าสุดรายรายการ), `GET /payments/follow-up` (รายการที่ต้องติดตาม)
 - ทุก endpoint เป็น Read-only; ไม่เพิ่ม endpoint แก้ยอดเงินหรือสถานะ
 - อัปเดต spec/plan/tasks ให้บันทึก contract นี้; T-05 พร้อมทำหลัง T-01/T-03, T-06 รอ T-05
+
+## 2569-11-05 /implement-all เฟส 3: T-05
+
+- Implement `GET /payments` พร้อม `worker_id`/`payment_reference` exact match และ `worker_name` partial match; route ใช้ `get_payment_user` จึงบังคับ role และบันทึก audit
+- ไฟล์โค้ด: `backend/app/main.py`, `backend/app/payments/router.py`, `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_03.py`
+- ผล test เฉพาะ T-05: `pytest -q tests/test_AC_PAY_03.py` -> 4 passed, 1 warning
+- ผล test ทั้งโปรเจกต์หลัง T-05: Backend `pytest` -> 25 passed, 1 warning; Frontend -> 8 passed, 1 todo, 5 files passed
+- `git diff --check` ผ่าน; T-05 ใช้ Mock Finance Data ที่ระบุ `data_source=MOCK`; ไม่มี write route
+- สถานะ T-05: `เสร็จ รอทีมตรวจ`

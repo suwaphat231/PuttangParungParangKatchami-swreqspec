@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from app.booking.router import router as booking_router
 from app.db.models import Base
 from app.db.session import engine
+from app.payments.router import router as payments_router
 from app.slots.router import router as slots_router
 
 
@@ -19,3 +20,4 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="จองคิวตรวจสุขภาพ", lifespan=lifespan)
 app.include_router(slots_router)
 app.include_router(booking_router)
+app.include_router(payments_router)
