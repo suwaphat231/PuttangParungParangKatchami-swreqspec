@@ -2,7 +2,7 @@
 - Feature: ติดตามและตรวจสอบการจ่ายเงิน
 - Spec ID: SPEC-16-16
 - อ้างอิง spec.md: [spec.md](spec.md)
-- ขอบเขตการพัฒนา: Backend API และ Business Logic เท่านั้น; ไม่มี Frontend/UI
+- ขอบเขตการพัฒนา: Backend API/Business Logic เดิม และ Prototype UI แยก Task; UI ไม่เชื่อม Backend หรือ Database
 
 ## รายการ task
 
@@ -40,7 +40,7 @@
 - รองรับ: ASM-01, Q-01
 - สถานะ: เสร็จ
 - รูปแบบที่ยืนยัน: API แยก `amount` และ `finance_status`; client ที่นำไปแสดงใช้รูปแบบ `ยอดเงิน | สถานะการจ่ายเงิน` เช่น `15,000 บาท | ชำระแล้ว`
-- ขอบเขตปัจจุบัน: คงรูปแบบข้อมูล/การแสดงผลที่ยืนยันไว้ แต่ไม่พัฒนา Frontend/UI สำหรับ UC-16
+- ขอบเขต: รูปแบบข้อมูล/การแสดงผลที่ยืนยันไว้; Prototype UI ที่นำไปใช้จะแยกอยู่ใน T-08
 - ต้องทำหลัง: ไม่มี
 - เสร็จเมื่อ: รูปแบบยอดเงินพร้อมสถานะถูกกำหนดและ test ของ format ที่มีอยู่ผ่าน
 
@@ -51,7 +51,7 @@
 - สถานะ: เสร็จ
 - ต้องทำหลัง: T-01, T-03
 - เงื่อนไขค้นหา: `worker_id` exact match, `worker_name` partial match, `payment_reference` exact match
-- ข้อจำกัด: API อ่านอย่างเดียวและต้องระบุ `data_source=MOCK` เมื่อใช้ provider จำลอง; ไม่มี Frontend/UI
+- ข้อจำกัด: API อ่านอย่างเดียวและต้องระบุ `data_source=MOCK` เมื่อใช้ provider จำลอง
 - เสร็จเมื่อ: API คืนรายการตาม filter ตาม AC-PAY-03, ถูกป้องกันด้วย authorization/audit ของ T-03 และ test ผ่าน
 
 ### T-06 สร้าง API อ่านสถานะล่าสุดและรายการที่ต้องติดตามแบบ Read-only
@@ -70,6 +70,18 @@
 - สถานะ: เสร็จ
 - ต้องทำหลัง: T-01, T-02, T-03, T-04, T-05, T-06
 - เสร็จเมื่อ: API tests ครอบคลุม AC-PAY-01 ถึง AC-PAY-05 และยืนยัน NFR-SEC-01/NFR-AUD-01 ผ่านทั้งหมด; ไม่มี test หรือข้อความใดอ้าง Mock Finance Data ว่าเป็นข้อมูลจริง
+
+### T-08 สร้าง Prototype UI สำหรับติดตามการจ่ายเงิน
+- รองรับ: FR-PAY-01, FR-PAY-02, FR-PAY-03, Q-01
+- ตรวจด้วย: AC-PAY-01, AC-PAY-02, AC-PAY-03 (Frontend prototype tests; ไม่แทน Backend acceptance tests)
+- ไฟล์ที่แตะ: `frontend/src/App.jsx`, `frontend/src/pages/PaymentTrackingPage.jsx` (สร้าง), `frontend/src/mocks/paymentTrackingData.js` (สร้าง), `frontend/src/pages/PaymentTrackingPage.test.jsx` (สร้าง)
+- สถานะ: เสร็จ รอทีมตรวจ
+- ต้องทำหลัง: T-01, T-02, T-04, T-07
+- ขอบเขต: ใช้ Mock Data ที่สมมติขึ้นภายใน Frontend เท่านั้น; ไม่เรียก API, ไม่เชื่อม Database, ไม่แก้ไฟล์ Backend และไม่แก้หน้าเดิมนอกเหนือจากเพิ่มการเลือกหน้า `/payments`
+- การแสดงผล: สรุปจำนวน PAID/UNPAID/ABNORMAL จาก Mock Data ทั้งชุด; ตารางผู้ปฏิบัติงาน/ยอดเงิน/สถานะ; ค้นหาชื่อแบบ partial และ worker ID/payment reference แบบ exact; กรองสถานะ; เปิดดูรายละเอียด; รวมยอดเงินกับป้ายสถานะตาม Q-01
+- ข้อจำกัด: Read-only; ไม่แสดง action แก้ไขยอดหรือเปลี่ยนสถานะ; แสดงข้อความชัดเจนว่าเป็นข้อมูลสมมติ ไม่ใช่ข้อมูลการเงินจริง; การตรวจสิทธิ์และ Audit Log เป็นหน้าที่ Backend ตาม T-03/T-07
+- เสร็จเมื่อ: UI เปิดได้ที่ `/payments` โดยหน้าเดิมที่ path `/` ยังทำงาน; tests ตรวจ summary, search, filter, detail, รูปแบบยอดเงิน/สถานะ, ป้าย Mock และ Read-only ผ่าน; `npm test` และ `npm run build` ผ่าน
+- ผลตรวจจริง: T-08 tests 6 passed; Frontend suite 11 passed, 1 todo; `npm run build` ผ่าน; Backend regression 54 passed, 1 warning; route `/payments` เปิดและทดสอบค้นหา/กรอง/รายละเอียดใน Browser ผ่าน
 
 ## เฟส 1: Mock Finance Data และ Business Logic
 ลำดับ: T-01 → T-02
@@ -108,4 +120,17 @@
 - จุดเริ่มเฟส: หลัง T-01 ถึง T-06 เสร็จและผ่านการตรวจของทีม
 - ผลตรวจ: AC-PAY-01 ถึง AC-PAY-05 และ NFR-SEC-01/NFR-AUD-01 ผ่าน acceptance tests; Backend ทั้งชุด 54 passed, 1 warning; Frontend regression 8 passed, 1 todo
 - Live API: `/payments`, `/payments/{payment_id}` และ `/payments/follow-up` ตอบ 200 ตาม contract; `payment_audit_logs` มี 3 ALLOWED และ 1 DENIED จากการตรวจ live โดยไม่มีข้อมูล token
-- ขอบเขต: ใช้ Mock Finance Data (`data_source=MOCK`) เท่านั้น; ไม่มี integration ระบบการเงินจริงและไม่มี Frontend/UI ของ UC-16
+- ขอบเขต Backend: ใช้ Mock Finance Data (`data_source=MOCK`) เท่านั้น; ไม่มี integration ระบบการเงินจริง; งาน UI แยกเป็น T-08
+
+## เฟส 5: Prototype UI
+ลำดับ: T-08
+- จุดเริ่มเฟส: T-01, T-02, T-04 และ T-07 เสร็จแล้ว; Backend ของ UC-16 คงเดิมและไม่ต้องแก้เพื่อทำ Prototype
+- ขอบเขต: Frontend React ใช้ Mock Data ภายในเท่านั้น; ไม่เรียก API/Database และไม่แก้ไฟล์ Backend
+- จุดเข้า: `/payments`; path `/` ต้องยังแสดงหน้าเดิม
+- คำสั่งทดสอบ: `cd frontend && npm test && npm run build`
+
+### จุดตรวจเฟส 5
+- Given: เปิด `/payments` และเห็นข้อความกำกับข้อมูลสมมติ
+- When: ค้นหาชื่อ/worker ID/payment reference, กรองสถานะ และเปิดรายละเอียด
+- Then: ตารางและ summary แสดงผลตรงกับ Mock Data; ค้นหาชื่อแบบ partial และ ID/reference แบบ exact; ยอดเงินกับสถานะอยู่รูปแบบเดียวกัน; ไม่มีการแก้ไขยอดหรือสถานะ
+- ตรวจเพิ่ม: หน้าเดิมที่ `/` ยังเปิดได้; ไม่มี API/Database call; tests และ production build ผ่าน

@@ -413,3 +413,23 @@
 - UC-16 Backend พร้อมตรวจรับ; ข้อมูลเป็น Mock Finance Data และไม่มีการอ้างว่าเชื่อมระบบการเงินจริง
 - T-07 test/doc files: `backend/tests/test_AC_PAY_01.py`, `backend/tests/test_AC_PAY_04.py`, `backend/tests/test_AC_PAY_05.py`, `specs/16-16-track-payment/spec.md`, `specs/16-16-track-payment/plan.md`, `specs/16-16-track-payment/tasks.md`, `prompt-log.md`
 - ลบไฟล์ SQLite `backend/dev.db` และไฟล์ response ชั่วคราวที่สร้างระหว่าง live verification หลังตรวจสอบ Audit Log เสร็จแล้ว
+
+## 2569-11-05 ปรับขอบเขต UC-16 เพื่อเพิ่ม Prototype UI
+
+- ตามคำยืนยันของทีม/อาจารย์ เพิ่มงาน Prototype UI ของ UC-16 โดยคง Backend API และ Business Logic ที่เสร็จแล้วทั้งหมด
+- ปรับ `spec.md`, `plan.md` และ `tasks.md` ให้ระบุ UI เป็นงานแยก; Frontend ใช้ Mock Data ภายในเท่านั้น ไม่เรียก API/Database และระบุชัดว่าเป็นข้อมูลสมมติ ไม่ใช่ข้อมูลการเงินจริง
+- เพิ่ม T-08 แยกจาก T-01 ถึง T-07; กำหนด Dependency เป็น T-01, T-02, T-04 และ T-07 ซึ่งเสร็จแล้ว
+- ตรวจโครงสร้าง Frontend: ใช้ React/Vite/Tailwind/Vitest ที่มีอยู่แล้ว; `App.jsx` ปัจจุบันแสดงหน้า Application Status ที่ path `/` และไม่มี Router
+- ขอบเขต T-08 ระบุไฟล์ Frontend ที่จะแตะไว้ชัดเจน; เพิ่มทางเข้า `/payments` โดยคง path `/` และไม่ติดตั้ง package
+- ยังไม่ Implement UI ในขั้นตอนปรับเอกสารนี้; T-08 อยู่สถานะ `พร้อมทำ` หลังตรวจ Dependency และขอบเขตแล้ว
+
+## 2569-11-05 /implement T-08: Prototype UI UC-16
+
+- Dependency ที่ตรวจ: T-01, T-02, T-04 และ T-07 เป็น `เสร็จ`; T-08 ระบุไฟล์ที่แตะและเงื่อนไขเสร็จเมื่อครบก่อนเริ่ม
+- Implement เฉพาะ Frontend: เพิ่ม `/payments` โดยคง path `/` เป็นหน้า Application Status; ใช้ Mock Data ภายใน Frontend, ไม่มี API/Database call และติดป้ายข้อมูลสมมติชัดเจน
+- UI เป็น Read-only; summary แสดงยอดจาก Mock Data ทั้งชุด; ค้นหาชื่อแบบ partial และ worker ID/payment reference แบบ exact; กรองสถานะ; เปิดรายละเอียด; แสดงยอดเงินกับสถานะในค่าเดียว
+- ไฟล์ T-08: `frontend/src/App.jsx`, `frontend/src/mocks/paymentTrackingData.js`, `frontend/src/pages/PaymentTrackingPage.jsx`, `frontend/src/pages/PaymentTrackingPage.test.jsx`
+- Frontend tests: `npm test -- --no-cache` -> 11 passed, 1 todo (5 files passed); T-08 tests 6 passed
+- Build: `npm run build` -> ผ่าน; Backend regression `PYTHONDONTWRITEBYTECODE=1 pytest` -> 54 passed, 1 warning เดิม
+- Browser verification: `/payments` ตอบ 200; ตรวจหน้า UI และทดลองค้นหา, กรองสถานะ UNPAID และเปิดรายละเอียดได้; ไม่เรียก API
+- การตรวจไม่พบคำถามค้างสำหรับ T-08; สถานะเปลี่ยนเป็น `เสร็จ รอทีมตรวจ`; ไม่ Commit หรือ Push
