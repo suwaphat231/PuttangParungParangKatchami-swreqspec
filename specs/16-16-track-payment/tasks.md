@@ -48,7 +48,7 @@
 - รองรับ: FR-PAY-01, FR-PAY-02
 - ตรวจด้วย: AC-PAY-03
 - ไฟล์ที่แตะ: `backend/app/main.py`, `backend/app/payments/router.py` (สร้าง), `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_03.py` (สร้าง)
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - ต้องทำหลัง: T-01, T-03
 - เงื่อนไขค้นหา: `worker_id` exact match, `worker_name` partial match, `payment_reference` exact match
 - ข้อจำกัด: API อ่านอย่างเดียวและต้องระบุ `data_source=MOCK` เมื่อใช้ provider จำลอง; ไม่มี Frontend/UI
@@ -58,7 +58,7 @@
 - รองรับ: FR-PAY-02, FR-PAY-03
 - ตรวจด้วย: AC-PAY-01, AC-PAY-02
 - ไฟล์ที่แตะ: `backend/app/payments/router.py`, `backend/app/payments/service.py`, `backend/tests/test_AC_PAY_01.py` (สร้าง), `backend/tests/test_AC_PAY_02.py`
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ
 - ต้องทำหลัง: T-02, T-03, T-05
 - ข้อจำกัด: API อ่านอย่างเดียว ไม่มีการแก้ไขยอดเงินหรือเปลี่ยนสถานะ; แสดง source เป็น MOCK ตามจริง
 - เสร็จเมื่อ: API คืนสถานะล่าสุดตาม AC-PAY-01 และ flag รายการตาม AC-PAY-02 โดยไม่แก้ข้อมูลต้นทาง และ test ผ่าน
@@ -67,7 +67,7 @@
 - รองรับ: FR-PAY-01 ถึง FR-PAY-05 และ NFR-SEC-01, NFR-AUD-01
 - ตรวจด้วย: AC-PAY-01 ถึง AC-PAY-05
 - ไฟล์ที่แตะ: `backend/tests/test_T01_payment_contract.py`, `backend/tests/test_AC_PAY_01.py`, `backend/tests/test_AC_PAY_02.py`, `backend/tests/test_AC_PAY_03.py`, `backend/tests/test_AC_PAY_04.py` (สร้าง), `backend/tests/test_AC_PAY_05.py` (สร้าง)
-- สถานะ: รอ T-01 ถึง T-06
+- สถานะ: เสร็จ
 - ต้องทำหลัง: T-01, T-02, T-03, T-04, T-05, T-06
 - เสร็จเมื่อ: API tests ครอบคลุม AC-PAY-01 ถึง AC-PAY-05 และยืนยัน NFR-SEC-01/NFR-AUD-01 ผ่านทั้งหมด; ไม่มี test หรือข้อความใดอ้าง Mock Finance Data ว่าเป็นข้อมูลจริง
 
@@ -89,7 +89,7 @@
 - Given: test ตั้ง `APP_ENV=test` พร้อม server-side token mapping ของ HR, Manager, Executive, Student และ Worker
 - When: เรียก test route ด้วย token ที่ถูกต้อง/ไม่ถูกต้อง และตรวจ `payment_audit_logs`
 - Then: HR/Manager/Executive ได้รับอนุญาต; Student/Worker และคำขอไม่มี token ถูกปฏิเสธ; ทุกผลมี user ID (ถ้าระบุตัวตนได้), เวลา, resource และผล ALLOWED/DENIED โดยไม่มี token ในตาราง
-- ข้อจำกัด: T-03 ยังไม่เปิด HTTP payment endpoint ใน app จริง; การตรวจผ่าน test route จนกว่า T-05/T-06 จะเพิ่ม API
+- ข้อจำกัด ณ จุดตรวจเฟส 2: T-03 ทดสอบผ่าน test route; endpoint จริงเพิ่มภายหลังในเฟส 3 และใช้ authorization dependency เดียวกัน
 
 ## เฟส 3: Read-only Backend API
 ลำดับ: T-05 → T-06
@@ -106,3 +106,6 @@
 ## เฟส 4: ตรวจรับ
 ลำดับ: T-07
 - จุดเริ่มเฟส: หลัง T-01 ถึง T-06 เสร็จและผ่านการตรวจของทีม
+- ผลตรวจ: AC-PAY-01 ถึง AC-PAY-05 และ NFR-SEC-01/NFR-AUD-01 ผ่าน acceptance tests; Backend ทั้งชุด 54 passed, 1 warning; Frontend regression 8 passed, 1 todo
+- Live API: `/payments`, `/payments/{payment_id}` และ `/payments/follow-up` ตอบ 200 ตาม contract; `payment_audit_logs` มี 3 ALLOWED และ 1 DENIED จากการตรวจ live โดยไม่มีข้อมูล token
+- ขอบเขต: ใช้ Mock Finance Data (`data_source=MOCK`) เท่านั้น; ไม่มี integration ระบบการเงินจริงและไม่มี Frontend/UI ของ UC-16

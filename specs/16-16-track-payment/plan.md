@@ -50,4 +50,4 @@ Spec Target: [specs/16-16-track-payment/spec.md](specs/16-16-track-payment/spec.
 - [x] กำหนดการพัฒนารอบนี้เป็น Backend-only
 - [x] ยืนยัน demo-only server-side bearer token mapping ผ่าน environment สำหรับ local/test และปิดใน production
 - [x] ยืนยันตาราง Audit Log แยกสำหรับ UC-16
-- [ ] ยืนยัน endpoint path ก่อน T-05
+- [x] ยืนยัน endpoint path ก่อน T-05

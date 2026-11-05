@@ -1,5 +1,8 @@
 # AC-PAY-01: อ่านสถานะล่าสุดและข้อมูลการเงินพร้อม timezone (FR-PAY-02)
 import json
+from decimal import Decimal
+
+import pytest
 
 from app import config
 from app.payments.mock_finance import get_mock_finance_records
@@ -51,13 +54,28 @@ def test_AC_PAY_01_requires_authorized_user(client):
     assert response.status_code == 401
 
 
-def test_AC_PAY_01_status_endpoint_is_read_only(client, monkeypatch):
+@pytest.mark.parametrize(
+    ("method", "path"),
+    [
+        ("POST", "/payments"),
+        ("PUT", "/payments/MOCK-PAY-001"),
+        ("PATCH", "/payments/MOCK-PAY-001"),
+        ("DELETE", "/payments/MOCK-PAY-001"),
+        ("POST", "/payments/follow-up"),
+        ("PUT", "/payments/follow-up"),
+        ("DELETE", "/payments/follow-up"),
+    ],
+)
+def test_AC_PAY_01_payment_apis_are_read_only(client, monkeypatch, method, path):
     headers = _authorize_payment_access(monkeypatch)
 
-    response = client.put(
-        "/payments/MOCK-PAY-001",
+    response = client.request(
+        method,
+        path,
         json={"finance_status": "UNPAID", "amount": 1},
         headers=headers,
     )
 
     assert response.status_code == 405
+    assert get_mock_finance_records()[0].finance_status.value == "PAID"
+    assert get_mock_finance_records()[0].amount == Decimal("15000.00")

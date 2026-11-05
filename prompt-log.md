@@ -399,3 +399,17 @@
 - `git diff --check` ผ่าน; ไม่มีการแก้ Frontend; ทุก route คืนข้อมูลจาก Mock Finance Data ที่ติดป้าย `MOCK`
 - สถานะ T-06: `เสร็จ รอทีมตรวจ`; เพิ่มจุดตรวจเฟส 3 พร้อมคำสั่งรันและ Given/When/Then
 - หยุดที่จุดตรวจเฟส 3 ตาม workflow; ยังไม่เริ่ม T-07/เฟส 4
+
+## 2569-11-05 ตรวจรับเฟส 3 และ /implement T-07: ปิด UC-16 Backend
+
+- Live backend ใช้คำสั่งใน tasks.md ที่ `APP_ENV=local` และ demo HR token; `GET /payments?worker_id=MOCK-WORKER-001`, `GET /payments/MOCK-PAY-001` และ `GET /payments/follow-up` ตอบ 200
+- Responses ตรวจแล้ว: filter คืน MOCK-WORKER-001; detail คืน amount `15000.00`, THB, PAID, เวลา `+07:00`, `data_source=MOCK`; follow-up คืน UNPAID/ABNORMAL พร้อม `requires_follow_up=true`
+- คำขอ live ที่ไม่มี token ตอบ 401; DB `payment_audit_logs` มี 3 ALLOWED และ 1 DENIED พร้อม actor/resource/time/result และไม่มีคอลัมน์ token
+- ปิด backend หลังตรวจ; ใช้ local SQLite `backend/dev.db` สำหรับการสาธิต ไม่ใช่ข้อมูลเงินจริง
+- T-07 เพิ่ม regression ครอบคลุม methods ที่ไม่ใช่ GET (405), role HR/Manager/Executive allowed, Student/Worker/missing token denied บน payment routes จริง และ audit ของทุก route
+- Backend final: `PYTHONDONTWRITEBYTECODE=1 pytest` -> 54 passed, 1 warning (Starlette TestClient/httpx deprecation)
+- Frontend regression: `npx vitest run --config vitest.baseline.config.js` -> 8 passed, 1 todo (5 files passed); config ใช้ cache `/tmp` และลบหลังรัน โดยไม่แก้ Frontend ที่ค้าง
+- `git diff --check` ผ่าน; T-05/T-06 เปลี่ยนเป็น `เสร็จ` หลัง live verification; T-07 เปลี่ยนเป็น `เสร็จ` หลัง test suite ผ่าน; AC-PAY-01 ถึง AC-PAY-05 ถูกทำเครื่องหมายผ่านใน spec
+- UC-16 Backend พร้อมตรวจรับ; ข้อมูลเป็น Mock Finance Data และไม่มีการอ้างว่าเชื่อมระบบการเงินจริง
+- T-07 test/doc files: `backend/tests/test_AC_PAY_01.py`, `backend/tests/test_AC_PAY_04.py`, `backend/tests/test_AC_PAY_05.py`, `specs/16-16-track-payment/spec.md`, `specs/16-16-track-payment/plan.md`, `specs/16-16-track-payment/tasks.md`, `prompt-log.md`
+- ลบไฟล์ SQLite `backend/dev.db` และไฟล์ response ชั่วคราวที่สร้างระหว่าง live verification หลังตรวจสอบ Audit Log เสร็จแล้ว

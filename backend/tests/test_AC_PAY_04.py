@@ -102,3 +102,55 @@ def test_AC_PAY_04_does_not_accept_role_from_request(db, monkeypatch):
     response = client.get("/payments/payment-1", headers={"X-Role": "HR"})
 
     assert response.status_code == 401
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/payments", "/payments/MOCK-PAY-001", "/payments/follow-up"],
+)
+@pytest.mark.parametrize(
+    ("role", "user_id"),
+    [("HR", "hr-1"), ("MANAGER", "manager-1"), ("EXECUTIVE", "executive-1")],
+)
+def test_AC_PAY_04_real_payment_apis_allow_authorized_roles(
+    client,
+    monkeypatch,
+    path,
+    role,
+    user_id,
+):
+    _set_demo_auth(
+        monkeypatch,
+        {"allowed-token": {"user_id": user_id, "role": role}},
+    )
+
+    allowed = client.get(path, headers={"Authorization": "Bearer allowed-token"})
+
+    assert allowed.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/payments", "/payments/MOCK-PAY-001", "/payments/follow-up"],
+)
+@pytest.mark.parametrize(
+    ("role", "user_id"),
+    [("STUDENT", "student-1"), ("WORKER", "worker-1")],
+)
+def test_AC_PAY_04_real_payment_apis_deny_unauthorized_roles(
+    client,
+    monkeypatch,
+    path,
+    role,
+    user_id,
+):
+    _set_demo_auth(
+        monkeypatch,
+        {"denied-token": {"user_id": user_id, "role": role}},
+    )
+
+    denied = client.get(path, headers={"Authorization": "Bearer denied-token"})
+    missing = client.get(path)
+
+    assert denied.status_code == 403
+    assert missing.status_code == 401
