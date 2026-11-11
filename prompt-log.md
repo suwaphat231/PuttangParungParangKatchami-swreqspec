@@ -433,3 +433,67 @@
 - Build: `npm run build` -> ผ่าน; Backend regression `PYTHONDONTWRITEBYTECODE=1 pytest` -> 54 passed, 1 warning เดิม
 - Browser verification: `/payments` ตอบ 200; ตรวจหน้า UI และทดลองค้นหา, กรองสถานะ UNPAID และเปิดรายละเอียดได้; ไม่เรียก API
 - การตรวจไม่พบคำถามค้างสำหรับ T-08; สถานะเปลี่ยนเป็น `เสร็จ รอทีมตรวจ`; ไม่ Commit หรือ Push
+
+## 2569-11-11 ตรวจทุกโฟลเดอร์ใน specs ด้วย /verify
+
+- ตรวจ `specs/` ทั้งหมด 23 ฟีเจอร์ หลังลบ `specs/001-booking/` แล้ว โดยอ่าน spec, plan, tasks และไฟล์ test/rtm ที่มีอยู่จริง รวมถึงตรวจโค้ดใน `backend/app/` และ `frontend/src/`
+- Backend: `cd backend && PYTHONDONTWRITEBYTECODE=1 pytest -v` -> 54 passed, 0 failed, 1 warning
+- Frontend: `cd frontend && npm test -- --run` -> 12 passed, 0 failed, 1 todo
+- พบ implementation ที่ตรงกับสเปกจริงหลัก ๆ ใน UC-05 (เฉพาะการบันทึกผล AC-REG-05), UC-03 (Frontend บางส่วน ไม่มี Backend endpoint), และ UC-16 (Backend + Prototype UI)
+- UC-13, UC-14 และ UC-15 มี tasks ระบุว่าเสร็จ แต่ไม่พบไฟล์โค้ดตาม tasks ใน repository; จัดเป็นเอกสารไม่สอดคล้องกับ implementation
+- UC-19, UC-12 และ UC-15 มี prototype HTML แต่ยังไม่ใช่ระบบจริง/ไม่มี test integration
+- เอกสาร `test-cases.md` และ `rtm.md` มีครบเฉพาะ UC-03 และ UC-05; อีก 21 โฟลเดอร์ยังขาดอย่างน้อยสองไฟล์นี้
+- พบ conflict markers ที่ยังค้างใน `specs/004-login/spec.md`
+- ไม่แก้โค้ด, test หรือ spec ตามขอบเขต `/verify`; รายละเอียดผลตรวจรายงานในแชต
+
+## 2569-11-11 สร้าง RTM ให้ทุกฟีเจอร์
+
+- ตามคำสั่งของทีม สร้าง `rtm.md` ให้ครบทั้ง 22 โฟลเดอร์ที่ยังอยู่ใน `specs/` รวมไฟล์เดิมของ UC-03 และ UC-05
+- RTM ใหม่ระบุการตามรอย requirement ไปยัง AC, task, โค้ด และ test พร้อมสถานะ `ครบ`, `ยังไม่ถึง` หรือ `ช่องโหว่` ตามหลักฐานที่ตรวจพบ
+- แยก Prototype/Mock ออกจาก implementation จริง และระบุฟีเจอร์ที่ tasks ระบุเสร็จแต่ไม่พบไฟล์โค้ด/test ตามที่อ้าง
+- ไม่แก้ `spec.md`, `plan.md`, `tasks.md`, โค้ด หรือ test
+
+## 2569-11-11 สร้าง RTM แบบละเอียดทีละฟีเจอร์: UC-01
+
+- เริ่มทำทีละฟีเจอร์ตามคำสั่งของทีม โดยปรับ [specs/001-apply-lab-boy/rtm.md](specs/001-apply-lab-boy/rtm.md) ใหม่ทั้งหมด
+- แยก 1 แถวต่อ 1 FR/NFR/Constraint, ระบุ AC, task, โค้ดและ test ตามหลักฐานที่พบจริง
+- ระบุโค้ด booking/status/announcement ที่พบว่าเป็นคนละฟีเจอร์ในตารางตามรอยย้อนกลับ
+- ยังไม่แก้โค้ด, test, spec, plan หรือ tasks
+
+## 2569-11-11 ลบสเปก UC-01 ที่ไม่เกี่ยวข้อง
+
+- ตามคำสั่งของทีม ลบโฟลเดอร์ `specs/001-booking/` ซึ่งไม่เกี่ยวข้องกับงานนี้
+- ไม่ได้ลบหรือแก้โค้ด Backend ส่วน booking ที่อยู่นอกโฟลเดอร์สเปก
+
+## 2569-11-11 ทำ RTM แบบละเอียดต่อเนื่อง
+
+- ทำ RTM แบบละเอียดต่อสำหรับ UC-02, UC-07, UC-08, UC-17 และ UC-18 โดยแยก requirement, AC, task, โค้ด และ test เป็นราย ID
+- ตรวจยืนยันว่า RTM อยู่ใน path ของ repository ครบ 22 โฟลเดอร์ (`22/22`) และลบไฟล์ที่เผลอสร้างนอก repository แล้ว
+- ระบุสถานะ `รอ Q-01` ใน UC-02 และ UC-18 ตาม Open Question ที่ tasks ระบุไว้
+- ระบุว่าโค้ด payment/audit และ announcement form ที่พบเป็นคนละ Use Case ไม่ใช่ implementation ของ UC-17/UC-18/UC-02
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks; `git diff --check` ผ่าน
+
+## 2569-11-11 ตรวจแก้ RTM UC-02 ตามข้อทักท้วง
+
+- แก้สถานะ Q-01 จาก `รอ Q-01` เป็น `ยังไม่ถึง` เพราะ `tasks.md` ระบุว่าทีมเลือกสมมติฐานรองรับการกรองด้วยรายวิชาและภาคการศึกษาแล้ว
+- เพิ่ม F-001 กรณี T-01 ระบุเสร็จแต่ไม่พบ model/service ที่ task อ้าง
+- เพิ่ม F-002 เพราะ NFR-PERF-01 และ NFR-USE-01 ไม่มี AC โดยตรง และปรับสถานะเป็น `ช่องโหว่`
+- เพิ่ม F-003 เพื่อแยก `AnnouncementForm.jsx` ของ UC-15 ออกจาก implementation ของ UC-02
+
+## 2569-11-11 ตรวจ RTM ทุกฟีเจอร์และแก้รายการที่ไม่ตรงกติกา
+
+- ตรวจ RTM ครบ 22 ฟีเจอร์เทียบกับ requirement IDs ใน `spec.md`; ไม่พบ requirement ID ที่หายจาก RTM และไม่พบแถวที่รวมหลาย requirement ID เป็นแถวเดียว
+- แก้ UC-04 ให้แยก NFR/Constraint และ task ที่มีจริง พร้อมเพิ่มข้อค้นพบเรื่อง conflict markers, requirement ที่ไม่มี AC และ T-01 ที่ระบุเสร็จแต่ไม่พบ implementation
+- แก้ UC-06, UC-09, UC-10, UC-12 และ UC-21 เรื่องการใช้สถานะ `ช่องโหว่` ผิดประเภท, AC ที่ไม่มีใน traceability และแถว FR/NFR ที่ไม่ครบ
+- เพิ่มตารางข้อค้นพบตาม template ให้ RTM ที่เดิมเขียนเป็นข้อความสรุป และเพิ่ม F-ID สำหรับข้อผิดพลาดใน task/spec ที่ตรวจพบ
+- ปรับ UC-19 ให้ prototype ที่ task ยังไม่เสร็จเป็น `ยังไม่ถึง` ไม่ใช่ข้อค้นพบจาก test
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks; `git diff --check` ผ่าน
+
+## 2569-11-11 ตรวจยืนยันว่า RTM อิงจาก spec ทุกฟีเจอร์
+
+- ตรวจ RTM ครบ 22 ฟีเจอร์ โดยเทียบ requirement ID, AC ID และ Q ID ในตารางตามรอยไปข้างหน้ากับ `spec.md` และ task references กับ `tasks.md`
+- แก้ UC-01 ที่อ้าง Q-01 ถึง Q-04 จาก `tasks.md` แต่ไม่มีใน `spec.md` โดยเปลี่ยนเป็น `ยังไม่ถึง` และเพิ่ม F-001 เรื่องอ้าง ID ผิดเรื่อง
+- แก้ UC-05 ให้ตารางข้อค้นพบมี header ครบตาม template
+- แก้ UC-13 ไม่ให้อ้าง AC-PERF-01 ซึ่งไม่มีใน `spec.md` และเพิ่ม F-002
+- ยืนยันว่า ID ของฟีเจอร์อื่นที่อยู่เฉพาะในตาราง “ตามรอยย้อนกลับ” เป็นหลักฐานว่าโค้ดนั้นเป็นคนละ Use Case ไม่ใช่ requirement ที่เพิ่มในตารางตามรอยไปข้างหน้า
+- ตรวจแล้ว requirement ID ในทุก `spec.md` มีอยู่ใน RTM และ `git diff --check` ผ่าน
