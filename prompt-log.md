@@ -543,3 +543,40 @@
 - แก้ UC-13 ไม่ให้อ้าง AC-PERF-01 ซึ่งไม่มีใน `spec.md` และเพิ่ม F-002
 - ยืนยันว่า ID ของฟีเจอร์อื่นที่อยู่เฉพาะในตาราง “ตามรอยย้อนกลับ” เป็นหลักฐานว่าโค้ดนั้นเป็นคนละ Use Case ไม่ใช่ requirement ที่เพิ่มในตารางตามรอยไปข้างหน้า
 - ตรวจแล้ว requirement ID ในทุก `spec.md` มีอยู่ใน RTM และ `git diff --check` ผ่าน
+
+## 2569-11-12 สร้าง test cases UC-15
+
+- คำสั่งจากทีม: `/testcases 15-15-create-recruitment-announcement`
+- คำถามที่ AI ถาม: ต้องการสร้าง test cases สำหรับ AC ID ใด
+- คำตอบของทีม: AC-ANN-01, AC-ANN-02, AC-ANN-03, AC-ANN-04
+- โหมด: ร่าง; สร้าง 9 แถว สถานะ "ร่าง" สำหรับ AC-ANN-01 ถึง AC-ANN-03 ใน `specs/15-15-create-recruitment-announcement/test-cases.md`; ยังไม่เขียนหรือรัน test
+- ข้อสังเกต: AC-ANN-04 ไม่มีใน spec.md จึงยังไม่สร้าง test case ให้; plan.md ระบุ AC-ANN-03 เป็นเรื่อง Expired แต่ spec.md ระบุ AC-ANN-03 เป็นเรื่อง audit log; แถว AC-ANN-02-3, AC-ANN-03-3 และ AC-ANN-01-3 ระบุผลที่ spec ไม่ได้กำหนดครบถ้วนไว้เป็นคำถาม
+
+## 2569-11-12 ตรวจ React Prototype และปรับ test cases UC-15
+
+- คำสั่งจากทีม: ตรวจ Implementation React Prototype จริง, ปรับ test cases ทั้ง 9 ให้เป็น frontend tests โดยไม่เปลี่ยน Requirement, และรายงานข้อผิดพลาดก่อนแก้ Implementation
+- คำถามที่ AI ถาม: จะคง expected behavior ตาม spec แล้วบันทึกช่องว่างของ Prototype หรือจำกัด tests เฉพาะ render/callback ที่มีอยู่
+- คำตอบของทีม: คง expected behavior ตาม spec และบันทึกสิ่งที่ Prototype ยังไม่มีเป็น implementation gaps
+- ผลตรวจ: มี Vitest และ React Testing Library ใน `frontend/package.json`; `AnnouncementForm.jsx` เป็น component นำเสนอที่เรียก callbacks ซึ่งส่งเข้ามา ไม่มีผู้เรียกใช้ใน `frontend/src`; ไม่พบ validation, persistence/state transition, Student role guard หรือ audit log ใน React Prototype
+- สิ่งที่แก้: เปลี่ยนวิธีตรวจทั้ง 9 แถวจาก pytest เป็น Vitest + React Testing Library; เพิ่มกรณี Student publish ตาม NFR-SEC-01; คง AC เดิมและทุกแถวยังเป็น "ร่าง"
+- ผล test: ไม่ได้เขียนหรือรัน test code เพราะ test cases ยังเป็นร่างและ Prototype ไม่มี flow ให้ทดสอบ expected behavior เหล่านี้; ไม่แก้ Implementation ตามคำสั่ง
+- คำถามค้าง: spec.md ไม่กำหนดผลเมื่อข้อมูลครบและผู้ใช้กดเผยแพร่; plan.md ระบุ Published แต่ต้องให้ทีมยืนยันก่อนใช้เป็น expected result
+
+## 2569-11-12 ปรับเอกสาร UC-15 ให้ใช้ AC-ANN-01 ถึง AC-ANN-04
+
+- คำสั่งจากทีม: ยึด Spec v2; แยก AC-ANN-03 สำหรับ audit log และ AC-ANN-04 สำหรับ Expired อัตโนมัติ; เพิ่มผลเมื่อข้อมูลครบแล้ว Publish; ปรับ Plan, Tasks, RTM และ test cases ให้ตรงกัน; คง implementation gap และ test cases สถานะร่าง; ห้ามแก้โค้ดหรือรันทดสอบ
+- สิ่งที่แก้: เพิ่ม Expected Result `Published` และ Student publish denial ใน AC-ANN-02; กำหนด AC-ANN-04 และ lifecycle constraint; ปรับ NFR-SEC-01, traceability และแผน/รายการ task ให้ใช้ T-01 ถึง T-08 ตรงกัน
+- Test cases: แยกตาม AC-ANN-01 ถึง AC-ANN-04 รวม 13 แถว ทุกแถวยังคงสถานะ "ร่าง"; ไม่เปลี่ยนผลทดสอบและไม่ได้สร้าง test code
+- RTM: คง F-001 เรื่อง implementation gap, บันทึก mock behavior ใน `prototype.html` เทียบกับระบบจริง และเพิ่ม F-002 เรื่อง Student ยังเห็น Draft ในรายการ mock
+- ผลตรวจ Prototype: `prototype.html` มี Draft/validation/Publish/role guard/audit log แบบ in-memory; ไม่พบ persistent storage, immutable audit storage หรือ Scheduled Job; React `AnnouncementForm` ยังไม่เชื่อมกับ `App`
+- ผลตรวจเอกสาร: AC ทุกข้อเชื่อมกับ task และ RTM; T-05 อ้าง AC-ANN-04; NFR-SEC-01 ครอบคลุม Student; ไม่ได้แก้ source code, React Prototype หรือ Implementation
+- ผล test: ไม่ได้รันตามคำสั่ง; ตรวจ `git diff --check` หลังแก้ไข
+- สิ่งที่ต้องให้ทีมยืนยัน: cutoff/time zone และความถี่ของ Scheduled Job สำหรับ end_date; ความหมาย/การแสดงข้อมูล Draft ที่ Student เห็นใน mock UI
+
+## 2569-11-12 ระบุเวลา Expired และสถานะ T-05 ตามข้อสรุปทีม
+
+- คำสั่งจากทีม: กำหนดเวลาหมดอายุ 23:59:59 น. Asia/Bangkok (UTC+7), Scheduled Job ทุกวัน 00:05 น. Asia/Bangkok, เปลี่ยน T-05 เป็นรอดำเนินการ, เพิ่ม test cases สำหรับเวลา Expired และ Student ต้องไม่เห็น Draft; ห้ามแก้ Prototype/Implementation หรือรันทดสอบ
+- สิ่งที่แก้: ระบุเวลา/time zone ใน spec, plan, tasks และ RTM; เปลี่ยนสถานะ T-05 เป็น "รอดำเนินการ / ยังไม่ Implement"; เพิ่ม TC-ANN-01-4 และ TC-ANN-04-4; ปรับ boundary cases ให้ตรงกับเวลาที่ทีมกำหนด
+- Test cases: มี 15 แถว ทุกแถวยังคงสถานะ "ร่าง"; ไม่เปลี่ยนผล Pass/Fail และไม่สร้าง test code
+- Implementation Gap: คง F-001 เรื่องไม่มี Scheduler ใน Implementation/RTM และ F-002 เรื่อง HTML Prototype ยังแสดง Draft ให้ Student; ไม่แก้ `prototype.html`, Source Code หรือ React Prototype
+- ผล test: ไม่ได้รันตามคำสั่ง; จะตรวจเฉพาะ `git diff --check` และความสอดคล้องของเอกสาร

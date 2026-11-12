@@ -699,7 +699,6 @@
         document.getElementById("saved-at").textContent = timeLabel(item.updated_at);
         document.getElementById("form-heading").textContent = `รายละเอียดประกาศ · ${item.id}`;
         formMessage.className = "notice";
-        formMessage.innerHTML = `<span class="notice-icon" aria-hidden="true">ℹ</span><div>กำลังแก้ไขข้อมูลจำลอง <strong>${escapeHtml(item.id)}</strong> · การบันทึกและประวัติอยู่ในหน้านี้เท่านั้น</div>`;
         renderRecords();
         renderAudit(item);
       }
