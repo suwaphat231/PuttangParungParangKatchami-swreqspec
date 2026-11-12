@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 
+const GRADE_OPTIONS = ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D'];
+
 const announcement = {
-  title: 'รับสมัคร Lab Boy ประจำห้องปฏิบัติการ',
-  department: 'ภาควิชาวิทยาการคอมพิวเตอร์',
-  period: '1–30 พฤศจิกายน 2569',
-  capacity: 12,
+  title: 'Computer Programming 1',
+  teacher: 'อาจารย์ ปัญญนัท อ้นพงษ์',
+  officeRoom: 'ว.1 ห้อง 1227',
+  time: 'อังคาร 13:00–14:45',
+  period: '21 พฤศจิกายน 2569',
+  capacity: 10,
   requirements: [
-    'เป็นนักศึกษาที่มีสถานะปกติ',
-    'ข้อมูลบัญชีผู้ใช้ต้องครบถ้วนก่อนยืนยัน',
+    'เป็นนักศึกษาที่ผ่านการเรียนรายวิชา Computer Programming 1แล้ว',
+    'ได้เกรด B ขึ้นไปในรายวิชา Computer Programming 1',
   ],
 };
 
@@ -142,7 +146,7 @@ export default function ApplyLabBoyPage() {
           <section aria-labelledby="announcement-title" className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="border-b border-slate-200 p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="text-sm font-semibold text-blue-700">ประกาศที่เปิดรับสมัคร</p>
+                  <p className="text-sm font-semibold text-blue-700">รับสมัคร Labboy รายวิชา</p>
                   <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
                     เปิดรับสมัคร
                   </span>
@@ -150,12 +154,14 @@ export default function ApplyLabBoyPage() {
                 <h2 id="announcement-title" className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
                   {announcement.title}
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">{announcement.department}</p>
+                <p className="mt-1 text-sm text-slate-500">ผู้สอน {announcement.teacher}</p>
+                <p className="mt-1 text-sm text-slate-500">ห้อง {announcement.officeRoom}</p>
+                <p className="mt-1 text-sm text-slate-500">เวลา {announcement.time}</p>
               </div>
 
               <div className="grid gap-4 p-5 sm:grid-cols-2 sm:p-6">
                 <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs font-medium text-slate-500">ช่วงเวลารับสมัคร</p>
+                  <p className="text-xs font-medium text-slate-500">เวลาปิดรับสมัคร</p>
                   <p className="mt-1 font-semibold text-slate-900">{announcement.period}</p>
                 </div>
                 <div className="rounded-xl bg-slate-50 p-4">
@@ -227,7 +233,7 @@ export default function ApplyLabBoyPage() {
                 </div>
                 <div>
                   <label htmlFor="student-grade" className="mb-1.5 block text-sm font-medium text-slate-700">
-                    เกรดของนักศึกษา (A–F)
+                    เกรดของนักศึกษา
                   </label>
                   <select
                     id="student-grade"
@@ -240,7 +246,7 @@ export default function ApplyLabBoyPage() {
                     className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-slate-100"
                   >
                     <option value="">เลือกเกรด</option>
-                    {'ABCDEF'.split('').map((grade) => (
+                    {GRADE_OPTIONS.map((grade) => (
                       <option key={grade} value={grade}>{grade}</option>
                     ))}
                   </select>
@@ -248,31 +254,13 @@ export default function ApplyLabBoyPage() {
                     <p id="student-grade-error" className="mt-1 text-sm text-rose-700">{fieldErrors.grade}</p>
                   ) : (
                     <p id="student-grade-hint" className="mt-1 text-xs text-slate-500">
-                      กรอกและยืนยันเกรดตัวอักษร เกรดนี้ไม่ใช้ตัดสินสิทธิ์สมัคร
+                      กรอกเกรดของนักศีกษา
                     </p>
                   )}
                 </div>
               </div>
 
-            <div className="mt-4 max-w-sm">
-              <label htmlFor="demo-scenario" className="mb-1.5 block text-sm font-medium text-slate-700">
-                ผลจำลองเมื่อยืนยัน
-              </label>
-              <select
-                id="demo-scenario"
-                value={scenario}
-                disabled={Boolean(isApplied)}
-                onChange={(event) => {
-                  setScenario(event.target.value);
-                  setError('');
-                }}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-slate-100"
-              >
-                {scenarios.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
-            </div>
+           
 
             {error ? (
                 <p role="alert" className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
@@ -295,14 +283,9 @@ export default function ApplyLabBoyPage() {
                 <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <button
                     type="button"
-                    onClick={() => {
-                      setForm(initialForm);
-                      setFieldErrors({});
-                      setError('');
-                    }}
                     className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                   >
-                    คืนค่าข้อมูลตัวอย่าง
+                    ยกเลิก
                   </button>
                   <button
                     type="button"

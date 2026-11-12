@@ -30,10 +30,20 @@ test('test_prototype_AC_LB_02_shows_open_announcement_details_and_conditions', (
   expect(screen.queryByText('ขั้นตอนการสมัคร')).toBeNull();
   expect(screen.queryByText('สมัครแล้ว')).toBeNull();
   expect(screen.queryByText('8 / 12 คน')).toBeNull();
-  expect(screen.getByText('ช่วงเวลารับสมัคร').parentElement.textContent).toContain('1–30 พฤศจิกายน 2569');
-  expect(screen.getByText('จำนวนที่รับ').parentElement.textContent).toContain('12 คน');
-  expect(screen.getByText('เป็นนักศึกษาที่มีสถานะปกติ')).toBeTruthy();
+  expect(screen.getByText('เวลาปิดรับสมัคร').parentElement.textContent).toContain('21 พฤศจิกายน 2569');
+  expect(screen.getByText('จำนวนที่รับ').parentElement.textContent).toContain('10 คน');
+  expect(screen.getByText('ได้เกรด B ขึ้นไปในรายวิชา Computer Programming 1')).toBeTruthy();
   expect(screen.getByText('Prototype · ข้อมูลจำลอง')).toBeTruthy();
+});
+
+test('test_prototype_AC_LB_02_places_office_room_below_teacher_name', () => {
+  render(<ApplyLabBoyPage />);
+
+  const teacherName = screen.getByText('ผู้สอน อาจารย์ ปัญญนัท อ้นพงษ์');
+  const officeRoom = screen.getByText('ห้อง ว.1 ห้อง 1227');
+  expect(teacherName.parentElement).toBe(officeRoom.parentElement);
+  expect(teacherName.compareDocumentPosition(officeRoom) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(screen.queryByText(/ชั่วโมงปฏิบัติงาน/)).toBeNull();
 });
 
 test('test_prototype_AC_LB_01_and_11_confirms_once_with_a_single_application', () => {
@@ -65,6 +75,22 @@ test('test_prototype_AC_LB_04_and_06_rejects_missing_fields_and_allows_editing',
   expect(screen.getByText('กรุณาเลือกเกรดเพื่อยืนยัน')).toBeTruthy();
   selectGrade('C');
   expect(screen.queryByText('กรุณาเลือกเกรดเพื่อยืนยัน')).toBeNull();
+});
+
+test('test_prototype_AC_LB_06_shows_confirm_and_no_op_cancel_buttons', () => {
+  render(<ApplyLabBoyPage />);
+  const nameInput = screen.getByRole('textbox', { name: 'ชื่อ-นามสกุล' });
+  const gradeSelect = screen.getByRole('combobox', { name: 'เกรดของนักศึกษา (A–F)' });
+  fireEvent.change(nameInput, { target: { value: 'ชื่อที่แก้ไขแล้ว' } });
+  selectGrade('B');
+
+  fireEvent.click(screen.getByRole('button', { name: 'ยกเลิก' }));
+
+  expect(screen.getByRole('button', { name: 'ยืนยันการสมัคร' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'คืนค่าข้อมูลตัวอย่าง' })).toBeNull();
+  expect(nameInput.value).toBe('ชื่อที่แก้ไขแล้ว');
+  expect(gradeSelect.value).toBe('B');
+  expect(screen.queryByRole('dialog')).toBeNull();
 });
 
 test('test_prototype_AC_LB_05_and_10_does_not_create_an_application_on_failure_or_when_full', () => {
