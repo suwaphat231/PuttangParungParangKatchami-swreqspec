@@ -651,3 +651,115 @@
 - ตารางตามรอยไปข้างหน้า: ครบ 0, ยังไม่ถึง 15, รอ 0, ช่องโหว่ 4
 - ข้อค้นพบใหม่: F-002 เกณฑ์/รายการเกรดไม่ตรง ASM-07; F-003 แสดงเวลาปฏิบัติงานที่อยู่ใน Out of scope; F-004 กำหนดรูปแบบเลขใบสมัครและวันเวลาโดยไม่มีข้อกำหนดใน spec
 - คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้; ไม่แก้โค้ดหรือ test
+
+## 2569-11-12 23.32 คำสั่ง: ปรับ FR-MSG-02 ของ specs/022-notify-user
+
+- ทีมสั่ง: เลือกฟีเจอร์ 022 และปรับ FR-MSG-02 ให้ใช้เฉพาะ notification ภายในระบบ
+- ไฟล์ที่แก้: `specs/022-notify-user/spec.md`
+- ผลลัพธ์: ปรับ FR-MSG-02 ให้ระบุ notification ภายในระบบเท่านั้น และส่งให้ผู้ใช้ที่เปิดใช้งานและมีสิทธิ์รับการแจ้งเตือน
+- การตรวจสอบ: ตรวจทานเอกสารที่เกี่ยวข้องแล้ว; ไม่รันทดสอบเนื่องจากเป็นการแก้เอกสาร
+
+## 2569-11-13 00:13 /implement T-01 specs/019-check-work-time/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/schemas/calendar_check_request.py`, `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`
+- ไฟล์สถานะ/บันทึกที่แก้: `specs/019-check-work-time/tasks.md` (T-01 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 5 passed, 1 warning จาก Starlette/httpx deprecation
+- ผลลัพธ์: เพิ่มการรับและตรวจสอบ `startDate`/`endDate` ตามรูปแบบ ISO datetime ในตัวอย่าง plan และทดสอบ AC-CAL-01 ทั้งกรณีข้อมูลถูกต้อง ขาด และรูปแบบผิด
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-02 ขึ้นไปยังไม่ได้ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี Task ID ในคำสั่งแรก จึงถามทีมและได้รับคำตอบ T-01 ก่อนเริ่ม; ไม่ได้กำหนดกติกาปฏิทินหรือการตรวจช่วงซึ่งอยู่นอก T-01
+
+## 2569-11-13 00:17 /implement T-02 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-01 และยืนยัน policy สำหรับ T-02: ใช้ช่วง PDF 22 มิ.ย. 2569–5 ก.ค. 2570; การดึง ThailandFormats API แบบสดที่ผ่าน validation ถือเป็นข้อมูลปัจจุบันและบันทึกเวลาที่ดึง
+- ไฟล์ที่สร้าง: `backend/app/models/calendar_snapshot.py`, `backend/app/services/calendar_source.py`
+- ไฟล์ที่แก้: `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-01 เป็น "เสร็จ", T-02 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: เพิ่ม snapshot จาก PDF มหาวิทยาลัยปี 2569 และวันหยุดไทยที่ดึงตามปี ค.ศ.; ปฏิเสธช่วงนอกขอบเขต PDF และข้อมูล API ที่ผิด/ขาด/ปีไม่ตรง
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 12 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่แก้ `spec.md` หรือ `plan.md`; ไม่ได้ทำ T-03 เป็นต้นไป
+- สิ่งที่เกือบต้องเดา: ขอบเขตวันของ PDF และ freshness ของ API; ถามทีมและใช้คำตอบที่ยืนยันแล้ว
+
+## 2569-11-13 00:28 /implement T-03 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-02 ก่อนเริ่ม T-03
+- ไฟล์ที่สร้าง: `backend/app/services/calendar_overlap_service.py`
+- ไฟล์ที่แก้: `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-02 เป็น "เสร็จ", T-03 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: ตรวจ overlap แบบรวมวันเริ่มและวันสิ้นสุดกับช่วงห้ามจากปฏิทินมหาวิทยาลัยและวันหยุดไทย; partial-day overlap ถือว่า FAIL พร้อมเหตุผล; ไม่ overlap คืน PASS
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 15 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-04 ขึ้นไปยังไม่ได้ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี; ยึดกฎ full-day และ partial overlap ที่ทีมยืนยันใน Q-01/Q-02
+
+## 2569-11-13 00:31 /implement T-04 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-03 ก่อนเริ่ม T-04 และกำหนดให้ T-04 สร้าง response service; T-05 จะสร้าง endpoint ที่ `/calendar/check`
+- ปรับรายละเอียด T-04 ใน `tasks.md` ให้ไม่รวม endpoint ซึ่งเป็นงานของ T-05; ไม่เปลี่ยน ID และไม่แก้ `spec.md`/`plan.md`
+- ไฟล์ที่แก้: `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-03 เป็น "เสร็จ", T-04 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: สร้าง JSON payload ที่มี `status`, `reason`, `calendarVersion`, `effectiveDate` สำหรับทั้งผล PASS และ FAIL พร้อมอ้างอิงปฏิทินมหาวิทยาลัยและปีของข้อมูลวันหยุด
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 17 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่สร้างหรือแก้ `backend/app/router.py`; endpoint `/calendar/check` เป็นขอบเขตของ T-05
+- สิ่งที่เกือบต้องเดา: `backend/app/router.py` ไม่มีอยู่ และ T-04/T-05 ระบุขอบเขตซ้อนกัน; ถามทีมและทำตามการแบ่งขอบเขตที่ยืนยันแล้ว
+
+## 2569-11-13 00:38 แก้รูปแบบ calendarVersion/effectiveDate ของ T-04
+
+- ทีมยืนยัน: `calendarVersion` ใช้วันที่สร้าง snapshot รูปแบบ `dd.mm.yyyy`; `effectiveDate` ใช้ timestamp UTC ตอนดึง/ประกอบ snapshot สำเร็จ
+- ไฟล์ที่แก้: `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: ปรับ response และ test ให้ยืนยันรูปแบบวันที่กับ timestamp ตามที่ทีมเลือก โดยไม่แก้ `spec.md` หรือ `plan.md`
+- สิ่งที่เกือบต้องเดา: ระบบปีของ calendarVersion; ใช้ ค.ศ. ตาม UTC ให้ตรงกับ effectiveDate
+
+## 2569-11-13 00:41 /implement T-05 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-04 ก่อนเริ่ม T-05; endpoint path ที่ทีมกำหนดคือ `POST /calendar/check`
+- ไฟล์ที่สร้าง: `backend/app/router.py`
+- ไฟล์ที่แก้: `backend/app/main.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-04 เป็น "เสร็จ", T-05 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: endpoint เชื่อม validation, calendar snapshot, overlap checker และ JSON response; หาก source ปฏิทินใช้ไม่ได้จะคืน FAIL พร้อม reason และเวลาที่พยายามตรวจ; request ไม่ถูกต้องคืน HTTP 422
+- ผล test: รันทดสอบ `cd backend && pytest -q tests/test_check_work_time.py` หลังแก้โค้ด
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-06/T-07 ยังไม่ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี; path และการแบ่งขอบเขต T-04/T-05 ได้รับการยืนยันจากทีมแล้ว
+- ผลทดสอบหลังทำเสร็จ: `cd backend && pytest -q tests/test_check_work_time.py` — 19 passed, 1 warning จาก Starlette/httpx deprecation
+- `git diff --check` ผ่าน; T-05 คงสถานะ "เสร็จ รอทีมตรวจ"
+
+## 2026-11-12 17:48 UTC /implement T-06 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-05 และสั่งทำ T-06
+- ไฟล์ที่สร้าง: `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/api/calendarCheckApi.js`, `frontend/src/__tests__/checkWorkTime.test.jsx`
+- ผลลัพธ์: สร้างฟอร์มช่วงวันและเวลาพร้อมแสดง `status`, `reason`, `calendarVersion`, `effectiveDate`; mock API ตอบ PASS ตาม JSON contract และหน้าจอรองรับทั้ง PASS/FAIL
+- สิ่งที่ถามเพื่อไม่เดา: spec/plan ไม่ระบุเงื่อนไข mock ที่ทำให้ FAIL; ทีมเลือก mock PASS คงที่ และให้ทดสอบการ render FAIL ด้วย mock response ใน test
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 2 passed
+- ผล build: `cd frontend && npm run build` — สำเร็จ
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-06 เป็น "เสร็จ รอทีมตรวจ" และยังไม่เริ่ม T-07
+
+## 2026-11-12 17:51 UTC /implement T-07 specs/019-check-work-time/tasks.md
+
+- ทีมยืนยันว่า T-05/T-06 ผ่านแล้ว และอนุมัติเปลี่ยนสถานะเป็น "เสร็จ" ก่อนเริ่ม T-07
+- ทีมกำหนด benchmark end-to-end รวม ThailandFormats API จริง เพดาน 500 ms; อนุมัติให้เพิ่มการ reuse HTTP connection pool โดยไม่ cache ข้อมูลปฏิทิน
+- ไฟล์ที่แก้: `backend/app/services/calendar_source.py` (reuse connection pool), `backend/tests/test_check_work_time.py`, `frontend/src/api/calendarCheckApi.js`, `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `frontend/src/App.jsx`, `specs/019-check-work-time/tasks.md` (T-05/T-06 เป็น "เสร็จ", T-07 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: หน้า UI ส่ง POST `/api/calendar/check` ไปยัง endpoint จริงและเข้าถึงได้ที่ `/calendar/check`; API mock ถูกแทนด้วย fetch จริงและแสดง error HTTP โดยไม่สร้างผลตรวจปลอม
+- ผล test backend: `cd backend && pytest -q tests/test_check_work_time.py` — 27 passed, รวม benchmark live 3 ครั้งภายใน 500 ms; มี 1 warning จาก Starlette/httpx deprecation
+- ผล test frontend เฉพาะงาน: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 7 passed
+- ผล test frontend ทั้งชุด: 22 passed, 6 failed, 1 todo; ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` และไม่เกี่ยวกับไฟล์ของ T-07
+- ผล build: `cd frontend && npm run build` — สำเร็จ; `git diff --check` ผ่าน
+- Benchmark ก่อนใช้ connection pool พบ cold request 568 ms; หลังใช้ connection pooling ทุกครั้งใน benchmark ล่าสุดผ่าน 500 ms โดยยังดึงข้อมูล API สดทุก request
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-07 รอทีมตรวจ
+
+## 2026-11-12 18:08 UTC แก้ไขคำแนะนำรูปแบบวันเวลาในหน้า T-07
+
+- ทีมแจ้งว่าหน้าแสดงข้อความ `The string did not match the expected pattern.`
+- ตรวจพบว่าเป็นรูปแบบที่ browser input `datetime-local` ปฏิเสธเมื่อพิมพ์ข้อความวันเวลาแบบอ่านง่าย; API รับค่า `YYYY-MM-DDTHH:mm` ได้และ endpoint ตอบ PASS เมื่อใช้รูปแบบดังกล่าว
+- ไฟล์ที่แก้: `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `prompt-log.md`
+- ผลลัพธ์: เพิ่มคำแนะนำรูปแบบ `YYYY-MM-DDTHH:mm` ที่เชื่อมกับ input ทั้งสองช่องผ่าน `aria-describedby`; ไม่เปลี่ยน contract หรือกฎตรวจปฏิทิน
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 8 passed
+
+## 2026-11-12 18:14 UTC แก้ไข response ว่างเมื่อ backend ไม่ทำงาน
+
+- ทีมแจ้งว่า API ใช้งานได้แล้วแต่ภายหลังขึ้น `Failed to execute 'json' on 'Response': Unexpected end of JSON input`
+- ตรวจพบ frontend ที่ port 5173 ยังทำงาน แต่ backend ที่ port 8000 หยุดอยู่; Vite proxy ตอบ HTTP 500 โดยไม่มี JSON
+- ไฟล์ที่แก้: `frontend/src/api/calendarCheckApi.js`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `prompt-log.md`
+- ผลลัพธ์: API client อ่าน response body อย่างปลอดภัยและแสดง HTTP status เมื่อ response ว่าง/ไม่ใช่ JSON แทนการโยน raw JSON parse error; restart backend แล้วลองจาก browser ได้ PASS
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 9 passed
+
+## 2026-11-12 18:22 UTC /verify specs/019-check-work-time/
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `rtm.md`, โค้ดและ test ของ backend/frontend ที่เกี่ยวข้อง; ไม่พบ `test-cases.md`
+- ผล test: `cd backend && pytest -v` — 81 passed; `cd frontend && npm test` — 24 passed, 6 failed, 1 todo โดย failures ทั้งหมดอยู่ใน `ApplyLabBoyPage.test.jsx` และไม่เกี่ยวกับฟีเจอร์ 019
+- ตารางตามรอยไปข้างหน้า: ครบ 4, ยังไม่ถึง 0, รอ 0, ช่องโหว่ 8
+- ข้อค้นพบใหม่: F-002 academic calendar จาก PDF เป็นข้อมูลคงที่และตรวจการแทนที่ฉบับใหม่ไม่ได้; F-003 source failure ระบุเวลา attempt เป็น calendar reference; F-004 benchmark ใช้เกณฑ์ 500 ms ที่ไม่มีใน spec
+- คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้ทุกข้อ; ไม่แก้โค้ดหรือ test; `git diff --check` ผ่าน
