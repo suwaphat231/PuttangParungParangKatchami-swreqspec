@@ -497,3 +497,42 @@
 - แก้ UC-13 ไม่ให้อ้าง AC-PERF-01 ซึ่งไม่มีใน `spec.md` และเพิ่ม F-002
 - ยืนยันว่า ID ของฟีเจอร์อื่นที่อยู่เฉพาะในตาราง “ตามรอยย้อนกลับ” เป็นหลักฐานว่าโค้ดนั้นเป็นคนละ Use Case ไม่ใช่ requirement ที่เพิ่มในตารางตามรอยไปข้างหน้า
 - ตรวจแล้ว requirement ID ในทุก `spec.md` มีอยู่ใน RTM และ `git diff --check` ผ่าน
+
+## 2569-11-11 คำสั่ง: /plan และ /tasks specs/007-viewapplicants
+
+- ปรับ `specs/007-viewapplicants/plan.md` จากแผนตรวจเอกสารให้เป็นแผน prototype ที่ระบุเทคโนโลยี โมเดลข้อมูล หน้าจอ ตารางตรวจ constraints แผนทดสอบ และลำดับงาน โดยอ้างอิง FR/AC/Constraint ใน `spec.md`
+- ปรับ `specs/007-viewapplicants/tasks.md` ให้ระบุไฟล์ที่แตะ คำสั่งเปิดระบบ และเกณฑ์เสร็จของ T-01 ถึง T-04
+- ยังไม่ได้เขียนโค้ดหรือ test; T-04 ยังคงรอคำตอบ Q-01
+
+## 2569-11-11 คำสั่ง: /implement T-01 specs/007-viewapplicants/tasks.md
+
+- สร้าง `frontend/src/pages/ViewApplicantsPage.jsx` และ `frontend/src/pages/ViewApplicantsPage.test.jsx` พร้อมเชื่อม route `/applicants` ใน `frontend/src/App.jsx`
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน (1 test)
+- ไม่ต้องเดาข้อมูลจาก Q-01; แสดงเฉพาะรหัสนักศึกษา ชื่อ และสถานะตาม plan และไม่สร้างข้อมูลเอกสารหรือข้อมูลติดต่อ
+
+## 2569-11-11 แก้รอบ UI: ลบป้ายมีสิทธิ์เข้าถึง
+
+- ลบป้ายสถานะ “มีสิทธิ์เข้าถึง” จาก `frontend/src/pages/ViewApplicantsPage.jsx` ตามคำขอของทีม
+- ปรับ `frontend/src/pages/ViewApplicantsPage.test.jsx` ให้ไม่ผูกกับป้ายดังกล่าว และยังตรวจรายชื่อเฉพาะรอบที่รับผิดชอบ
+
+## 2569-11-12 แก้ UI ตามภาพตัวอย่างหน้าคัดเลือกผู้สมัคร
+
+- ปรับ `frontend/src/pages/ViewApplicantsPage.jsx` ให้ใช้ layout แบบหน้าคัดเลือกผู้สมัคร: top navigation, course selector, summary card, status tabs, search field และตารางข้อมูล
+- คงการแสดงเฉพาะผู้สมัครของรอบที่อาจารย์รับผิดชอบตาม FR-APP-01/NFR-SEC-01
+- เพิ่ม heading แบบ screen-reader-only เพื่อคง accessibility และ test เดิม ขณะที่ heading ที่มองเห็นใช้ข้อความ “คัดเลือกผู้สมัคร”
+
+## 2569-11-12 แก้ข้อความ UI
+
+- เปลี่ยนข้อความ “คัดเลือกผู้สมัคร” เป็น “รายชื่อผู้สมัคร” ใน breadcrumb และหัวข้อหลักของ `frontend/src/pages/ViewApplicantsPage.jsx`
+
+## 2569-11-12 คำสั่ง: /testcases AC-APP-01 AC-APP-02 AC-APP-03 specs/007-viewapplicants
+
+- โหมดร่าง: สร้าง `specs/007-viewapplicants/test-cases.md` จำนวน 9 แถว ครบทั้ง AC-APP-01 ถึง AC-APP-03 โดยแบ่งทางปกติ ขอบ และทางผิด
+- ยังไม่เขียนโค้ด test เพราะทุกแถวมีสถานะ `ร่าง` และต้องให้ทีมตรวจเปลี่ยนเป็น `ใช้ได้` ก่อน
+- ระบุประเด็นที่ spec ยังไม่บอกสำหรับกรณีไม่มีผู้สมัคร/เงื่อนไขตรงข้าม และข้อมูลส่วนบุคคลที่รอ Q-01
+
+## 2569-11-12 ปรับ RTM ฟีเจอร์ 007-viewapplicants
+
+- อัปเดต `specs/007-viewapplicants/rtm.md` ให้สะท้อน T-01 และ `test_AC_APP_01` ที่ผ่านแล้ว
+- เพิ่ม traceability ของ test cases ทั้ง 9 แถว, Constraint เรื่องการปฏิเสธการเข้าถึง และ mapping ของ NFR ให้ตรงกับ tasks
+- ระบุข้อค้นพบเรื่อง T-02/T-03 ที่ยังไม่ทำ และ Q-01 ที่ยังรอคำตอบ
