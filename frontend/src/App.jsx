@@ -3,6 +3,7 @@ import ApplyLabBoyPage from '../../specs/001-apply-lab-boy/ApplyLabBoyPrototype.
 import RecruitmentAnnouncementPrototype from '../../specs/015-create-recruitment-announcement/prototype.jsx';
 import CheckWorkTimePage from './pages/CheckWorkTimePage.jsx';
 import PaymentTrackingPage from './pages/PaymentTrackingPage.jsx';
+import ViewApplicantsPage from './pages/ViewApplicantsPage.jsx';
 
 export default function App() {
   if (window.location.pathname === '/create-announcement') {
@@ -19,6 +20,9 @@ export default function App() {
 
   if (window.location.pathname === '/payments') {
     return <PaymentTrackingPage />;
+  }
+  if (window.location.pathname === '/list-applicants') {
+    return <ViewApplicantsPage />;
   }
 
   return <ApplicationStatusPage />;
