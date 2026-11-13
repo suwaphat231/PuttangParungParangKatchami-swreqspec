@@ -259,6 +259,21 @@
 - ผล test: `cd frontend && npm test -- --run src/components/PaymentStatusBadge.test.jsx` -> 1 file passed, 3 tests passed
 - สถานะ T-04: เปลี่ยนเป็น `เสร็จ รอทีมตรวจ`
 
+## 2569-11-13 14:12 คำสั่ง: /verify specs/019-check-work-time
+- โหมด: ตรวจสอบ requirement และ test ตามรอยไปข้างหน้า/ย้อนกลับ โดยไม่แก้โค้ด, test, spec, plan หรือ tasks
+- ไฟล์ที่อ่าน: `specs/019-check-work-time/spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, `rtm.md` และ `AGENTS.md`
+- ผล test: `cd backend && pytest -v` -> 81 passed, 0 failed; `cd frontend && npx vitest run src/__tests__/checkWorkTime.test.jsx` -> 9 passed, 0 failed; `cd frontend && CI=1 npm test -- --run` -> full suite still ไม่ผ่าน เนื่องจาก tests อื่นของ ApplyLabBoy 6 failed และไม่ใช่ scope ของ SPEC-19-19-
+- ผลตามรอย: FR-CAL-01 ถึง FR-CAL-05, NFR-REL-01, NFR-INT-01 = ครบ; NFR-PERF-01 = ยังไม่ถึง
+- ข้อค้นพบใหม่: F-001 (NFR-PERF-01 ไม่มี benchmark/threshold ที่ traceable กับ spec)
+- ไฟล์ที่แก้: `specs/019-check-work-time/rtm.md` และ `prompt-log.md` (เพิ่มต่อท้ายเท่านั้น)
+
+## 2569-11-13 14:05 คำสั่ง: /testcases AC-CAL-01-05 specs/019-check-work-time
+- โหมด: ร่าง เนื่องจากยังไม่มี `test-cases.md` ในฟีเจอร์นี้ และ AC ที่มีคำขอคือ AC-CAL-01 ถึง AC-CAL-05
+- ไฟล์ที่สร้าง: `specs/019-check-work-time/test-cases.md`
+- TC ID ที่เสนอ: `TC-CAL-01-1` ถึง `TC-CAL-05-3`
+- ผลลัพธ์: เสนอ 15 แถว สถานะ `ร่าง`; ยังไม่ได้เขียนหรือรันโค้ด test ตามโหมดร่าง
+- ข้อจำกัด/คำถาม: `NFR-PERF-01` เป็น Quality Requirement ไม่ใช่ AC ดังนั้นจึงดำเนินการต่อแปลง AC-CAL-01 ถึง AC-CAL-05 ตามคำขอของทีม และหยุดรอให้ทีมตรวจแถวและเปลี่ยนสถานะเป็น `ใช้ได้` ก่อน
+
 ## 2569-11-05 11:34 คำสั่ง: ตรวจสอบความพร้อม T-01 specs/16-16-track-payment/tasks.md
 
 - เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
