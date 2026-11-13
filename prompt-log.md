@@ -573,6 +573,201 @@
 - ยืนยันว่า ID ของฟีเจอร์อื่นที่อยู่เฉพาะในตาราง “ตามรอยย้อนกลับ” เป็นหลักฐานว่าโค้ดนั้นเป็นคนละ Use Case ไม่ใช่ requirement ที่เพิ่มในตารางตามรอยไปข้างหน้า
 - ตรวจแล้ว requirement ID ในทุก `spec.md` มีอยู่ใน RTM และ `git diff --check` ผ่าน
 
+## 2569-11-11 คำสั่ง: /plan และ /tasks specs/007-viewapplicants
+
+- ปรับ `specs/007-viewapplicants/plan.md` จากแผนตรวจเอกสารให้เป็นแผน prototype ที่ระบุเทคโนโลยี โมเดลข้อมูล หน้าจอ ตารางตรวจ constraints แผนทดสอบ และลำดับงาน โดยอ้างอิง FR/AC/Constraint ใน `spec.md`
+- ปรับ `specs/007-viewapplicants/tasks.md` ให้ระบุไฟล์ที่แตะ คำสั่งเปิดระบบ และเกณฑ์เสร็จของ T-01 ถึง T-04
+- ยังไม่ได้เขียนโค้ดหรือ test; T-04 ยังคงรอคำตอบ Q-01
+
+## 2569-11-11 คำสั่ง: /implement T-01 specs/007-viewapplicants/tasks.md
+
+- สร้าง `frontend/src/pages/ViewApplicantsPage.jsx` และ `frontend/src/pages/ViewApplicantsPage.test.jsx` พร้อมเชื่อม route `/applicants` ใน `frontend/src/App.jsx`
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน (1 test)
+- ไม่ต้องเดาข้อมูลจาก Q-01; แสดงเฉพาะรหัสนักศึกษา ชื่อ และสถานะตาม plan และไม่สร้างข้อมูลเอกสารหรือข้อมูลติดต่อ
+
+## 2569-11-11 แก้รอบ UI: ลบป้ายมีสิทธิ์เข้าถึง
+
+- ลบป้ายสถานะ “มีสิทธิ์เข้าถึง” จาก `frontend/src/pages/ViewApplicantsPage.jsx` ตามคำขอของทีม
+- ปรับ `frontend/src/pages/ViewApplicantsPage.test.jsx` ให้ไม่ผูกกับป้ายดังกล่าว และยังตรวจรายชื่อเฉพาะรอบที่รับผิดชอบ
+
+## 2569-11-12 แก้ UI ตามภาพตัวอย่างหน้าคัดเลือกผู้สมัคร
+
+- ปรับ `frontend/src/pages/ViewApplicantsPage.jsx` ให้ใช้ layout แบบหน้าคัดเลือกผู้สมัคร: top navigation, course selector, summary card, status tabs, search field และตารางข้อมูล
+- คงการแสดงเฉพาะผู้สมัครของรอบที่อาจารย์รับผิดชอบตาม FR-APP-01/NFR-SEC-01
+- เพิ่ม heading แบบ screen-reader-only เพื่อคง accessibility และ test เดิม ขณะที่ heading ที่มองเห็นใช้ข้อความ “คัดเลือกผู้สมัคร”
+
+## 2569-11-12 แก้ข้อความ UI
+
+- เปลี่ยนข้อความ “คัดเลือกผู้สมัคร” เป็น “รายชื่อผู้สมัคร” ใน breadcrumb และหัวข้อหลักของ `frontend/src/pages/ViewApplicantsPage.jsx`
+
+## 2569-11-12 คำสั่ง: /testcases AC-APP-01 AC-APP-02 AC-APP-03 specs/007-viewapplicants
+
+- โหมดร่าง: สร้าง `specs/007-viewapplicants/test-cases.md` จำนวน 9 แถว ครบทั้ง AC-APP-01 ถึง AC-APP-03 โดยแบ่งทางปกติ ขอบ และทางผิด
+- ยังไม่เขียนโค้ด test เพราะทุกแถวมีสถานะ `ร่าง` และต้องให้ทีมตรวจเปลี่ยนเป็น `ใช้ได้` ก่อน
+- ระบุประเด็นที่ spec ยังไม่บอกสำหรับกรณีไม่มีผู้สมัคร/เงื่อนไขตรงข้าม และข้อมูลส่วนบุคคลที่รอ Q-01
+
+## 2569-11-12 ปรับ RTM ฟีเจอร์ 007-viewapplicants
+
+- อัปเดต `specs/007-viewapplicants/rtm.md` ให้สะท้อน T-01 และ `test_AC_APP_01` ที่ผ่านแล้ว
+- เพิ่ม traceability ของ test cases ทั้ง 9 แถว, Constraint เรื่องการปฏิเสธการเข้าถึง และ mapping ของ NFR ให้ตรงกับ tasks
+- ระบุข้อค้นพบเรื่อง T-02/T-03 ที่ยังไม่ทำ และ Q-01 ที่ยังรอคำตอบ
+
+## 2569-11-13 คำสั่ง: /implement T-02 (specs/007-viewapplicants/tasks.md)
+
+- แก้ `frontend/src/pages/ViewApplicantsPage.jsx`: เพิ่มช่องค้นหาตามชื่อ/รหัสนักศึกษา (ไม่สนตัวพิมพ์ใหญ่เล็ก จับคำบางส่วน), ปุ่มกรองสถานะ, dropdown เลือกรอบที่อาจารย์มีสิทธิ์ และฟังก์ชัน `filterApplicants` (FR-APP-02, NFR-PERF-01)
+- แก้ `frontend/src/pages/ViewApplicantsPage.test.jsx`: เพิ่ม `test_AC_APP_02`
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน 2/2 (`test_AC_APP_01`, `test_AC_APP_02`)
+- คำถามที่ถามทีมแทนการเดา:
+  - ชุดสถานะไม่มีใน spec และปุ่มเดิม (รอพิจารณา/ผ่าน/ไม่ผ่าน/ถอน) ไม่ตรงกับข้อมูล -> ทีมตอบ: สร้างปุ่มจากสถานะที่มีอยู่ในข้อมูล
+  - มีรอบที่มีสิทธิ์แค่รอบเดียว จึงทดสอบการกรองตามรอบไม่ได้ -> ทีมตอบ: เพิ่มรอบตัวอย่างที่มีสิทธิ์อีก 1 รอบ (`round-3`)
+  - NFR-PERF-01 ไม่ได้ระบุตัวเลขเวลา -> ทีมตอบ: กรองฝั่งหน้าบ้านด้วย useMemo และไม่ทดสอบเวลา ตัวเลขเวลายังเป็นสิ่งที่ spec ต้องเติม
+- ข้อมูลตัวอย่างที่เพิ่ม: ผู้สมัคร `applicant-4` (สถานะ "ผ่าน" ใช้ชื่อจากปุ่มใน UI เดิม) และ `applicant-5` ในรอบ `round-3`
+- กรณีค้นหาแล้วไม่พบผล ตารางจะว่าง ไม่ได้เพิ่มข้อความเพราะ spec ไม่ได้บอก (เกี่ยวกับ TC-APP-02-3)
+
+## 2569-11-13 คำสั่ง: /implement T-03 (specs/007-viewapplicants/tasks.md)
+
+- แก้ `frontend/src/pages/ViewApplicantsPage.jsx`: อ่านรอบที่ขอเปิดจาก URL `?round=` ถ้าไม่อยู่ในรอบที่อาจารย์มีสิทธิ์ จะแสดงเฉพาะข้อความปฏิเสธ (role=alert) ไม่แสดงตาราง ชื่อรอบ รายวิชา หรือข้อมูลผู้สมัคร (FR-APP-03, NFR-SEC-01) และแยก header เป็น `PageHeader` เพื่อใช้ร่วมกัน
+- แก้ `frontend/src/pages/ViewApplicantsPage.test.jsx`: เพิ่ม `test_AC_APP_03` และ `afterEach` คืนค่า URL
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน 3/3 (`test_AC_APP_01`, `test_AC_APP_02`, `test_AC_APP_03`)
+- คำถามที่ถามทีมแทนการเดา:
+  - อาจารย์ "พยายามเปิด" รอบที่ไม่มีสิทธิ์ทางไหน (dropdown ซ่อนรอบนั้นอยู่แล้ว) -> ทีมเลือก: ผ่าน URL `?round=` และ dropdown ยังซ่อนรอบที่ไม่มีสิทธิ์เหมือนเดิม
+  - หน้าปฏิเสธแสดงอะไร -> ทีมเลือก: ข้อความสั้นอย่างเดียว "คุณไม่มีสิทธิ์เข้าถึงข้อมูลผู้สมัครของรอบรับสมัครนี้"
+- ข้อสังเกต: รหัสรอบที่ไม่มีอยู่จริงใน `?round=` ถูกปฏิเสธเหมือนรอบที่ไม่มีสิทธิ์ เพราะยืนยันสิทธิ์ไม่ได้ ทีมควรตรวจว่าเห็นด้วยหรือไม่
+
+## 2569-11-13 ทีมตอบ Q-01 (specs/007-viewapplicants)
+
+- AI ถาม: ข้อมูลใดที่อาจารย์มีสิทธิ์ดูได้ (Q-01)
+- ทีมตอบ: ดูชื่อได้ เกรดได้ ข้อมูลติดต่อได้ เอกสารเอาออกเพราะระบบให้ส่งแค่เกรด
+- AI ถามต่อเพราะคำตอบชนกับ FR-APP-02 และหน้าจอเดิม ทีมตอบ:
+  - รหัสนักศึกษา: ดูได้
+  - คอลัมน์สถานะ และวันที่สมัคร: คงไว้ทั้งคู่
+  - ข้อมูลติดต่อ: อีเมล และเบอร์โทรศัพท์
+  - เกรด: เกรดรายวิชาของรอบรับสมัครนั้น
+- บันทึกคำตอบปิด Q-01 ใต้ข้อ Q-01 ใน `specs/007-viewapplicants/spec.md` (ไม่แก้ข้อความเดิม ไม่สร้าง ID ใหม่)
+- เปลี่ยนสถานะ T-04 ใน `specs/007-viewapplicants/tasks.md` จาก "รอ Q-01" เป็น "พร้อมทำ" (ยังไม่เริ่ม T-04)
+
+## 2569-11-13 คำสั่ง: /implement T-04 (specs/007-viewapplicants/tasks.md)
+
+- แก้ `frontend/src/pages/ViewApplicantsPage.jsx`: เพิ่มฟิลด์ `grade`, `email`, `phone`, `appliedDate` ในข้อมูลตัวอย่างตามคำตอบ Q-01, เพิ่ม `TEACHER_VISIBLE_FIELDS` และ `toTeacherView` ตัดฟิลด์นอกรายการก่อนแสดงผล (NFR-SEC-01), เพิ่มคอลัมน์ "ข้อมูลติดต่อ" (อีเมล + เบอร์โทร) และเปลี่ยนเกรด/วันที่สมัครจากค่าตายตัวเป็นค่าจากข้อมูล
+- แก้ `frontend/src/pages/ViewApplicantsPage.test.jsx`: เพิ่ม `test_Q_01` (T-04 ไม่มี AC ตรง ๆ)
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน 4/4 (`test_AC_APP_01`, `test_AC_APP_02`, `test_AC_APP_03`, `test_Q_01`)
+- ทีมสั่งทำต่อโดยยังไม่อัปเดต plan.md: AI ตั้งชื่อฟิลด์ `grade`, `email`, `phone`, `appliedDate` และวางข้อมูลติดต่อเป็นคอลัมน์ใหม่เอง ทีมควรตรวจและอัปเดต plan.md หัวข้อ 3 ให้ตรง
+- ค่าเกรด อีเมล (โดเมน example.com) เบอร์โทร และวันที่สมัครในข้อมูลตัวอย่างเป็นข้อมูลสมมติ
+
+## 2569-11-13 คำสั่ง: อัปเดตเอกสาร specs/007-viewapplicants
+
+- อัปเดต `plan.md` ให้ตรงกับ implementation ของ AC-APP-01 ถึง AC-APP-03 และคำตอบ Q-01
+- อัปเดต `tasks.md` ให้ T-01 ถึง T-04 เป็นสถานะ `เสร็จ`
+- อัปเดต `rtm.md` ให้สะท้อน test เฉพาะฟีเจอร์ผ่าน 4 รายการและ build ผ่าน
+- อัปเดต `test-cases.md` ว่า Q-01 ปิดแล้ว และระบุว่าแถว `TC-*` ยังเป็นร่างจนกว่าทีมจะอนุมัติ
+- คงข้อจำกัดที่ยังมีจริง: ยังไม่มี benchmark ของ NFR-PERF-01 เพราะ spec ไม่ระบุเกณฑ์เวลา และ prototype ยังใช้ข้อมูล in-memory
+
+## 2569-11-13 คำสั่ง: เปลี่ยน frontend route ของ 007-viewapplicants
+
+- ทีมยืนยันให้เปลี่ยนชื่อ frontend route จาก `/applicants` เป็น `/list-applicants` ตามชื่อ `List Applicants`
+- แก้ `frontend/src/App.jsx` และ URL ใน `ViewApplicantsPage.test.jsx`
+- แก้ `specs/007-viewapplicants/rtm.md` ให้ trace route ใหม่
+- ไม่สร้างหรือเปลี่ยน backend API เพราะฟีเจอร์นี้ยังเป็น prototype ที่ใช้ข้อมูล in-memory
+
+## 2569-11-13 คำสั่ง: /testcases AC-APP-01 specs/007-viewapplicants
+
+- โหมด: ตรวจสถานะ test cases
+- พบแถว `TC-APP-01-1` ถึง `TC-APP-01-3` แล้ว จำนวน 3 แถว และทุกแถวยังเป็นสถานะ `ร่าง`
+- T-01 มีสถานะ `เสร็จ` และมี implementation test ของ AC แยกอยู่แล้ว แต่ยังไม่มี test ตามชื่อ `test_TC_APP_01_*` จากตารางที่ทีมอนุมัติ
+- ผลลัพธ์: ยังไม่เขียนหรือรันโค้ด test ตามกติกา ต้องให้ทีมตรวจแถวและเปลี่ยนสถานะเป็น `ใช้ได้` ก่อน แล้วจึงสั่ง `/testcases AC-APP-01` อีกครั้ง
+
+## 2569-11-13 คำสั่ง: ทำต่อจาก /testcases AC-APP-01 specs/007-viewapplicants
+
+- ทีมสั่ง: `ทำต่อเลย` ซึ่งถือเป็นการอนุมัติให้ดำเนินการกับแถวที่ตรวจได้
+- เปลี่ยนสถานะ `TC-APP-01-1` และ `TC-APP-01-2` เป็น `ใช้ได้`
+- สร้าง `frontend/src/__tests__/TC-APP-01-1.test.jsx` และ `frontend/src/__tests__/TC-APP-01-2.test.jsx` ตาม Given/When/Then ในตาราง
+- `TC-APP-01-3` ยังไม่เขียน test เพราะช่องตรวจด้วยเป็น `คน` และ spec ไม่ได้กำหนดผลลัพธ์กรณีไม่มีผู้สมัคร
+
+## 2569-11-13 คำตอบทีม: พฤติกรรมเมื่อไม่มีผู้สมัครใน TC-APP-01-3
+
+- ทีมกำหนดให้เมื่อเปิดรอบที่ไม่มีผู้สมัคร ระบบต้องแสดงตารางว่างและข้อความ “ไม่พบผู้สมัคร”
+- อัปเดต `TC-APP-01-3` ใน `specs/007-viewapplicants/test-cases.md` เป็นสถานะ `ใช้ได้`
+- เปลี่ยนวิธีตรวจเป็น `vitest` และชื่อ test เป็น `test_TC_APP_01_3_shows_empty_applicant_table`
+- ยังไม่เขียน test หรือแก้โค้ดระบบในรอบนี้ รอการสั่ง `/testcases AC-APP-01` เพื่อเขียน test ตามแถวที่ทีมอนุมัติ
+
+## 2569-11-13 คำสั่ง: /testcases AC-APP-01
+
+- โหมด: เขียน test จากแถวสถานะ `ใช้ได้`
+- `TC-APP-01-1` และ `TC-APP-01-2` มี test แล้ว จึงไม่เขียนซ้ำ
+- `TC-APP-01-3` ยังเขียน test ที่ตรงตาม Given/When/Then ไม่ได้ เพราะ implementation ไม่มีรอบที่อาจารย์มีสิทธิ์แต่ไม่มีผู้สมัคร และไม่มี empty-state ที่ตรวจได้
+- ไม่สร้าง test แบบเดาหรือใช้กรณีค้นหาไม่พบแทน เพราะไม่ตรงกับ Given ของ `TC-APP-01-3`
+- ผล test: ไม่ได้รัน เนื่องจากยังสร้าง test ที่ตรงตามกรณีนี้ไม่ได้โดยไม่แก้โค้ดระบบ ซึ่ง `/testcases` ห้ามแก้
+
+## 2569-11-13 คำสั่ง: /verify specs/007-viewapplicants
+
+- ผล test: backend 54 passed, 0 failed, 1 warning; frontend 18 passed, 0 failed, 1 todo
+- อ่านโค้ดทุกไฟล์ใน `backend/app/`, `frontend/src/` และ test ทั้งหมดตามขอบเขต verify
+- RTM ใหม่: 8 แถวตามรอยไปข้างหน้า — ครบ 7, ช่องโหว่ 1; ไม่มีแถว `ยังไม่ถึง` ในตาราง requirement หลัก
+- ข้อค้นพบใหม่: F-001 เอกสารระบุ TC เป็นร่างทั้งหมดทั้งที่มีแถวใช้ได้, F-004 `TC-APP-01-3` ใช้ได้แต่ยังไม่มี test, F-005 T-05 ยังพร้อมทำและยังไม่มี empty-state
+- คง F-002 และ F-003 ตาม RTM เดิม เพราะทีมตัดสินว่าไม่เป็นปัญหา
+
+## 2569-11-13 คำสั่ง: เพิ่ม T-05 ใน specs/007-viewapplicants/tasks.md
+
+- ทีมสั่งให้อัปเดต task สำหรับ empty-state และข้อมูลรอบที่มีสิทธิ์แต่ไม่มีผู้สมัคร
+- เพิ่ม `T-05 เพิ่ม empty-state สำหรับรอบที่ไม่มีผู้สมัคร`
+- T-05 รองรับ `FR-APP-01`, `AC-APP-01`, ต้องทำหลัง T-01 และสถานะเริ่มต้นเป็น `พร้อมทำ`
+- ไฟล์ที่กำหนดให้แตะ: `frontend/src/pages/ViewApplicantsPage.jsx` และ `frontend/src/pages/ViewApplicantsPage.test.jsx`
+- เงื่อนไขเสร็จ: เปิดรอบที่มีสิทธิ์แต่ไม่มีผู้สมัครแล้วเห็นตารางว่างและข้อความ “ไม่พบผู้สมัคร”
+
+## 2569-11-13 คำสั่ง: ตรวจเอกสาร specs/007-viewapplicants แล้วแก้ตามที่ทีมสั่ง
+
+- แก้หัว `spec.md` ช่อง Updated จาก 2569-09-19 เป็น 2569-11-13 เพราะปิด Q-01 แล้ว (คง Status: Draft v1)
+- แก้บรรทัดสรุปใน `tasks.md` จาก "3 เฟส" เป็น "4 เฟส" ให้ตรงกับจำนวนเฟสจริง
+- ยังไม่แก้และรอทีมตัดสิน: ปุ่มรับ/ไม่รับ/รับทั้งหมด checkbox และแถบ "Lab Boy ที่รับแล้ว" ในหน้าเป็นการคัดเลือก (UC-08) ซึ่งอยู่ใน Out of scope; ช่อง "ทีมตัดสิน" ใน `rtm.md` มีข้อความอยู่แล้วทั้งที่ทีมต้องเขียนเอง; ไฟล์ build ใน `frontend/dist/` เปลี่ยน
+
+## 2569-11-13 คำสั่ง: แก้ 3 ข้อค้างของ specs/007-viewapplicants ตามที่ทีมตัดสิน
+
+- ข้อ 1 ทีมตัดสิน: เอาส่วนคัดเลือกผู้สมัครออก ให้หน้ามีแค่ดูรายชื่อ ค้นหา กรอง และปุ่มดู
+  - แก้ `frontend/src/pages/ViewApplicantsPage.jsx`: ลบปุ่ม "รับทั้งหมด", checkbox, ปุ่ม "รับ"/"ไม่รับ" และแถบ "Lab Boy ที่รับแล้ว" (UC-08 อยู่ใน Out of scope)
+  - แก้ `frontend/src/pages/ViewApplicantsPage.test.jsx`: ปรับหัวตารางที่คาดใน `test_Q_01` และเพิ่มการตรวจว่าไม่มีส่วนคัดเลือกแต่ยังมีปุ่มดู
+  - ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน 4/4
+- ข้อ 2 ทีมตัดสิน: F-001 ถึง F-003 ใน `rtm.md` ผ่าน -> ใส่ "ผ่าน" ในช่องทีมตัดสินตามคำสั่งทีม และบันทึกในหัวข้อแก้แล้ว
+- ข้อ 3 ทีมตัดสิน: คืนไฟล์ build ใน `frontend/dist/` และ cache ใน `frontend/node_modules/.vite` กลับเป็นเหมือน commit ล่าสุด (ลบไฟล์ build ใหม่ที่ยังไม่ถูก track)
+
+## 2569-11-13 คำสั่ง: ตกแต่ง UI หน้า http://localhost:5173/list-applicants
+
+- แก้ `frontend/src/pages/ViewApplicantsPage.jsx` เฉพาะหน้าตา ไม่เพิ่มความสามารถหรือข้อมูลใหม่: เปลี่ยนสัญลักษณ์ตัวอักษร (☰ ♧ ● ⊙) เป็นไอคอน SVG, header แบบ sticky, การ์ดสรุป 2 ใบพร้อมไอคอน, แถบกรองสถานะแบบ segmented, ช่องค้นหามีไอคอน, ตารางมี hover, ป้ายเกรด, ไอคอนอีเมล/โทรศัพท์, สีป้ายสถานะ ("ผ่าน" สีเขียว สถานะอื่นสีเหลือง), หน้าปฏิเสธเป็นการ์ดพร้อมไอคอนกุญแจ
+- ข้อความที่เพิ่ม: คำอธิบายใต้หัวข้อ "ดูรายชื่อ ค้นหา และกรองผู้สมัครในรอบที่คุณรับผิดชอบ" และ label "เลือกรอบรับสมัคร" ที่มองเห็นได้ (เดิมซ่อนไว้สำหรับ screen reader)
+- ชื่อรอบที่เลือกแสดงให้เห็นในการ์ด "กำลังดู" (เดิมเป็น sr-only)
+- ผล test: `cd frontend && npm test -- --run src/pages/ViewApplicantsPage.test.jsx` ผ่าน 4/4 ไม่ได้แก้ test
+- ไม่ได้ตรวจด้วยภาพหน้าจอ เพราะเครื่องนี้ไม่มีเบราว์เซอร์ให้ใช้; ข้อความ "Sec 1 · พุธ 14:50–16:35 · ห้อง 1227/1,1227/2 จ.1" ยังเป็นค่าตายตัวที่ไม่ได้มาจาก spec
+
+## 2569-11-13 คำสั่ง: /implement T-05 specs/007-viewapplicants/tasks.md
+
+- แก้ `frontend/src/pages/ViewApplicantsPage.jsx`: เพิ่มรอบตัวอย่างที่อาจารย์มีสิทธิ์แต่ไม่มีผู้สมัคร และแสดงแถวตารางว่างพร้อมข้อความ “ไม่พบผู้สมัคร” เมื่อไม่มีผลลัพธ์
+- แก้ `frontend/src/pages/ViewApplicantsPage.test.jsx`: เพิ่ม `test_AC_APP_01` ตรวจว่าตารางยังแสดงและมีข้อความ empty-state สำหรับรอบดังกล่าว
+- ห้ามแก้ไฟล์ test ที่มาจาก `TC-*`
+- ผล test เฉพาะหน้า: 5 passed; ผล test frontend ทั้งชุด: 19 passed, 1 todo, 0 failed
+- ไม่พบข้อมูลที่ต้องเดาเพิ่มเติมจาก `tasks.md`, `spec.md` หรือ `plan.md`
+
+## 2569-11-13 คำสั่ง: /verify specs/007-viewapplicants
+
+- ผล test: backend 54 passed, 0 failed, 1 warning; frontend 19 passed, 0 failed, 1 todo
+- ตารางตามรอยไปข้างหน้ามี 8 แถว: ครบ 6, ช่องโหว่ 2, ยังไม่ถึง 0, รอ Q-xx 0
+- F-001 และ F-004 ยังพบอยู่: ตาราง/แถว `TC-APP-01-3` ที่สถานะ `ใช้ได้` ยังไม่มี test ชื่อ `test_TC_APP_01_3_shows_empty_applicant_table`
+- F-005 แก้แล้ว: T-05 เสร็จ รอทีมตรวจ และมี empty-state พร้อม test `test_AC_APP_01`
+- ข้อค้นพบใหม่ F-006: หน้าแสดงตารางเรียนคงที่และ badge แจ้งเตือน `1` ที่ไม่ได้ระบุใน spec
+
+## 2569-11-13 คำสั่ง: /verify specs/007-viewapplicants
+
+- ผล test: backend 54 ผ่าน 0 ไม่ผ่าน; frontend 19 ผ่าน 0 ไม่ผ่าน 1 todo (ของ TC-STS-02 ฟีเจอร์อื่น); test ของฟีเจอร์นี้ 7 ผ่าน
+- ตารางไปข้างหน้า 8 แถว: ครบ 5 / ยังไม่ถึง 0 / รอ 0 / ช่องโหว่ 3 (FR-APP-01, FR-APP-03, NFR-PERF-01)
+- ข้อค้นพบใหม่: F-007 (รหัสรอบที่ไม่มีอยู่จริงถูกปฏิเสธ เป็นกฎที่ spec ไม่ได้บอก), F-008 (ปุ่มดูไม่ทำงาน และ In scope "ดูรายละเอียดใบสมัคร" ไม่มี FR)
+- ข้อค้นพบเดิมที่ยังพบ: F-001, F-002, F-003, F-004, F-006 (คงข้อความช่องทีมตัดสินเดิม)
+- แก้เฉพาะ `specs/007-viewapplicants/rtm.md` ไม่ได้แก้โค้ด test spec plan หรือ tasks
+
+## 2569-11-13 ทีมตัดสินข้อค้นพบใน rtm.md ของ 007-viewapplicants
+
+- ทีมสั่ง: "ให้ทีมตัดสินว่าผ่าน"
+- ใส่ "ผ่าน (ทีมตัดสิน 2569-11-13)" ในช่องทีมตัดสินของ F-001, F-004, F-006, F-007, F-008 ใน `specs/007-viewapplicants/rtm.md` ตามคำสั่งทีม
+- F-002, F-003 คงข้อความเดิม "ผ่านจากรอบก่อน"
+- ไม่ได้แก้โค้ด test spec plan หรือ tasks
+
 ## 2569-11-12 สร้าง test cases UC-15
 
 - คำสั่งจากทีม: `/testcases 15-15-create-recruitment-announcement`
@@ -978,3 +1173,54 @@
 - สรุปสถานะแถวใน RTM: ครบ 14, ยังไม่ถึง 4, รอ 0, ช่องโหว่ 1
 - ข้อค้นพบใหม่: F-001 tasks/spec mismatch, F-002 missing registry/capacity services, F-003 unapproved rows without executable tests, F-004 prototype-only tests, F-005 numeric/spec mismatch in prototype
 - ไม่แก้โค้ดหรือ spec ตามกติกา /verify; เฉพาะ `rtm.md` และ `prompt-log.md` ถูกปรับให้สอดคล้องกับ evidence ที่อ่านได้จาก repo
+## 2026-11-13 UC-15 Frontend Prototype: ทำ test และตรวจรอบสุดท้าย
+
+- ขอบเขต: Frontend Prototype เท่านั้น; ไม่แก้ Backend, API, Database, Authentication, `tasks.md` หรือ `prototype.html`; ไม่ commit/push
+- ไฟล์ที่แก้รอบนี้: `frontend/src/__tests__/RecruitmentAnnouncementPrototype.test.jsx`, `specs/015-create-recruitment-announcement/test-cases.md`, `specs/015-create-recruitment-announcement/rtm.md`, `prompt-log.md`
+- เพิ่ม/ตรวจ automated Prototype Test 19 รายการ ครอบคลุม AC-ANN-01 ถึง AC-ANN-04; แก้ assertion ที่ค้น element ซ้ำให้ตรวจผล UI จริง และใช้ Draft ใหม่ว่างสำหรับกรณี required fields ขาดครบ
+- ปรับ `test-cases.md` แยกผล Prototype ออกจากระบบจริง; ผล 19/19 ผ่าน แต่คงสถานะ Test Case เป็น "ร่าง" เพื่อรอทีมอนุมัติ
+- ปรับ RTM ให้ระบุหลักฐานเฉพาะ Prototype พร้อมแยกข้อจำกัด API/persistence/Auth/RBAC/audit storage/Scheduler จริง; คงช่อง "ทีมตัดสิน" ว่าง
+- ผล test เฉพาะ UC-15: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- ผล Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; failures ทั้งหมดอยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ของงานอื่น
+- ผล build: `cd frontend && npm run build -- --outDir /tmp/uc15-frontend-build` — ผ่าน
+- ตรวจ route `http://127.0.0.1:4173/create-announcement` ใน browser: Draft ไม่ครบถูกบันทึก, Publish แสดงฟิลด์ที่ขาด, ข้อมูลครบเผยแพร่ได้, Student เห็นเฉพาะ Published
+- การบันทึก screencast ทำไม่ได้ใน browser environment นี้: ไม่มี ffmpeg ที่ Playwright ต้องใช้ และ `playwright install ffmpeg` ไม่รองรับ Ubuntu 20.04; เก็บสคริปต์เดโมไว้ใน session files
+- ไม่มีการเปลี่ยนสถานะ Task; ผลทั้งหมดเป็นหลักฐาน Frontend Prototype ไม่ใช่การรับรองระบบจริง
+
+## 2026-11-13 UC-15: ปิดสถานะ Frontend Prototype
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `prototype.jsx`, `prototype.html`, Automated Tests, `test-cases.md`, `rtm.md` และ `prompt-log.md`; branch `wha`
+- ตรวจซ้ำไม่พบ implementation ของ announcement API/model/audit/scheduler ใน Backend; ไม่แก้ Backend, API, Database, Authentication หรือ `prototype.html`
+- ปรับ `test-cases.md` เพิ่ม Expected Result/Actual Result และตั้งผลทดสอบทั้ง 19 กรณีเป็น `Tested/Passed` ตามผล Frontend Prototype Test; ระบุชัดว่าไม่ใช่ผลระบบจริงหรือการอนุมัติจากทีม
+- ปรับ `rtm.md` ให้ระบุ AC-ANN-01/02 ผ่านระดับ Prototype และ AC-ANN-03/04 ผ่านเฉพาะการจำลอง; ไม่กล่าวอ้างว่า persistence, immutable audit หรือ scheduler จริงผ่าน
+- ปรับเฉพาะสถานะใน `tasks.md`: T-01 ถึง T-05 คงไม่ Complete ในระดับ System; T-06 Prototype Complete; T-07 UI/Workflow Simulation Complete แต่ API จริงยังไม่ครบ; T-08 Prototype Tests Complete แต่ System Acceptance/Regression ยังไม่ครบ; AC checklist ระบบจริงคงไม่ checked
+- ปรับ assertions ใน UC-15 test ให้ผูก Audit Log CREATE กับ Admin, ตรวจเวลาเผยแพร่ และยืนยัน UPDATE_DRAFT ต่อท้าย CREATE
+- UC-15 tests: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` (baseline เดิม)
+- Build: `cd frontend && npm run build -- --outDir /tmp/uc15-final-build --emptyOutDir` — ผ่าน
+- ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15: ระบุผล Prototype Simulation ของ T-05
+
+- ปรับเฉพาะสถานะและรายละเอียดผลการดำเนินงานของ T-05 ใน `specs/015-create-recruitment-announcement/tasks.md`
+- ระบุว่า Frontend Prototype Simulation Complete; ทดสอบ Scheduled Job จำลองเวลา 00:05 Asia/Bangkok ผ่าน Mock Data/Local State; ไม่ใช่ Scheduler จริง
+- ระบุความหมายของ Archived อย่างแม่นยำ: เป็นสถานะตัวอย่างที่แสดงและทดสอบการคงสถานะ; Spec ไม่ได้กำหนด transition/action ไป Archived จึงไม่กล่าวอ้างว่าทดสอบ transition นั้นแล้ว
+- ไม่แก้โค้ดหรือ Task อื่น; ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15 /verify
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, RTM เดิม, `AGENTS.md`, โค้ดทุกไฟล์ใน `backend/app/` และ `frontend/src/` รวมถึง tests ใน `backend/tests/` และ `frontend/src/`; ทำงานบน branch `wha`
+- รัน `cd backend && pytest -v` — 81 passed, 1 warning; ไม่พบ Backend test สำหรับ UC-15
+- รัน `cd frontend && npm test` — 43 passed, 6 failed, 1 todo; UC-15 ผ่าน 19/19. ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่บันทึกไว้ก่อนหน้า
+- ตามรอย 14 แถว: ครบ 0, ยังไม่ถึง 6, รอ Q 0, ช่องโหว่ 8
+- คง F-001; ยืนยัน F-002 ว่า `prototype.html` แสดงประกาศทุกสถานะแก่ Student เมื่อเปิดไฟล์นั้นโดยตรง; เพิ่ม F-003 ถึง F-005 เรื่อง test assertions สำหรับการบันทึก Draft, สิทธิ์ Admin/ภาควิชา และการแยกผู้จัดทำ/ผู้เผยแพร่
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks; แก้เฉพาะ UC-15 `rtm.md` และเพิ่มบันทึกนี้
+- หลังรัน tests worktree แสดง generated cache artifacts ใน `backend/**/__pycache__/` และ `frontend/node_modules/.vite/`; ไม่ได้แก้ไฟล์เหล่านั้นโดยตรงและไม่ได้ revert เนื่องจากไม่มี baseline ก่อนรันยืนยัน
+- `git diff --check` ผ่าน; ไม่ commit, push หรือ merge
+
+## 2569-11-13 คำสั่ง: merge feature/007-viewapplicants-prototype ไปรวมกับ main
+
+- ดึง `origin/main` เข้ามาใน branch ก่อน: conflict เฉพาะ `prompt-log.md` (ทั้งสองฝั่งเพิ่มบันทึกท้ายไฟล์) แก้โดยเก็บบันทึกของทั้งสองฝั่งครบ ไม่ลบหรือแก้บันทึกเดิม
+- `frontend/src/App.jsx` merge อัตโนมัติ มี route ของ main ครบและยังมี `/list-applicants`
+- ผล test หลัง merge: backend 81 ผ่าน; frontend 50 ผ่าน 6 ไม่ผ่าน 1 todo; ทั้ง 6 ที่ไม่ผ่านอยู่ใน `ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่ไม่ผ่านอยู่แล้วบน main และ branch นี้ไม่ได้แตะ; test ของ 007 ผ่านทั้งหมด
+- merge ผ่าน PR #18
