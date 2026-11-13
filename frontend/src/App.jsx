@@ -6,7 +6,7 @@ export default function App() {
   if (window.location.pathname === '/payments') {
     return <PaymentTrackingPage />;
   }
-  if (window.location.pathname === '/applicants') {
+  if (window.location.pathname === '/list-applicants') {
     return <ViewApplicantsPage />;
   }
 
