@@ -1,6 +1,6 @@
 # Feature: จัดทำประกาศรับสมัคร
 Spec ID: SPEC-15-15- | Source: Use Case Diagram UC-15 | Use case: UC-15
-Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-20
+Owner: ทีม A | Status: Draft v2 | Updated: 2569-11-12
 
 ## Goal
 เจ้าหน้าที่จัดทำและเผยแพร่ประกาศรับสมัคร Lab Boy ให้เป็นแหล่งข้อมูลหลักสำหรับกระบวนการรับสมัคร โดยมีข้อมูลที่ครบถ้วนและบันทึกประวัติการเปลี่ยนแปลงตามมาตรฐานความปลอดภัยและตรวจสอบย้อนกลับได้
@@ -23,7 +23,7 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-20
 - ฟิลด์ข้อมูลบังคับต้องครบถ้วนก่อนเปลี่ยนสถานะเป็น Published
 - ประกาศแบบ Draft สามารถบันทึกไว้ก่อนเผยแพร่โดยไม่บังคับให้กรอกทุกฟิลด์
 - ผู้จัดทำต้องมีสิทธิ์ของภาควิชา และผู้ดูแลระบบ (Admin) มีสิทธิ์เปลี่ยนสถานะ Draft → Published ได้ทันที
-- สถานะประกาศต้องเป็นไปตาม lifecycle: Draft → Published → Expired / Archived
+- สถานะประกาศต้องเป็นไปตาม lifecycle: Draft → Published → Expired / Archived โดยประกาศ Published มีผลหมดอายุเมื่อสิ้นสุดวัน end_date เวลา 23:59:59 น. ตาม Asia/Bangkok (UTC+7) และเปลี่ยนเป็น Expired โดย Scheduled Job ที่ทำงานทุกวันเวลา 00:05 น. ตาม Asia/Bangkok (UTC+7)
 - ประวัติการจัดทำและการเปลี่ยนสถานะต้องถูกบันทึกแบบ append-only
 
 ## Requirements
@@ -33,21 +33,31 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-20
 
 ## Quality Requirements
 - NFR-AUD-01 ระบบต้องเก็บประวัติการสร้าง/แก้ไข/เผยแพร่ประกาศแบบ immutable ในตาราง announcement_audit_logs โดยมีข้อมูล: announcement_id, action, operator_id, operator_role, timestamp, changed_fields
-- NFR-SEC-01 ระบบต้องตรวจสอบสิทธิ์ทุกครั้งก่อนให้จัดทำหรือแก้ไขประกาศ และให้เฉพาะเจ้าหน้าที่ภาควิชาและ Admin ที่สามารถเปลี่ยนสถานะไปสู่ Published
+- NFR-SEC-01 ระบบต้องตรวจสอบสิทธิ์ทุกครั้งก่อนให้จัดทำหรือแก้ไขประกาศ และให้เฉพาะเจ้าหน้าที่ภาควิชาและ Admin ที่สามารถเปลี่ยนสถานะไปสู่ Published; ผู้ใช้ Student ต้องไม่สามารถเปลี่ยนสถานะไปสู่ Published
 
 ## Acceptance Criteria
 - [ ] AC-ANN-01 (FR-ANN-01)
       Given เจ้าหน้าที่ภาควิชา หรือผู้ดูแลระบบมีสิทธิ์ใช้งาน
             When  สร้างประกาศใหม่หรือบันทึกฉบับร่าง
-            Then  ระบบอนุญาตให้บันทึกข้อมูลประกาศตาม template และจัดเก็บสถานะเป็น Draft
+            Then  ระบบอนุญาตให้บันทึกข้อมูลประกาศตาม template และจัดเก็บสถานะเป็น Draft; นักศึกษาเห็นเฉพาะประกาศ Published ตาม ASM-04
 - [ ] AC-ANN-02 (FR-ANN-02)
       Given ข้อมูลประกาศไม่ครบถ้วนสำหรับการเผยแพร่
             When  ผู้ใช้งานกดเผยแพร่ประกาศ
             Then  ระบบปฏิเสธการเผยแพร่ และแสดงรายการข้อมูลที่ขาด เช่น title, course_id, quota, start_date, end_date, qualifications, required_documents
+      Given ข้อมูลประกาศครบถ้วนและผู้ใช้งานมีสิทธิ์เผยแพร่
+            When  ผู้ใช้งานกดเผยแพร่ประกาศ
+            Then  ระบบเปลี่ยนสถานะประกาศเป็น Published
+      Given ข้อมูลประกาศครบถ้วนและผู้ใช้งานเป็น Student
+            When  ผู้ใช้กดเผยแพร่ประกาศ
+            Then  ระบบปฏิเสธการเผยแพร่และไม่เปลี่ยนสถานะเป็น Published
 - [ ] AC-ANN-03 (FR-ANN-03)
       Given ข้อมูลประกาศครบถ้วนและสถานะพร้อมเผยแพร่
             When  ผู้ใช้งานกดเผยแพร่ประกาศ
             Then  ระบบบันทึกผู้จัดทำ ผู้เผยแพร่ เวลาเผยแพร่ และบันทึก audit log แบบ append-only พร้อมข้อมูล action, operator_id, operator_role, timestamp, และ changed_fields
+- [ ] AC-ANN-04 (Lifecycle / ASM-02)
+      Given ประกาศมีสถานะ Published และสิ้นสุดวัน end_date เวลา 23:59:59 น. ตาม Asia/Bangkok (UTC+7) แล้ว
+            When  Scheduled Job ทำงานทุกวันเวลา 00:05 น. ตาม Asia/Bangkok (UTC+7) และตรวจพบประกาศที่หมดอายุ
+            Then  ระบบเปลี่ยนสถานะประกาศเป็น Expired
 
 ## Assumptions & Open Questions
 - ASM-01 รูปแบบประกาศมี template ที่กำหนดไว้ให้ใช้เป็นแหล่งข้อมูลหลัก
@@ -63,4 +73,6 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-20
 | UC-15 requirement 2 | FR-ANN-02 | AC-ANN-02 |
 | UC-15 requirement 3 | FR-ANN-03 | AC-ANN-03 |
 | NFR-AUD-01 | Quality Requirements | AC-ANN-03 |
-| NFR-SEC-01 | Quality Requirements | AC-ANN-01 |
+| NFR-SEC-01 | Quality Requirements | AC-ANN-01, AC-ANN-02 |
+| Lifecycle Constraint / ASM-02 | Constraints / Assumptions | AC-ANN-04 |
+| ASM-04 | Assumptions | AC-ANN-01 |

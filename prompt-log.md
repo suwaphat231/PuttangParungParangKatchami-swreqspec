@@ -259,6 +259,21 @@
 - ผล test: `cd frontend && npm test -- --run src/components/PaymentStatusBadge.test.jsx` -> 1 file passed, 3 tests passed
 - สถานะ T-04: เปลี่ยนเป็น `เสร็จ รอทีมตรวจ`
 
+## 2569-11-13 14:12 คำสั่ง: /verify specs/019-check-work-time
+- โหมด: ตรวจสอบ requirement และ test ตามรอยไปข้างหน้า/ย้อนกลับ โดยไม่แก้โค้ด, test, spec, plan หรือ tasks
+- ไฟล์ที่อ่าน: `specs/019-check-work-time/spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, `rtm.md` และ `AGENTS.md`
+- ผล test: `cd backend && pytest -v` -> 81 passed, 0 failed; `cd frontend && npx vitest run src/__tests__/checkWorkTime.test.jsx` -> 9 passed, 0 failed; `cd frontend && CI=1 npm test -- --run` -> full suite still ไม่ผ่าน เนื่องจาก tests อื่นของ ApplyLabBoy 6 failed และไม่ใช่ scope ของ SPEC-19-19-
+- ผลตามรอย: FR-CAL-01 ถึง FR-CAL-05, NFR-REL-01, NFR-INT-01 = ครบ; NFR-PERF-01 = ยังไม่ถึง
+- ข้อค้นพบใหม่: F-001 (NFR-PERF-01 ไม่มี benchmark/threshold ที่ traceable กับ spec)
+- ไฟล์ที่แก้: `specs/019-check-work-time/rtm.md` และ `prompt-log.md` (เพิ่มต่อท้ายเท่านั้น)
+
+## 2569-11-13 14:05 คำสั่ง: /testcases AC-CAL-01-05 specs/019-check-work-time
+- โหมด: ร่าง เนื่องจากยังไม่มี `test-cases.md` ในฟีเจอร์นี้ และ AC ที่มีคำขอคือ AC-CAL-01 ถึง AC-CAL-05
+- ไฟล์ที่สร้าง: `specs/019-check-work-time/test-cases.md`
+- TC ID ที่เสนอ: `TC-CAL-01-1` ถึง `TC-CAL-05-3`
+- ผลลัพธ์: เสนอ 15 แถว สถานะ `ร่าง`; ยังไม่ได้เขียนหรือรันโค้ด test ตามโหมดร่าง
+- ข้อจำกัด/คำถาม: `NFR-PERF-01` เป็น Quality Requirement ไม่ใช่ AC ดังนั้นจึงดำเนินการต่อแปลง AC-CAL-01 ถึง AC-CAL-05 ตามคำขอของทีม และหยุดรอให้ทีมตรวจแถวและเปลี่ยนสถานะเป็น `ใช้ได้` ก่อน
+
 ## 2569-11-05 11:34 คำสั่ง: ตรวจสอบความพร้อม T-01 specs/16-16-track-payment/tasks.md
 
 - เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
@@ -489,6 +504,52 @@
 - ปรับ UC-19 ให้ prototype ที่ task ยังไม่เสร็จเป็น `ยังไม่ถึง` ไม่ใช่ข้อค้นพบจาก test
 - ไม่แก้โค้ด, test, spec, plan หรือ tasks; `git diff --check` ผ่าน
 
+## 2569-11-11 ทำ Prototype สมัครเป็น Lab Boy (UC-01)
+
+- คำสั่งจากทีม: `/workspaces/PuttangParungParangKatchami-swreqspec/specs/001-apply-lab-boy` — “ทำ Prototype ให้ดูหน่อย”
+- เพิ่มหน้า Prototype ที่ `/apply-lab-boy` เพื่อสาธิตประกาศรับสมัคร การตรวจข้อมูลบัญชี การยืนยัน ถอน/สมัครใหม่ และผลลัพธ์จำลองตาม AC ใน `specs/001-apply-lab-boy/spec.md`
+- ระบุชัดว่าเป็นข้อมูลจำลอง ไม่เชื่อม Backend และชื่อ/ฟิลด์ข้อมูลเป็นตัวอย่างเท่านั้น
+- เพิ่มการทดสอบ UI ที่อ้างอิง AC-LB-01 ถึง AC-LB-11; ไม่แก้ spec, plan หรือ tasks
+
+## 2569-11-11 ย้ายไฟล์ Prototype สมัคร Lab Boy
+
+- คำสั่งจากทีม: ย้ายไฟล์ Prototype ไปไว้ที่ `specs/001-apply-lab-boy`
+- ย้ายหน้า Prototype ไปเป็น `specs/001-apply-lab-boy/ApplyLabBoyPrototype.jsx` และปรับ import ใน Frontend
+- คงไฟล์ทดสอบไว้ใน `frontend/src/pages` เพื่อให้ชุดทดสอบเดิมตรวจพบและรันได้
+
+## 2569-11-11 ปรับหน้า Prototype สมัคร Lab Boy
+
+- คำสั่งจากทีม: ไม่ต้องการหัวข้อ “ตรวจสอบคุณสมบัติ”, “ทดลองสถานการณ์” และ “ขั้นตอนการสมัคร”
+- นำแผงหัวข้อดังกล่าวออก ปรับหน้าประกาศและข้อมูลผู้สมัครเป็นคอลัมน์เดียว และคงตัวเลือกผลจำลองไว้ในฟอร์มโดยไม่มีหัวข้อ “ทดลองสถานการณ์”
+- เพิ่ม assertion ใน UI test ว่าหัวข้อ/ข้อความที่ระบุไม่ปรากฏ
+
+## 2569-11-11 ปรับข้อมูลผู้สมัครและการแสดงจำนวนผู้สมัคร (UC-01)
+
+- คำสั่งจากทีม: ไม่แสดงหัวข้อ “สมัครแล้ว” และเพิ่มการยืนยันเกรดของนักศึกษา
+
+### คำถามที่ AI ถาม (ทั้งหมด)
+
+1. ต้องการซ่อนเฉพาะหัวข้อ “สมัครแล้ว” หรือเอาช่องจำนวนผู้สมัครและตัวเลขออกทั้งหมด?
+2. ต้องการให้ผู้สมัครยืนยันเกรดในลักษณะใด?
+3. ต้องการให้กรอกข้อมูลเกรดชนิดใด ใช้รูปแบบใด และเกรดจะใช้ตัดสินสิทธิ์สมัครหรือไม่?
+4. สำหรับเกรดรายวิชา ให้กรอกเกรดอย่างเดียวเพราะรายวิชาอยู่ในประกาศ หรือกรอกรหัส/ชื่อวิชาด้วย?
+5. ใน spec ยังไม่มีรายวิชาที่เกี่ยวข้อง ต้องการเพิ่มชื่อวิชาในประกาศ หรือเก็บเกรดโดยไม่ผูกกับรายวิชา?
+
+### คำตอบของทีมและเหตุผล
+
+1. เอาช่องจำนวนผู้สมัครและตัวเลขออกทั้งหมด
+2. ให้ผู้สมัครกรอกเกรดเองแล้วกดยืนยัน
+3. เลือกเกรดรายวิชาแบบตัวอักษร A–F และเก็บเพื่อยืนยันเท่านั้น ไม่ใช้ตัดสินสิทธิ์สมัคร
+4. ทีมเลือกกรอกเฉพาะเกรด เพราะเข้าใจว่ารายวิชาอยู่ในประกาศ
+5. หลังแจ้งว่า spec/Prototype ไม่ระบุรายวิชา ทีมยืนยันให้เก็บเกรดโดยไม่ผูกกับรายวิชา
+
+### สิ่งที่แก้
+
+- เพิ่ม ASM-07 ใน `specs/001-apply-lab-boy/spec.md` เพื่อบันทึกชนิดเกรดและวิธีใช้งานตามคำตอบของทีม
+- เอาช่องจำนวนผู้สมัครออกจาก Prototype
+- เพิ่มฟิลด์เกรด A–F ที่ต้องเลือกก่อนยืนยัน และแสดงเกรดในหน้าต่างยืนยัน/ผลการสมัคร โดยไม่ใช้เกรดตัดสินคุณสมบัติ
+- เพิ่ม UI tests ตรวจการซ่อนจำนวนผู้สมัครและการยืนยันเกรด
+
 ## 2569-11-11 ตรวจยืนยันว่า RTM อิงจาก spec ทุกฟีเจอร์
 
 - ตรวจ RTM ครบ 22 ฟีเจอร์ โดยเทียบ requirement ID, AC ID และ Q ID ในตารางตามรอยไปข้างหน้ากับ `spec.md` และ task references กับ `tasks.md`
@@ -692,3 +753,275 @@
 - ใส่ "ผ่าน (ทีมตัดสิน 2569-11-13)" ในช่องทีมตัดสินของ F-001, F-004, F-006, F-007, F-008 ใน `specs/007-viewapplicants/rtm.md` ตามคำสั่งทีม
 - F-002, F-003 คงข้อความเดิม "ผ่านจากรอบก่อน"
 - ไม่ได้แก้โค้ด test spec plan หรือ tasks
+
+## 2569-11-12 สร้าง test cases UC-15
+
+- คำสั่งจากทีม: `/testcases 15-15-create-recruitment-announcement`
+- คำถามที่ AI ถาม: ต้องการสร้าง test cases สำหรับ AC ID ใด
+- คำตอบของทีม: AC-ANN-01, AC-ANN-02, AC-ANN-03, AC-ANN-04
+- โหมด: ร่าง; สร้าง 9 แถว สถานะ "ร่าง" สำหรับ AC-ANN-01 ถึง AC-ANN-03 ใน `specs/15-15-create-recruitment-announcement/test-cases.md`; ยังไม่เขียนหรือรัน test
+- ข้อสังเกต: AC-ANN-04 ไม่มีใน spec.md จึงยังไม่สร้าง test case ให้; plan.md ระบุ AC-ANN-03 เป็นเรื่อง Expired แต่ spec.md ระบุ AC-ANN-03 เป็นเรื่อง audit log; แถว AC-ANN-02-3, AC-ANN-03-3 และ AC-ANN-01-3 ระบุผลที่ spec ไม่ได้กำหนดครบถ้วนไว้เป็นคำถาม
+
+## 2569-11-12 ตรวจ React Prototype และปรับ test cases UC-15
+
+- คำสั่งจากทีม: ตรวจ Implementation React Prototype จริง, ปรับ test cases ทั้ง 9 ให้เป็น frontend tests โดยไม่เปลี่ยน Requirement, และรายงานข้อผิดพลาดก่อนแก้ Implementation
+- คำถามที่ AI ถาม: จะคง expected behavior ตาม spec แล้วบันทึกช่องว่างของ Prototype หรือจำกัด tests เฉพาะ render/callback ที่มีอยู่
+- คำตอบของทีม: คง expected behavior ตาม spec และบันทึกสิ่งที่ Prototype ยังไม่มีเป็น implementation gaps
+- ผลตรวจ: มี Vitest และ React Testing Library ใน `frontend/package.json`; `AnnouncementForm.jsx` เป็น component นำเสนอที่เรียก callbacks ซึ่งส่งเข้ามา ไม่มีผู้เรียกใช้ใน `frontend/src`; ไม่พบ validation, persistence/state transition, Student role guard หรือ audit log ใน React Prototype
+- สิ่งที่แก้: เปลี่ยนวิธีตรวจทั้ง 9 แถวจาก pytest เป็น Vitest + React Testing Library; เพิ่มกรณี Student publish ตาม NFR-SEC-01; คง AC เดิมและทุกแถวยังเป็น "ร่าง"
+- ผล test: ไม่ได้เขียนหรือรัน test code เพราะ test cases ยังเป็นร่างและ Prototype ไม่มี flow ให้ทดสอบ expected behavior เหล่านี้; ไม่แก้ Implementation ตามคำสั่ง
+- คำถามค้าง: spec.md ไม่กำหนดผลเมื่อข้อมูลครบและผู้ใช้กดเผยแพร่; plan.md ระบุ Published แต่ต้องให้ทีมยืนยันก่อนใช้เป็น expected result
+
+## 2569-11-12 ปรับเอกสาร UC-15 ให้ใช้ AC-ANN-01 ถึง AC-ANN-04
+
+- คำสั่งจากทีม: ยึด Spec v2; แยก AC-ANN-03 สำหรับ audit log และ AC-ANN-04 สำหรับ Expired อัตโนมัติ; เพิ่มผลเมื่อข้อมูลครบแล้ว Publish; ปรับ Plan, Tasks, RTM และ test cases ให้ตรงกัน; คง implementation gap และ test cases สถานะร่าง; ห้ามแก้โค้ดหรือรันทดสอบ
+- สิ่งที่แก้: เพิ่ม Expected Result `Published` และ Student publish denial ใน AC-ANN-02; กำหนด AC-ANN-04 และ lifecycle constraint; ปรับ NFR-SEC-01, traceability และแผน/รายการ task ให้ใช้ T-01 ถึง T-08 ตรงกัน
+- Test cases: แยกตาม AC-ANN-01 ถึง AC-ANN-04 รวม 13 แถว ทุกแถวยังคงสถานะ "ร่าง"; ไม่เปลี่ยนผลทดสอบและไม่ได้สร้าง test code
+- RTM: คง F-001 เรื่อง implementation gap, บันทึก mock behavior ใน `prototype.html` เทียบกับระบบจริง และเพิ่ม F-002 เรื่อง Student ยังเห็น Draft ในรายการ mock
+- ผลตรวจ Prototype: `prototype.html` มี Draft/validation/Publish/role guard/audit log แบบ in-memory; ไม่พบ persistent storage, immutable audit storage หรือ Scheduled Job; React `AnnouncementForm` ยังไม่เชื่อมกับ `App`
+- ผลตรวจเอกสาร: AC ทุกข้อเชื่อมกับ task และ RTM; T-05 อ้าง AC-ANN-04; NFR-SEC-01 ครอบคลุม Student; ไม่ได้แก้ source code, React Prototype หรือ Implementation
+- ผล test: ไม่ได้รันตามคำสั่ง; ตรวจ `git diff --check` หลังแก้ไข
+- สิ่งที่ต้องให้ทีมยืนยัน: cutoff/time zone และความถี่ของ Scheduled Job สำหรับ end_date; ความหมาย/การแสดงข้อมูล Draft ที่ Student เห็นใน mock UI
+
+## 2569-11-12 ระบุเวลา Expired และสถานะ T-05 ตามข้อสรุปทีม
+
+- คำสั่งจากทีม: กำหนดเวลาหมดอายุ 23:59:59 น. Asia/Bangkok (UTC+7), Scheduled Job ทุกวัน 00:05 น. Asia/Bangkok, เปลี่ยน T-05 เป็นรอดำเนินการ, เพิ่ม test cases สำหรับเวลา Expired และ Student ต้องไม่เห็น Draft; ห้ามแก้ Prototype/Implementation หรือรันทดสอบ
+- สิ่งที่แก้: ระบุเวลา/time zone ใน spec, plan, tasks และ RTM; เปลี่ยนสถานะ T-05 เป็น "รอดำเนินการ / ยังไม่ Implement"; เพิ่ม TC-ANN-01-4 และ TC-ANN-04-4; ปรับ boundary cases ให้ตรงกับเวลาที่ทีมกำหนด
+- Test cases: มี 15 แถว ทุกแถวยังคงสถานะ "ร่าง"; ไม่เปลี่ยนผล Pass/Fail และไม่สร้าง test code
+- Implementation Gap: คง F-001 เรื่องไม่มี Scheduler ใน Implementation/RTM และ F-002 เรื่อง HTML Prototype ยังแสดง Draft ให้ Student; ไม่แก้ `prototype.html`, Source Code หรือ React Prototype
+- ผล test: ไม่ได้รันตามคำสั่ง; จะตรวจเฉพาะ `git diff --check` และความสอดคล้องของเอกสาร
+## 2569-11-12 21:54 ปรับข้อมูลห้องทำงานในประกาศสมัคร Lab Boy
+
+- คำสั่งจากทีม: เพิ่มเวลาที่ต้องทำ Lab Boy และห้องทำงานใต้ชื่ออาจารย์
+
+### คำถามที่ AI ถาม (ทั้งหมด)
+
+1. ยืนยันว่าปรับ `ApplyLabBoyPrototype.jsx` และให้ระบุชื่ออาจารย์ เวลาปฏิบัติงาน ห้องทำงาน และยืนยันการแก้ spec หรือไม่?
+2. ชื่ออาจารย์ควรแสดงอย่างไร และ “ไม่ต้องทำ” หมายถึงไม่มีชั่วโมงที่กำหนดหรือข้อความอื่น?
+3. ชั่วโมงที่ไม่กำหนดให้ซ่อนหรือแสดงเป็น “ไม่กำหนด” และชื่ออาจารย์ใช้บัญชีเจ้าของประกาศหรือบัญชีผู้ใช้ปัจจุบัน?
+4. เนื่องจาก Prototype ยังไม่มีข้อมูลชื่ออาจารย์ จะเพิ่มห้องในส่วนประกาศชั่วคราว หรือรอให้ทีมเพิ่มชื่อก่อน?
+
+### คำตอบของทีมและเหตุผล
+
+1. ยืนยันขอบเขต Prototype และแก้ spec; ห้องทำงานคือ `ว.1 ห้อง 1227`; ค่าแรกของชั่วโมงที่ส่งมายังไม่ชัด
+2. ชื่อควรมาจาก User ID โดยไม่ต้องกรอกเอง; ชั่วโมงไม่ต้องกำหนด; ห้องแสดงใต้ชื่อ
+3. ซ่อนชั่วโมง และทีมจะจัดการแหล่งชื่ออาจารย์เอง
+4. เพิ่มห้องในส่วนประกาศชั่วคราว เพื่อให้ทีมย้ายไปใต้ชื่ออาจารย์ภายหลัง
+
+### สิ่งที่แก้
+
+- ปรับ FR-LB-01 และ AC-LB-02 ให้ระบุการแสดงห้องทำงาน โดยคง ID เดิม
+- เพิ่ม `ว.1 ห้อง 1227` ใต้ชื่ออาจารย์ในส่วนประกาศของ Prototype; ไม่เพิ่มข้อมูลชั่วโมงปฏิบัติงาน
+- เพิ่ม test สำหรับ AC-LB-02 ตรวจตำแหน่งห้องทำงานใต้ชื่ออาจารย์ และตรวจว่าไม่มีข้อความชั่วโมงปฏิบัติงาน
+- ทีมจะจัดการการผูกชื่ออาจารย์กับ User ID เอง; ตำแหน่งห้องใน Prototype ขณะนี้เป็นตำแหน่งชั่วคราวตามที่ยืนยัน
+- ตรวจสอบ: `npm test -- src/pages/ApplyLabBoyPage.test.jsx` ผ่าน 8/8 tests, `npm run build` ผ่าน และ `git diff --check` ผ่าน
+
+## 2569-11-12 22:21 /testcases AC-LB-01
+
+- โหมด: ร่าง
+- ไฟล์: `specs/001-apply-lab-boy/test-cases.md`
+- สถานะ task ที่เกี่ยวข้อง: T-04 พร้อมทำ
+- เสนอ TC-LB-01-1 ถึง TC-LB-01-5; ยังไม่ได้เขียนโค้ด test เพราะทุกแถวมีสถานะ `ร่าง`
+- จุดที่ spec ยังไม่บอก: เมื่อคำขอยืนยันมาถึงตรงกับเวลาปิดรับสมัคร ให้นับว่ายังอยู่ในช่วงรับสมัครหรือไม่
+
+## 2569-11-12 22:30 ปรับปุ่มในฟอร์มสมัคร Lab Boy
+
+- คำสั่งจากทีม: แทนที่ปุ่มคืนค่าข้อมูลด้วยปุ่มยืนยันการสมัครและยกเลิก
+
+### คำถามที่ AI ถาม (ทั้งหมด)
+
+1. ต้องการเปลี่ยนปุ่มแถวใต้ฟอร์มหรือปุ่มในกล่องยืนยัน และปุ่มยกเลิกควรทำอะไร?
+2. เมื่อเลือกแถวใต้ฟอร์มแต่ตอบว่าจะปิดกล่องยืนยัน ซึ่งยังไม่เปิดอยู่ ต้องการให้ปุ่มทำอะไรแทน?
+3. “ไม่ต้องแสดงอะไร” หมายถึงซ่อนปุ่มหรือแสดงปุ่มที่กดแล้วไม่เกิดผล?
+
+### คำตอบของทีมและเหตุผล
+
+1. เปลี่ยนแถวใต้ฟอร์มแทนปุ่มคืนค่าข้อมูล; ตอนแรกตอบให้ปิดกล่องยืนยัน
+2. ตอบว่าไม่ต้องแสดงอะไร
+3. ยืนยันให้แสดงปุ่มยกเลิก แต่กดแล้วไม่เกิดผล
+
+### สิ่งที่แก้
+
+- ปรับ FR-LB-06 และ AC-LB-06 โดยคง ID เดิม ให้ระบุปุ่มยืนยันและยกเลิก และผลของปุ่มยกเลิก
+- แทนปุ่ม “คืนค่าข้อมูลตัวอย่าง” ด้วย “ยกเลิก”; ปุ่มยกเลิกไม่เปลี่ยนข้อมูลหรือสถานะตามที่ทีมยืนยัน
+- เพิ่ม test ตรวจการแสดงปุ่มทั้งสองและตรวจว่าการกดยกเลิกไม่เปลี่ยนข้อมูลในฟอร์ม
+- ตรวจสอบ: `npm test -- src/pages/ApplyLabBoyPage.test.jsx` และ `git diff --check` (บันทึกผลหลังรัน)
+
+### ผลตรวจหลังรัน
+
+- test ปุ่มยกเลิก: ผ่าน 1/1 (อีก 8 tests ถูกข้ามด้วย filter)
+- ชุด test ทั้งไฟล์: 7 ผ่าน, 2 ไม่ผ่าน เพราะยังค้นหา combobox `ผลจำลองเมื่อยืนยัน` ที่ไม่มีใน JSX ปัจจุบัน; ไม่ได้แก้ test เหล่านั้นซึ่งอยู่นอกงานนี้
+- `git diff --check` ยังพบ whitespace ท้ายบรรทัดเดิมที่ `ApplyLabBoyPrototype.jsx:261`; ไม่แก้เพราะไม่เกี่ยวกับงานนี้
+
+## 2569-11-12 22:50 /verify specs/001-apply-lab-boy
+
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/rtm.md` และเพิ่มบันทึกนี้ต่อท้าย
+- ผล test: backend 54 ผ่าน; frontend 15 ผ่าน, 6 ไม่ผ่าน, 1 todo
+- test ไฟล์หน้า Lab Boy: ผ่าน 3 (รวม route test 1 และ test ประกาศ/ห้องทำงาน 2); ไม่ผ่าน 6 เพราะ test เดิมค้น label เกรดและ selector จำลองที่ไม่มีใน UI ปัจจุบัน
+- ตารางตามรอยไปข้างหน้า: ครบ 0, ยังไม่ถึง 15, รอ 0, ช่องโหว่ 4
+- ข้อค้นพบใหม่: F-002 เกณฑ์/รายการเกรดไม่ตรง ASM-07; F-003 แสดงเวลาปฏิบัติงานที่อยู่ใน Out of scope; F-004 กำหนดรูปแบบเลขใบสมัครและวันเวลาโดยไม่มีข้อกำหนดใน spec
+- คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้; ไม่แก้โค้ดหรือ test
+
+## 2569-11-12 23.32 คำสั่ง: ปรับ FR-MSG-02 ของ specs/022-notify-user
+
+- ทีมสั่ง: เลือกฟีเจอร์ 022 และปรับ FR-MSG-02 ให้ใช้เฉพาะ notification ภายในระบบ
+- ไฟล์ที่แก้: `specs/022-notify-user/spec.md`
+- ผลลัพธ์: ปรับ FR-MSG-02 ให้ระบุ notification ภายในระบบเท่านั้น และส่งให้ผู้ใช้ที่เปิดใช้งานและมีสิทธิ์รับการแจ้งเตือน
+- การตรวจสอบ: ตรวจทานเอกสารที่เกี่ยวข้องแล้ว; ไม่รันทดสอบเนื่องจากเป็นการแก้เอกสาร
+
+## 2569-11-13 00:13 /implement T-01 specs/019-check-work-time/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/schemas/calendar_check_request.py`, `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`
+- ไฟล์สถานะ/บันทึกที่แก้: `specs/019-check-work-time/tasks.md` (T-01 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 5 passed, 1 warning จาก Starlette/httpx deprecation
+- ผลลัพธ์: เพิ่มการรับและตรวจสอบ `startDate`/`endDate` ตามรูปแบบ ISO datetime ในตัวอย่าง plan และทดสอบ AC-CAL-01 ทั้งกรณีข้อมูลถูกต้อง ขาด และรูปแบบผิด
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-02 ขึ้นไปยังไม่ได้ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี Task ID ในคำสั่งแรก จึงถามทีมและได้รับคำตอบ T-01 ก่อนเริ่ม; ไม่ได้กำหนดกติกาปฏิทินหรือการตรวจช่วงซึ่งอยู่นอก T-01
+
+## 2569-11-13 00:17 /implement T-02 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-01 และยืนยัน policy สำหรับ T-02: ใช้ช่วง PDF 22 มิ.ย. 2569–5 ก.ค. 2570; การดึง ThailandFormats API แบบสดที่ผ่าน validation ถือเป็นข้อมูลปัจจุบันและบันทึกเวลาที่ดึง
+- ไฟล์ที่สร้าง: `backend/app/models/calendar_snapshot.py`, `backend/app/services/calendar_source.py`
+- ไฟล์ที่แก้: `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-01 เป็น "เสร็จ", T-02 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: เพิ่ม snapshot จาก PDF มหาวิทยาลัยปี 2569 และวันหยุดไทยที่ดึงตามปี ค.ศ.; ปฏิเสธช่วงนอกขอบเขต PDF และข้อมูล API ที่ผิด/ขาด/ปีไม่ตรง
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 12 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่แก้ `spec.md` หรือ `plan.md`; ไม่ได้ทำ T-03 เป็นต้นไป
+- สิ่งที่เกือบต้องเดา: ขอบเขตวันของ PDF และ freshness ของ API; ถามทีมและใช้คำตอบที่ยืนยันแล้ว
+
+## 2569-11-13 00:28 /implement T-03 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-02 ก่อนเริ่ม T-03
+- ไฟล์ที่สร้าง: `backend/app/services/calendar_overlap_service.py`
+- ไฟล์ที่แก้: `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-02 เป็น "เสร็จ", T-03 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: ตรวจ overlap แบบรวมวันเริ่มและวันสิ้นสุดกับช่วงห้ามจากปฏิทินมหาวิทยาลัยและวันหยุดไทย; partial-day overlap ถือว่า FAIL พร้อมเหตุผล; ไม่ overlap คืน PASS
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 15 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-04 ขึ้นไปยังไม่ได้ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี; ยึดกฎ full-day และ partial overlap ที่ทีมยืนยันใน Q-01/Q-02
+
+## 2569-11-13 00:31 /implement T-04 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-03 ก่อนเริ่ม T-04 และกำหนดให้ T-04 สร้าง response service; T-05 จะสร้าง endpoint ที่ `/calendar/check`
+- ปรับรายละเอียด T-04 ใน `tasks.md` ให้ไม่รวม endpoint ซึ่งเป็นงานของ T-05; ไม่เปลี่ยน ID และไม่แก้ `spec.md`/`plan.md`
+- ไฟล์ที่แก้: `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-03 เป็น "เสร็จ", T-04 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: สร้าง JSON payload ที่มี `status`, `reason`, `calendarVersion`, `effectiveDate` สำหรับทั้งผล PASS และ FAIL พร้อมอ้างอิงปฏิทินมหาวิทยาลัยและปีของข้อมูลวันหยุด
+- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 17 passed, 1 warning จาก Starlette/httpx deprecation
+- ไม่สร้างหรือแก้ `backend/app/router.py`; endpoint `/calendar/check` เป็นขอบเขตของ T-05
+- สิ่งที่เกือบต้องเดา: `backend/app/router.py` ไม่มีอยู่ และ T-04/T-05 ระบุขอบเขตซ้อนกัน; ถามทีมและทำตามการแบ่งขอบเขตที่ยืนยันแล้ว
+
+## 2569-11-13 00:38 แก้รูปแบบ calendarVersion/effectiveDate ของ T-04
+
+- ทีมยืนยัน: `calendarVersion` ใช้วันที่สร้าง snapshot รูปแบบ `dd.mm.yyyy`; `effectiveDate` ใช้ timestamp UTC ตอนดึง/ประกอบ snapshot สำเร็จ
+- ไฟล์ที่แก้: `backend/app/services/calendar_check_service.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: ปรับ response และ test ให้ยืนยันรูปแบบวันที่กับ timestamp ตามที่ทีมเลือก โดยไม่แก้ `spec.md` หรือ `plan.md`
+- สิ่งที่เกือบต้องเดา: ระบบปีของ calendarVersion; ใช้ ค.ศ. ตาม UTC ให้ตรงกับ effectiveDate
+
+## 2569-11-13 00:41 /implement T-05 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-04 ก่อนเริ่ม T-05; endpoint path ที่ทีมกำหนดคือ `POST /calendar/check`
+- ไฟล์ที่สร้าง: `backend/app/router.py`
+- ไฟล์ที่แก้: `backend/app/main.py`, `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-04 เป็น "เสร็จ", T-05 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: endpoint เชื่อม validation, calendar snapshot, overlap checker และ JSON response; หาก source ปฏิทินใช้ไม่ได้จะคืน FAIL พร้อม reason และเวลาที่พยายามตรวจ; request ไม่ถูกต้องคืน HTTP 422
+- ผล test: รันทดสอบ `cd backend && pytest -q tests/test_check_work_time.py` หลังแก้โค้ด
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-06/T-07 ยังไม่ทำ
+- สิ่งที่เกือบต้องเดา: ไม่มี; path และการแบ่งขอบเขต T-04/T-05 ได้รับการยืนยันจากทีมแล้ว
+- ผลทดสอบหลังทำเสร็จ: `cd backend && pytest -q tests/test_check_work_time.py` — 19 passed, 1 warning จาก Starlette/httpx deprecation
+- `git diff --check` ผ่าน; T-05 คงสถานะ "เสร็จ รอทีมตรวจ"
+
+## 2026-11-12 17:48 UTC /implement T-06 specs/019-check-work-time/tasks.md
+
+- ทีมอนุมัติ T-05 และสั่งทำ T-06
+- ไฟล์ที่สร้าง: `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/api/calendarCheckApi.js`, `frontend/src/__tests__/checkWorkTime.test.jsx`
+- ผลลัพธ์: สร้างฟอร์มช่วงวันและเวลาพร้อมแสดง `status`, `reason`, `calendarVersion`, `effectiveDate`; mock API ตอบ PASS ตาม JSON contract และหน้าจอรองรับทั้ง PASS/FAIL
+- สิ่งที่ถามเพื่อไม่เดา: spec/plan ไม่ระบุเงื่อนไข mock ที่ทำให้ FAIL; ทีมเลือก mock PASS คงที่ และให้ทดสอบการ render FAIL ด้วย mock response ใน test
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 2 passed
+- ผล build: `cd frontend && npm run build` — สำเร็จ
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-06 เป็น "เสร็จ รอทีมตรวจ" และยังไม่เริ่ม T-07
+
+## 2026-11-12 17:51 UTC /implement T-07 specs/019-check-work-time/tasks.md
+
+- ทีมยืนยันว่า T-05/T-06 ผ่านแล้ว และอนุมัติเปลี่ยนสถานะเป็น "เสร็จ" ก่อนเริ่ม T-07
+- ทีมกำหนด benchmark end-to-end รวม ThailandFormats API จริง เพดาน 500 ms; อนุมัติให้เพิ่มการ reuse HTTP connection pool โดยไม่ cache ข้อมูลปฏิทิน
+- ไฟล์ที่แก้: `backend/app/services/calendar_source.py` (reuse connection pool), `backend/tests/test_check_work_time.py`, `frontend/src/api/calendarCheckApi.js`, `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `frontend/src/App.jsx`, `specs/019-check-work-time/tasks.md` (T-05/T-06 เป็น "เสร็จ", T-07 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
+- ผลลัพธ์: หน้า UI ส่ง POST `/api/calendar/check` ไปยัง endpoint จริงและเข้าถึงได้ที่ `/calendar/check`; API mock ถูกแทนด้วย fetch จริงและแสดง error HTTP โดยไม่สร้างผลตรวจปลอม
+- ผล test backend: `cd backend && pytest -q tests/test_check_work_time.py` — 27 passed, รวม benchmark live 3 ครั้งภายใน 500 ms; มี 1 warning จาก Starlette/httpx deprecation
+- ผล test frontend เฉพาะงาน: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 7 passed
+- ผล test frontend ทั้งชุด: 22 passed, 6 failed, 1 todo; ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` และไม่เกี่ยวกับไฟล์ของ T-07
+- ผล build: `cd frontend && npm run build` — สำเร็จ; `git diff --check` ผ่าน
+- Benchmark ก่อนใช้ connection pool พบ cold request 568 ms; หลังใช้ connection pooling ทุกครั้งใน benchmark ล่าสุดผ่าน 500 ms โดยยังดึงข้อมูล API สดทุก request
+- ไม่แก้ `spec.md` หรือ `plan.md`; T-07 รอทีมตรวจ
+
+## 2026-11-12 18:08 UTC แก้ไขคำแนะนำรูปแบบวันเวลาในหน้า T-07
+
+- ทีมแจ้งว่าหน้าแสดงข้อความ `The string did not match the expected pattern.`
+- ตรวจพบว่าเป็นรูปแบบที่ browser input `datetime-local` ปฏิเสธเมื่อพิมพ์ข้อความวันเวลาแบบอ่านง่าย; API รับค่า `YYYY-MM-DDTHH:mm` ได้และ endpoint ตอบ PASS เมื่อใช้รูปแบบดังกล่าว
+- ไฟล์ที่แก้: `frontend/src/pages/CheckWorkTimePage.jsx`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `prompt-log.md`
+- ผลลัพธ์: เพิ่มคำแนะนำรูปแบบ `YYYY-MM-DDTHH:mm` ที่เชื่อมกับ input ทั้งสองช่องผ่าน `aria-describedby`; ไม่เปลี่ยน contract หรือกฎตรวจปฏิทิน
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 8 passed
+
+## 2026-11-12 18:14 UTC แก้ไข response ว่างเมื่อ backend ไม่ทำงาน
+
+- ทีมแจ้งว่า API ใช้งานได้แล้วแต่ภายหลังขึ้น `Failed to execute 'json' on 'Response': Unexpected end of JSON input`
+- ตรวจพบ frontend ที่ port 5173 ยังทำงาน แต่ backend ที่ port 8000 หยุดอยู่; Vite proxy ตอบ HTTP 500 โดยไม่มี JSON
+- ไฟล์ที่แก้: `frontend/src/api/calendarCheckApi.js`, `frontend/src/__tests__/checkWorkTime.test.jsx`, `prompt-log.md`
+- ผลลัพธ์: API client อ่าน response body อย่างปลอดภัยและแสดง HTTP status เมื่อ response ว่าง/ไม่ใช่ JSON แทนการโยน raw JSON parse error; restart backend แล้วลองจาก browser ได้ PASS
+- ผล test: `cd frontend && npm test -- src/__tests__/checkWorkTime.test.jsx` — 9 passed
+
+## 2026-11-12 18:22 UTC /verify specs/019-check-work-time/
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `rtm.md`, โค้ดและ test ของ backend/frontend ที่เกี่ยวข้อง; ไม่พบ `test-cases.md`
+- ผล test: `cd backend && pytest -v` — 81 passed; `cd frontend && npm test` — 24 passed, 6 failed, 1 todo โดย failures ทั้งหมดอยู่ใน `ApplyLabBoyPage.test.jsx` และไม่เกี่ยวกับฟีเจอร์ 019
+- ตารางตามรอยไปข้างหน้า: ครบ 4, ยังไม่ถึง 0, รอ 0, ช่องโหว่ 8
+- ข้อค้นพบใหม่: F-002 academic calendar จาก PDF เป็นข้อมูลคงที่และตรวจการแทนที่ฉบับใหม่ไม่ได้; F-003 source failure ระบุเวลา attempt เป็น calendar reference; F-004 benchmark ใช้เกณฑ์ 500 ms ที่ไม่มีใน spec
+- คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้ทุกข้อ; ไม่แก้โค้ดหรือ test; `git diff --check` ผ่าน
+
+## 2026-11-13 UC-15 Frontend Prototype: ทำ test และตรวจรอบสุดท้าย
+
+- ขอบเขต: Frontend Prototype เท่านั้น; ไม่แก้ Backend, API, Database, Authentication, `tasks.md` หรือ `prototype.html`; ไม่ commit/push
+- ไฟล์ที่แก้รอบนี้: `frontend/src/__tests__/RecruitmentAnnouncementPrototype.test.jsx`, `specs/015-create-recruitment-announcement/test-cases.md`, `specs/015-create-recruitment-announcement/rtm.md`, `prompt-log.md`
+- เพิ่ม/ตรวจ automated Prototype Test 19 รายการ ครอบคลุม AC-ANN-01 ถึง AC-ANN-04; แก้ assertion ที่ค้น element ซ้ำให้ตรวจผล UI จริง และใช้ Draft ใหม่ว่างสำหรับกรณี required fields ขาดครบ
+- ปรับ `test-cases.md` แยกผล Prototype ออกจากระบบจริง; ผล 19/19 ผ่าน แต่คงสถานะ Test Case เป็น "ร่าง" เพื่อรอทีมอนุมัติ
+- ปรับ RTM ให้ระบุหลักฐานเฉพาะ Prototype พร้อมแยกข้อจำกัด API/persistence/Auth/RBAC/audit storage/Scheduler จริง; คงช่อง "ทีมตัดสิน" ว่าง
+- ผล test เฉพาะ UC-15: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- ผล Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; failures ทั้งหมดอยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ของงานอื่น
+- ผล build: `cd frontend && npm run build -- --outDir /tmp/uc15-frontend-build` — ผ่าน
+- ตรวจ route `http://127.0.0.1:4173/create-announcement` ใน browser: Draft ไม่ครบถูกบันทึก, Publish แสดงฟิลด์ที่ขาด, ข้อมูลครบเผยแพร่ได้, Student เห็นเฉพาะ Published
+- การบันทึก screencast ทำไม่ได้ใน browser environment นี้: ไม่มี ffmpeg ที่ Playwright ต้องใช้ และ `playwright install ffmpeg` ไม่รองรับ Ubuntu 20.04; เก็บสคริปต์เดโมไว้ใน session files
+- ไม่มีการเปลี่ยนสถานะ Task; ผลทั้งหมดเป็นหลักฐาน Frontend Prototype ไม่ใช่การรับรองระบบจริง
+
+## 2026-11-13 UC-15: ปิดสถานะ Frontend Prototype
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `prototype.jsx`, `prototype.html`, Automated Tests, `test-cases.md`, `rtm.md` และ `prompt-log.md`; branch `wha`
+- ตรวจซ้ำไม่พบ implementation ของ announcement API/model/audit/scheduler ใน Backend; ไม่แก้ Backend, API, Database, Authentication หรือ `prototype.html`
+- ปรับ `test-cases.md` เพิ่ม Expected Result/Actual Result และตั้งผลทดสอบทั้ง 19 กรณีเป็น `Tested/Passed` ตามผล Frontend Prototype Test; ระบุชัดว่าไม่ใช่ผลระบบจริงหรือการอนุมัติจากทีม
+- ปรับ `rtm.md` ให้ระบุ AC-ANN-01/02 ผ่านระดับ Prototype และ AC-ANN-03/04 ผ่านเฉพาะการจำลอง; ไม่กล่าวอ้างว่า persistence, immutable audit หรือ scheduler จริงผ่าน
+- ปรับเฉพาะสถานะใน `tasks.md`: T-01 ถึง T-05 คงไม่ Complete ในระดับ System; T-06 Prototype Complete; T-07 UI/Workflow Simulation Complete แต่ API จริงยังไม่ครบ; T-08 Prototype Tests Complete แต่ System Acceptance/Regression ยังไม่ครบ; AC checklist ระบบจริงคงไม่ checked
+- ปรับ assertions ใน UC-15 test ให้ผูก Audit Log CREATE กับ Admin, ตรวจเวลาเผยแพร่ และยืนยัน UPDATE_DRAFT ต่อท้าย CREATE
+- UC-15 tests: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` (baseline เดิม)
+- Build: `cd frontend && npm run build -- --outDir /tmp/uc15-final-build --emptyOutDir` — ผ่าน
+- ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15: ระบุผล Prototype Simulation ของ T-05
+
+- ปรับเฉพาะสถานะและรายละเอียดผลการดำเนินงานของ T-05 ใน `specs/015-create-recruitment-announcement/tasks.md`
+- ระบุว่า Frontend Prototype Simulation Complete; ทดสอบ Scheduled Job จำลองเวลา 00:05 Asia/Bangkok ผ่าน Mock Data/Local State; ไม่ใช่ Scheduler จริง
+- ระบุความหมายของ Archived อย่างแม่นยำ: เป็นสถานะตัวอย่างที่แสดงและทดสอบการคงสถานะ; Spec ไม่ได้กำหนด transition/action ไป Archived จึงไม่กล่าวอ้างว่าทดสอบ transition นั้นแล้ว
+- ไม่แก้โค้ดหรือ Task อื่น; ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15 /verify
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, RTM เดิม, `AGENTS.md`, โค้ดทุกไฟล์ใน `backend/app/` และ `frontend/src/` รวมถึง tests ใน `backend/tests/` และ `frontend/src/`; ทำงานบน branch `wha`
+- รัน `cd backend && pytest -v` — 81 passed, 1 warning; ไม่พบ Backend test สำหรับ UC-15
+- รัน `cd frontend && npm test` — 43 passed, 6 failed, 1 todo; UC-15 ผ่าน 19/19. ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่บันทึกไว้ก่อนหน้า
+- ตามรอย 14 แถว: ครบ 0, ยังไม่ถึง 6, รอ Q 0, ช่องโหว่ 8
+- คง F-001; ยืนยัน F-002 ว่า `prototype.html` แสดงประกาศทุกสถานะแก่ Student เมื่อเปิดไฟล์นั้นโดยตรง; เพิ่ม F-003 ถึง F-005 เรื่อง test assertions สำหรับการบันทึก Draft, สิทธิ์ Admin/ภาควิชา และการแยกผู้จัดทำ/ผู้เผยแพร่
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks; แก้เฉพาะ UC-15 `rtm.md` และเพิ่มบันทึกนี้
+- หลังรัน tests worktree แสดง generated cache artifacts ใน `backend/**/__pycache__/` และ `frontend/node_modules/.vite/`; ไม่ได้แก้ไฟล์เหล่านั้นโดยตรงและไม่ได้ revert เนื่องจากไม่มี baseline ก่อนรันยืนยัน
+- `git diff --check` ผ่าน; ไม่ commit, push หรือ merge
+
+## 2569-11-13 คำสั่ง: merge feature/007-viewapplicants-prototype ไปรวมกับ main
+
+- ดึง `origin/main` เข้ามาใน branch ก่อน: conflict เฉพาะ `prompt-log.md` (ทั้งสองฝั่งเพิ่มบันทึกท้ายไฟล์) แก้โดยเก็บบันทึกของทั้งสองฝั่งครบ ไม่ลบหรือแก้บันทึกเดิม
+- `frontend/src/App.jsx` merge อัตโนมัติ มี route ของ main ครบและยังมี `/list-applicants`
+- ผล test หลัง merge: backend 81 ผ่าน; frontend 50 ผ่าน 6 ไม่ผ่าน 1 todo; ทั้ง 6 ที่ไม่ผ่านอยู่ใน `ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่ไม่ผ่านอยู่แล้วบน main และ branch นี้ไม่ได้แตะ; test ของ 007 ผ่านทั้งหมด
+- merge ผ่าน PR #18
