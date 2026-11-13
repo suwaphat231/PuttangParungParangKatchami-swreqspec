@@ -778,3 +778,48 @@
 - ตารางตามรอยไปข้างหน้า: ครบ 4, ยังไม่ถึง 0, รอ 0, ช่องโหว่ 8
 - ข้อค้นพบใหม่: F-002 academic calendar จาก PDF เป็นข้อมูลคงที่และตรวจการแทนที่ฉบับใหม่ไม่ได้; F-003 source failure ระบุเวลา attempt เป็น calendar reference; F-004 benchmark ใช้เกณฑ์ 500 ms ที่ไม่มีใน spec
 - คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้ทุกข้อ; ไม่แก้โค้ดหรือ test; `git diff --check` ผ่าน
+
+## 2026-11-13 UC-15 Frontend Prototype: ทำ test และตรวจรอบสุดท้าย
+
+- ขอบเขต: Frontend Prototype เท่านั้น; ไม่แก้ Backend, API, Database, Authentication, `tasks.md` หรือ `prototype.html`; ไม่ commit/push
+- ไฟล์ที่แก้รอบนี้: `frontend/src/__tests__/RecruitmentAnnouncementPrototype.test.jsx`, `specs/015-create-recruitment-announcement/test-cases.md`, `specs/015-create-recruitment-announcement/rtm.md`, `prompt-log.md`
+- เพิ่ม/ตรวจ automated Prototype Test 19 รายการ ครอบคลุม AC-ANN-01 ถึง AC-ANN-04; แก้ assertion ที่ค้น element ซ้ำให้ตรวจผล UI จริง และใช้ Draft ใหม่ว่างสำหรับกรณี required fields ขาดครบ
+- ปรับ `test-cases.md` แยกผล Prototype ออกจากระบบจริง; ผล 19/19 ผ่าน แต่คงสถานะ Test Case เป็น "ร่าง" เพื่อรอทีมอนุมัติ
+- ปรับ RTM ให้ระบุหลักฐานเฉพาะ Prototype พร้อมแยกข้อจำกัด API/persistence/Auth/RBAC/audit storage/Scheduler จริง; คงช่อง "ทีมตัดสิน" ว่าง
+- ผล test เฉพาะ UC-15: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- ผล Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; failures ทั้งหมดอยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ของงานอื่น
+- ผล build: `cd frontend && npm run build -- --outDir /tmp/uc15-frontend-build` — ผ่าน
+- ตรวจ route `http://127.0.0.1:4173/create-announcement` ใน browser: Draft ไม่ครบถูกบันทึก, Publish แสดงฟิลด์ที่ขาด, ข้อมูลครบเผยแพร่ได้, Student เห็นเฉพาะ Published
+- การบันทึก screencast ทำไม่ได้ใน browser environment นี้: ไม่มี ffmpeg ที่ Playwright ต้องใช้ และ `playwright install ffmpeg` ไม่รองรับ Ubuntu 20.04; เก็บสคริปต์เดโมไว้ใน session files
+- ไม่มีการเปลี่ยนสถานะ Task; ผลทั้งหมดเป็นหลักฐาน Frontend Prototype ไม่ใช่การรับรองระบบจริง
+
+## 2026-11-13 UC-15: ปิดสถานะ Frontend Prototype
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `prototype.jsx`, `prototype.html`, Automated Tests, `test-cases.md`, `rtm.md` และ `prompt-log.md`; branch `wha`
+- ตรวจซ้ำไม่พบ implementation ของ announcement API/model/audit/scheduler ใน Backend; ไม่แก้ Backend, API, Database, Authentication หรือ `prototype.html`
+- ปรับ `test-cases.md` เพิ่ม Expected Result/Actual Result และตั้งผลทดสอบทั้ง 19 กรณีเป็น `Tested/Passed` ตามผล Frontend Prototype Test; ระบุชัดว่าไม่ใช่ผลระบบจริงหรือการอนุมัติจากทีม
+- ปรับ `rtm.md` ให้ระบุ AC-ANN-01/02 ผ่านระดับ Prototype และ AC-ANN-03/04 ผ่านเฉพาะการจำลอง; ไม่กล่าวอ้างว่า persistence, immutable audit หรือ scheduler จริงผ่าน
+- ปรับเฉพาะสถานะใน `tasks.md`: T-01 ถึง T-05 คงไม่ Complete ในระดับ System; T-06 Prototype Complete; T-07 UI/Workflow Simulation Complete แต่ API จริงยังไม่ครบ; T-08 Prototype Tests Complete แต่ System Acceptance/Regression ยังไม่ครบ; AC checklist ระบบจริงคงไม่ checked
+- ปรับ assertions ใน UC-15 test ให้ผูก Audit Log CREATE กับ Admin, ตรวจเวลาเผยแพร่ และยืนยัน UPDATE_DRAFT ต่อท้าย CREATE
+- UC-15 tests: `cd frontend && npm test -- --run src/__tests__/RecruitmentAnnouncementPrototype.test.jsx` — 19 passed
+- Frontend suite: `cd frontend && npm test -- --run` — 43 passed, 6 failed, 1 todo; ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` (baseline เดิม)
+- Build: `cd frontend && npm run build -- --outDir /tmp/uc15-final-build --emptyOutDir` — ผ่าน
+- ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15: ระบุผล Prototype Simulation ของ T-05
+
+- ปรับเฉพาะสถานะและรายละเอียดผลการดำเนินงานของ T-05 ใน `specs/015-create-recruitment-announcement/tasks.md`
+- ระบุว่า Frontend Prototype Simulation Complete; ทดสอบ Scheduled Job จำลองเวลา 00:05 Asia/Bangkok ผ่าน Mock Data/Local State; ไม่ใช่ Scheduler จริง
+- ระบุความหมายของ Archived อย่างแม่นยำ: เป็นสถานะตัวอย่างที่แสดงและทดสอบการคงสถานะ; Spec ไม่ได้กำหนด transition/action ไป Archived จึงไม่กล่าวอ้างว่าทดสอบ transition นั้นแล้ว
+- ไม่แก้โค้ดหรือ Task อื่น; ไม่ commit, push หรือ merge
+
+## 2026-11-13 UC-15 /verify
+
+- ตรวจ `spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, RTM เดิม, `AGENTS.md`, โค้ดทุกไฟล์ใน `backend/app/` และ `frontend/src/` รวมถึง tests ใน `backend/tests/` และ `frontend/src/`; ทำงานบน branch `wha`
+- รัน `cd backend && pytest -v` — 81 passed, 1 warning; ไม่พบ Backend test สำหรับ UC-15
+- รัน `cd frontend && npm test` — 43 passed, 6 failed, 1 todo; UC-15 ผ่าน 19/19. ทั้ง 6 failures อยู่ใน `src/pages/ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่บันทึกไว้ก่อนหน้า
+- ตามรอย 14 แถว: ครบ 0, ยังไม่ถึง 6, รอ Q 0, ช่องโหว่ 8
+- คง F-001; ยืนยัน F-002 ว่า `prototype.html` แสดงประกาศทุกสถานะแก่ Student เมื่อเปิดไฟล์นั้นโดยตรง; เพิ่ม F-003 ถึง F-005 เรื่อง test assertions สำหรับการบันทึก Draft, สิทธิ์ Admin/ภาควิชา และการแยกผู้จัดทำ/ผู้เผยแพร่
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks; แก้เฉพาะ UC-15 `rtm.md` และเพิ่มบันทึกนี้
+- หลังรัน tests worktree แสดง generated cache artifacts ใน `backend/**/__pycache__/` และ `frontend/node_modules/.vite/`; ไม่ได้แก้ไฟล์เหล่านั้นโดยตรงและไม่ได้ revert เนื่องจากไม่มี baseline ก่อนรันยืนยัน
+- `git diff --check` ผ่าน; ไม่ commit, push หรือ merge
