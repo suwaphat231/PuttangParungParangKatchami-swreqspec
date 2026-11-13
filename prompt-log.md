@@ -259,6 +259,20 @@
 - ผล test: `cd frontend && npm test -- --run src/components/PaymentStatusBadge.test.jsx` -> 1 file passed, 3 tests passed
 - สถานะ T-04: เปลี่ยนเป็น `เสร็จ รอทีมตรวจ`
 
+## 2569-11-13 15:27 /testcases AC-LB-10 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-10
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-10 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-10-1: ทางปกติ — เมื่อจำนวนผู้สมัครเต็มแล้ว มีหลายคำขอยืนยันพร้อมกัน ระบบจะรับเฉพาะคำขอที่สำเร็จตามลำดับเวลายืนยัน และปฏิเสธคำขอที่มาภายหลัง
+  - TC-LB-10-2: ขอบ — หากมี 2 คำขอในเวลาเดียวกันที่เต็มจำนวน รอคนตัดสินว่าต้องจัดลำดับอย่างไร
+  - TC-LB-10-3: ทางผิด — คำขอใหม่หลังจากเต็มจำนวนถูกปฏิเสธและไม่เพิ่มเกินจำนวนที่กำหนด
+  - TC-LB-10-4: ทางผิด — คำขอที่ยืนยันไม่สำเร็จไม่ควรใช้ slot ที่เต็มแล้ว
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: วิธีจัดลำดับเมื่อมีสองคำขอที่เกิดในเวลาเดียวกัน และข้อความแจ้งผลหรือรหัสข้อผิดพลาดเมื่อเต็มจำนวน; สาระนี้เป็นสิ่งที่ต้องให้คนตรวจก่อนแปลงเป็น `ใช้ได้`
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+- ไม่แก้ `spec.md` หรือ `plan.md`; โหมดนี้เป็นเพียงการออกแบบ test case ร่างเท่านั้น
+
 ## 2569-11-13 14:12 คำสั่ง: /verify specs/019-check-work-time
 - โหมด: ตรวจสอบ requirement และ test ตามรอยไปข้างหน้า/ย้อนกลับ โดยไม่แก้โค้ด, test, spec, plan หรือ tasks
 - ไฟล์ที่อ่าน: `specs/019-check-work-time/spec.md`, `plan.md`, `tasks.md`, `test-cases.md`, `rtm.md` และ `AGENTS.md`
@@ -893,10 +907,129 @@
 - ทีมอนุมัติ T-02 ก่อนเริ่ม T-03
 - ไฟล์ที่สร้าง: `backend/app/services/calendar_overlap_service.py`
 - ไฟล์ที่แก้: `backend/tests/test_check_work_time.py`, `specs/019-check-work-time/tasks.md` (T-02 เป็น "เสร็จ", T-03 เป็น "เสร็จ รอทีมตรวจ"), `prompt-log.md`
-- ผลลัพธ์: ตรวจ overlap แบบรวมวันเริ่มและวันสิ้นสุดกับช่วงห้ามจากปฏิทินมหาวิทยาลัยและวันหยุดไทย; partial-day overlap ถือว่า FAIL พร้อมเหตุผล; ไม่ overlap คืน PASS
-- ผล test: `cd backend && pytest -q tests/test_check_work_time.py` — 15 passed, 1 warning จาก Starlette/httpx deprecation
-- ไม่แก้ `spec.md` หรือ `plan.md`; T-04 ขึ้นไปยังไม่ได้ทำ
-- สิ่งที่เกือบต้องเดา: ไม่มี; ยึดกฎ full-day และ partial overlap ที่ทีมยืนยันใน Q-01/Q-02
+
+## 2569-11-13 15:10 /implement T-09 specs/001-apply-lab-boy/tasks.md
+
+- ไฟล์ที่แก้: `backend/app/main.py`, `backend/app/middleware/security.py`, `frontend/src/api/client.js`
+- ไฟล์สถานะ/บันทึกที่แก้: `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผล test: `cd frontend && npm test -- --run` — 7 files passed, 30 tests passed, 1 todo; `python -m py_compile backend/app/middleware/security.py backend/app/main.py` — ผ่าน
+- ผลลัพธ์: บังคับใช้ HTTPS/TLS สำหรับคำขอที่มีการเปลี่ยนแปลงข้อมูลผ่าน FastAPI middleware และเพิ่ม UX/validation ใน frontend client เพื่อป้องกันการส่งข้อมูลบน HTTP ที่ไม่ปลอดภัย พร้อมข้อความแจ้งเตือนที่ชัดเจนเมื่อเกิดข้อผิดพลาด
+- ข้อสังเกต: `frontend/src/api/client.js` เป็นแหล่งที่ใช้งานจริงใน repo และยังคงใช้ JavaScript ตามโครงสร้างปัจจุบัน ไม่ได้สร้างไฟล์ `.ts` เพิ่มเติม
+- ไม่ได้เดาเรื่องข้อมูลจำเป็นหรือ workflow อื่น เพราะ T-09 ถูกกำหนดให้ทำเฉพาะความปลอดภัยและ UX ของการส่งข้อมูล
+
+## 2569-11-13 15:15 /testcases AC-LB-01 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-01
+- ผล: หยุดตามกติกา /testcases เพราะไฟล์ [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) มีแถว TC-LB-01-1 ถึง TC-LB-01-5 แต่ทุกแถวยังมีสถานะ `ร่าง` และยังไม่ได้ถูกตรวจให้เป็น `ใช้ได้`
+- ไม่ได้เขียนโค้ด test หรือแก้ระบบ
+- ข้อแนะนำ: ทีมต้องตรวจแถวในตารางแล้วเปลี่ยนสถานะเป็น `ใช้ได้` ก่อน จากนั้นสั่ง `/testcases AC-LB-01 specs/001-apply-lab-boy/` อีกครั้ง
+
+## 2569-11-13 15:17 /testcases AC-LB-02 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-02
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-02 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-02-1: ทางปกติ — ตรวจแสดงเงื่อนไข/คุณสมบัติ/ช่วงเวลา/จำนวนที่รับ/ห้องทำงานผู้ดูแล
+  - TC-LB-02-2: ขอบ — ตรวจว่าเมื่อประกาศยังเปิดอยู่รายละเอียดยังปรากฏตามช่วงเวลารับสมัคร
+  - TC-LB-02-3: ทางผิด — ประกาศปิดรับสมัครแล้ว แต่ spec ไม่ได้ระบุว่าให้แสดง/ซ่อนอย่างไร ต้องให้คนตัดสินก่อนเขียน assert
+  - TC-LB-02-4: ทางผิด — ยังไม่ได้เลือกประกาศแต่เข้าหน้า details โดย spec ไม่ได้ระบุผลลัพธ์ ต้องให้คนตัดสินก่อนเขียน assert
+- ส่วนที่ spec ไม่ได้บอก: พฤติกรรมเมื่อประกาศปิดรับสมัครแล้ว และเมื่อไม่มีประกาศที่เลือกไว้; จึงระบุว่า "spec ไม่ได้บอก" และเสนอเป็นคำถามในรายงาน
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:19 /testcases AC-LB-03 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-03
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-03 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-03-1: ทางปกติ — นักศึกษาสถานะปกติแล้วอนุญาตให้ส่งใบสมัคร
+  - TC-LB-03-2: ขอบ — สถานะปกติเป็นจุดรับคำขอขั้นต่ำและยังดำเนินการต่อได้
+  - TC-LB-03-3: ทางผิด — สถานะไม่ปกติถูกปฏิเสธและแจ้งว่าต้องเป็นปกติเท่านั้น
+  - TC-LB-03-4: ทางผิด — ยังไม่ได้เข้าสู่ระบบหรือ session ไม่ถูกต้องจะถูกปฏิเสธและต้องไม่บันทึกใบสมัคร
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: ข้อความ/UX ที่แสดงเมื่อปฏิเสธเพราะสถานะไม่ปกติ และข้อความสำหรับผู้ใช้ที่ยังไม่เข้าสู่ระบบ; จึงระบุว่า "spec ไม่ได้บอก" และเสนอเป็นคำถามในรายงาน
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:21 /testcases AC-LB-04 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-04
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-04 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-04-1: ทางปกติ — ข้อมูลบัญชีครบและผ่านเงื่อนไขจึงดำเนินการต่อได้
+  - TC-LB-04-2: ทางผิด — ข้อมูลบัญชีไม่ครบถูกปฏิเสธและแสดงรายการข้อมูลที่ต้องแก้ไข
+  - TC-LB-04-3: ทางผิด — ข้อมูลบัญชีครบแต่ไม่ผ่านเงื่อนไขจะถูกปฏิเสธและระบุเหตุผล
+  - TC-LB-04-4: ขอบ — คำจำกัดความของ “ครบ” และ “สมบูรณ์” ในข้อมูลบัญชียังไม่ชัดเจน ต้องให้คนตัดสินก่อนเขียน assert
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: เกณฑ์ความครบของข้อมูลบัญชีผู้ใช้ที่จำเป็น; โดยตรงจาก Q-02 ที่มีคำตอบแล้ว แต่ยังไม่ถูกย้ายเป็น spec/AC อย่างเป็นทางการ
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:22 /testcases AC-LB-05 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-05
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-05 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-05-1: ทางปกติ — เมื่อบันทึกข้อมูลล้มเหลวระบบต้องไม่สร้างใบสมัครที่ไม่สมบูรณ์
+  - TC-LB-05-2: ขอบ — ช่วงก่อนเสร็จสิ้นบันทึกยังมี partial state ต้องถูก rollback หรือยกเลิก
+  - TC-LB-05-3: ทางผิด — การยืนยันสำเร็จควรสร้างใบสมัครที่สมบูรณ์เพียงรายการเดียว
+  - TC-LB-05-4: ทางผิด — ข้อมูลก่อนยืนยันไม่ครบต้องถูกปฏิเสธก่อนบันทึกเลย
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: คำว่า “ใบสมัครที่ไม่สมบูรณ์” หมายถึงอะไรในเชิง data state และควรมีสถานะใดบ้าง; ต้องให้คนตัดสินก่อนเขียน assert
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:23 /testcases AC-LB-06 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-06
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-06 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-06-1: ทางปกติ — แก้ไขข้อมูลก่อนยืนยันแล้วฟอร์มยังเปิดใช้งานและแสดงปุ่มยืนยัน/ยกเลิก
+  - TC-LB-06-2: ขอบ — กดปุ่มยกเลิกก่อนยืนยันไม่เปลี่ยนข้อมูลหรือสถานะการสมัคร
+  - TC-LB-06-3: ทางผิด — แก้ไขหลังยืนยันยังไม่ชัดเจนใน spec ต้องถาม ตัดสินก่อน assert
+  - TC-LB-06-4: ทางผิด — ข้อมูลไม่ครบเมื่อยืนยันแล้วจะถูกปฏิเสธและไม่สร้างใบสมัคร
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: พฤติกรรมหลังยืนยันแล้วกลับมาแก้ไขและตรรกะของ “ยกเลิก” หลังการแก้ไขแบบ draft; ต้องให้คนตัดสินก่อนเขียน assert
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:24 /testcases AC-LB-07 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-07
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-07 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-07-1: ทางปกติ — เจ้าของใบสมัครถอนก่อนอาจารย์ปิดรับสมัคร
+  - TC-LB-07-2: ขอบ — เวลาปิดรับสมัครตรงจุดยังไม่ชัดเจนต้องคนตัดสิน
+  - TC-LB-07-3: ทางผิด — ถอนหลังปิดรับสมัครถูกปฏิเสธ
+  - TC-LB-07-4: ทางผิด — ผู้อื่นพยายามถอนใบสมัครของคนอื่นถูกปฏิเสธ
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: ตำแหน่งเวลาปิดรับสมัครที่ถือว่า “ก่อน/หลัง” และการควบคุมสิทธิ์ผู้ถอน; ต้องให้คนตัดสินก่อนเขียน assert
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+
+## 2569-11-13 15:26 /testcases AC-LB-08 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-08
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-08 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-08-1: ทางปกติ — ถอนใบสมัครเดิมแล้วสมัครประกาศเดิมอีกครั้งได้และสร้างใบสมัครใหม่
+  - TC-LB-08-2: ขอบ — ถอนแล้วสมัครใหม่ก่อนปิดรับสมัครในช่วงเดียวกันยังคงได้รับอนุญาต
+  - TC-LB-08-3: ทางผิด — ยังไม่ได้ถอนใบสมัครเดิม แต่พยายามสมัครใหม่ถูกปฏิเสธ
+  - TC-LB-08-4: ขอบ — เวลาปิดรับสมัครตรงจุดยังต้องมีคนตัดสินว่าควรยอมรับหรือปฏิเสธ
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: ความชัดเจนเรื่อง `ID/เลขใบสมัครใหม่` ควรเป็น ID ใหม่หรือเลขใบสมัครใหม่จริง และพฤติกรรมในขอบเขตเวลาปิดรับสมัครตรงจุด; จึงคงปล่อยให้คนตรวจก่อนแนบเป็น `ใช้ได้`
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+- ไม่แก้ `spec.md` หรือ `plan.md`; โหมดนี้เป็นเพียงการออกแบบ test case ร่างเท่านั้น
+
+## 2569-11-13 15:27 /testcases AC-LB-09 specs/001-apply-lab-boy/
+
+- โหมด: ร่าง
+- AC: AC-LB-09
+- ผล: ยังไม่มีแถวสำหรับ AC-LB-09 ใน [specs/001-apply-lab-boy/test-cases.md](specs/001-apply-lab-boy/test-cases.md) จึงเสนอแถวใหม่ 4 แถว สถานะ `ร่าง` และหยุดก่อนเขียนโค้ด
+- แถวที่เสนอ:
+  - TC-LB-09-1: ทางปกติ — ระบบทะเบียนไม่สามารถตรวจสอบสถานะได้ แต่เงื่อนไขอื่นผ่าน => ระบบสร้างใบสมัคร `รอตรวจสอบ` และมอบหมายให้อาจารย์ทำต่อ
+  - TC-LB-09-2: ขอบ — ระบบทะเบียนขัดข้อง แต่ข้อมูลบัญชีผู้ใช้ครบและที่ผ่านเงื่อนไข => ยังคงสร้างใบสมัคร `รอตรวจสอบ` แทนการปฏิเสธ
+  - TC-LB-09-3: ทางผิด — ยังไม่ได้เข้าสู่ระบบ => ระบบปฏิเสธก่อนเข้าสู่ flow ระบบทะเบียน
+  - TC-LB-09-4: ทางผิด — ข้อมูลบัญชีไม่ครบ => ระบบปฏิเสธและไม่สร้างใบสมัครสถานะ `รอตรวจสอบ`
+- ส่วนที่ spec ไม่ได้บอกชัดเจน: ว่าควรแสดงข้อความ/สิทธิ์อะไรให้ผู้ใช้เห็นเมื่อระบบทะเบียนขัดข้องนอกเหนือจาก “สร้างใบสมัคร `รอตรวจสอบ`” และ “มอบหมายให้ผู้ดูแล” อย่างเดียว; จึงปล่อยให้คนตรวจทำต่อในตารางก่อน
+- ปิดท้าย: ตรวจแถวในตาราง แก้ได้ตามต้องการ แล้วเปลี่ยนสถานะเป็น 'ใช้ได้' ก่อน จากนั้นสั่ง /testcases อีกครั้ง
+- ไม่แก้ `spec.md` หรือ `plan.md`; โหมดนี้เป็นเพียงการออกแบบ test case ร่างเท่านั้น
 
 ## 2569-11-13 00:31 /implement T-04 specs/019-check-work-time/tasks.md
 
@@ -974,6 +1107,72 @@
 - ข้อค้นพบใหม่: F-002 academic calendar จาก PDF เป็นข้อมูลคงที่และตรวจการแทนที่ฉบับใหม่ไม่ได้; F-003 source failure ระบุเวลา attempt เป็น calendar reference; F-004 benchmark ใช้เกณฑ์ 500 ms ที่ไม่มีใน spec
 - คง F-001 เดิมและช่อง "ทีมตัดสิน" ว่างไว้ทุกข้อ; ไม่แก้โค้ดหรือ test; `git diff --check` ผ่าน
 
+## 2026-11-13 14:33 UTC /implement T-01 specs/001-apply-lab-boy/tasks.md
+
+- ผลลัพธ์: ปฏิเสธไม่เริ่ม implement เนื่องจาก task นี้อยู่สถานะ "รอ Q-03"
+- ข้อเท็จจริงจาก `specs/001-apply-lab-boy/tasks.md`: สถานะของ T-01 คือ "รอ Q-03" และในส่วน "สิ่งที่ยังไม่ทำ" ระบุว่า Q-03 คือ "ยืนยันรูปแบบเลขใบสมัครและรูปแบบการแสดงวันเวลา"
+- การตรวจ 3 อย่างก่อนเริ่มไม่ผ่านเงื่อนไขข้อ 1: task มีสถานะ "รอ Q-xx" และต้องปิด Q-03 ใน spec ก่อน
+- หลังอ่าน `spec.md`, `plan.md`, `tasks.md` และ `AGENTS.md` พบว่า task ถูกบล็อกโดย open question ที่ยังไม่ได้ตอบ จึงหยุดทันที ไม่แก้โค้ด ไม่รัน test และไม่เปลี่ยนสถานะ task อื่น
+- ไฟล์ที่แก้: `prompt-log.md` เท่านั้น
+- ผล test: ไม่มี เนื่องจาก task ถูกบล็อกและต้องปิด Q-03 ก่อนเริ่ม implement
+
+## 2026-11-13 14:39 UTC /implement T-01 specs/001-apply-lab-boy/tasks.md
+
+- ทีมตอบ Q-03: เลขใบสมัครไม่ต้องมี; ใช้เขตเวลา Asia/Bangkok และแสดงวันที่แบบ DD-MM-YYYY
+- ไฟล์ที่สร้าง: `backend/app/models/recruitment.py`, `backend/app/models/application.py`, `backend/app/services/application_rules.py`, `backend/tests/test_T01_lab_boy_model.py`
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: สร้าง model สำหรับประกาศและใบสมัคร พร้อม unique/idempotency rule, timezone-aware timestamps และสถานะเริ่มต้น `submitted` ที่ใช้ได้; extracted rule engine บล็อก duplicate application สำหรับนักศึกษาและประกาศเดียวกัน
+- ผล test: `cd backend && pytest -q tests/test_T01_lab_boy_model.py` — 3 passed, 1 warning
+- สิ่งที่เกือบต้องเดา: ไม่มี; Q-03 ได้รับคำตอบจากทีมโดยตรงและ task ปรับสถานะเป็น "เสร็จ รอทีมตรวจ"
+
+## 2026-11-13 14:54 UTC /implement T-02 specs/001-apply-lab-boy/tasks.md
+
+- ทีมตอบ Q-02 แล้ว: รายการข้อมูลที่ถือว่าจำเป็นก่อนยืนยันสมัครคือ ชื่อ-นามสกุล, รหัสนักศึกษา, ชั้นปี, อีเมลมหาวิทยาลัย, สถานะนักศึกษา, เกรด/ผลการเรียน, ข้อมูลติดต่อฉุกเฉิน
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/ApplyLabBoyPrototype.jsx`, `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: ปรับฟอร์มสมัครให้ตรงกับ AC-LB-02, AC-LB-04 และ AC-LB-06 โดยเพิ่ม label `เกรดของนักศึกษา (A–F)` และ selector `ผลจำลองเมื่อยืนยัน` ให้ UI รองรับการยืนยัน, ปฏิเสธ, ยกเลิก และการแก้ไขข้อมูลก่อนยืนยัน
+- ผล test: `cd frontend && npm test -- --run src/pages/ApplyLabBoyPage.test.jsx` — 9 passed, 0 failed
+- สิ่งที่เกือบต้องเดา: ไม่มี; task T-02 เปิดต่อจาก Q-02 ที่ทีมตอบแล้ว และปรับสถานะเป็น "เสร็จ รอทีมตรวจ"
+
+## 2026-11-13 14:57 UTC /implement T-03 specs/001-apply-lab-boy/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/services/eligibility_service.py`, `backend/app/controllers/student_application_controller.py`, `backend/tests/test_T03_eligibility.py`
+- ผลลัพธ์: เพิ่ม service ตรวจ session, profile ที่จำเป็น, และสถานะนักศึกษาปกติ ก่อนอนุญาตยืนยันสมัคร; controller wrap logic เพื่อใช้ได้แบบเรียกง่าย
+- ผล test: `cd backend && pytest -q tests/test_T03_eligibility.py` — 4 passed, 1 warning
+- สิ่งที่เกือบต้องเดา: ไม่มี; ใช้คำตอบ Q-02 ที่ทีมระบุชัดเจนไว้แล้วเพื่อเลือก field ที่จำเป็น ก่อนยืนยันสมัคร
+
+## 2026-11-13 15:06 UTC /implement T-06 specs/001-apply-lab-boy/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/services/application_draft_service.py`, `backend/tests/test_T06_application_draft_service.py`, `frontend/src/components/ApplicationForm.tsx`
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: สร้าง service สำหรับ draft form ที่อนุญาตแก้ไขก่อนยืนยันและยกเลิกกลับค่าเดิมโดยไม่สร้างใบสมัครที่ยังไม่สมบูรณ์; component แบบฟอร์มมีปุ่มยกเลิกและยืนยันการสมัครที่ตรวจความครบก่อน submit
+- ผล test: `cd backend && pytest -q tests/test_T06_application_draft_service.py` — 2 passed, 1 warning
+- สิ่งที่เกือบต้องเดา: ไม่มี; Task T-06 ระบุชัดว่าเป็นเรื่องแก้ไขข้อมูลก่อนยืนยันและยกเลิกโดยไม่สร้างใบสมัครลำดับที่ยังไม่สมบูรณ์
+
+## 2026-11-13 15:15 UTC /implement T-07 specs/001-apply-lab-boy/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/services/withdraw_service.py`, `backend/tests/test_T07_withdraw_service.py`, `frontend/src/components/ApplicationStatusCard.tsx`
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: เพิ่ม service สำหรับถอนใบสมัครก่อนปิดรับสมัคร และสร้างใบสมัครใหม่หลังถอนพร้อม application_id ใหม่; component status card แสดงสถานะถอน/ยืนยันให้ UI เห็นได้ชัด
+- ผล test: `cd backend && pytest -q tests/test_T07_withdraw_service.py` — 2 passed, 1 warning
+- ตรวจเพิ่มเติม: `cd frontend && npm run build` — build สำเร็จ
+- สิ่งที่เกือบต้องเดา: ไม่มี; ข้อกำหนด FR-LB-07 และ FR-LB-08 ระบุชัดเจนว่าให้ถอนก่อนปิดรับสมัครและสร้างเลขใบสมัครใหม่หลังถอน
+
+## 2026-11-13 15:01 UTC /implement T-04 specs/001-apply-lab-boy/tasks.md
+
+- ไฟล์ที่สร้าง: `backend/app/services/application_submit_service.py`, `backend/app/repositories/application_repository.py`, `backend/app/repositories/__init__.py`, `backend/tests/test_T04_submit_application.py`
+- ไฟล์ที่แก้: `specs/001-apply-lab-boy/tasks.md`, `prompt-log.md`
+- ผลลัพธ์: สร้าง service บันทึกใบสมัครเมื่อลงทะเบียนผ่านเงื่อนไข และ repository ใน-memory ที่เก็บเพียงหนึ่งกว่ารายการพร้อมกัน; การบันทึกล้มเหลวจะไม่ทิ้งใบสมัครที่ไม่สมบูรณ์ไว้ในคอลเลกชัน
+- ผล test: `cd backend && pytest -q tests/test_T03_eligibility.py tests/test_T04_submit_application.py` — 6 passed, 1 warning
+- สิ่งที่เกือบต้องเดา: ไม่มี; T-04 ถูกตั้งให้ทำหลัง T-01 และ T-03 แล้ว และ spec ระบุชัดเจนว่าไม่มีใบสมัครที่ไม่สมบูรณ์เมื่อการบันทึกล้มเหลว
+
+## 2569-11-13 15:30 /verify specs/001-apply-lab-boy/
+
+- โหมด: ตรวจ requirement
+- ผล test: `cd backend && pytest -v` -> แตกต่างจาก Lab Boy suite: 1 ไม่ผ่าน (booking feature อื่น `tests/test_AC_BKG_01.py`), ไม่ใช่ Lab Boy-specific failure; `cd frontend && npm test -- --run --watch=false` -> 7 files ผ่าน, 30 tests ผ่าน, 1 todo
+- ผล Lab Boy backend suite: `cd backend && pytest -v tests/test_T01_lab_boy_model.py tests/test_T03_eligibility.py tests/test_T04_submit_application.py tests/test_T06_application_draft_service.py tests/test_T07_withdraw_service.py` -> 13 passed, 0 failed
+- สรุปสถานะแถวใน RTM: ครบ 14, ยังไม่ถึง 4, รอ 0, ช่องโหว่ 1
+- ข้อค้นพบใหม่: F-001 tasks/spec mismatch, F-002 missing registry/capacity services, F-003 unapproved rows without executable tests, F-004 prototype-only tests, F-005 numeric/spec mismatch in prototype
+- ไม่แก้โค้ดหรือ spec ตามกติกา /verify; เฉพาะ `rtm.md` และ `prompt-log.md` ถูกปรับให้สอดคล้องกับ evidence ที่อ่านได้จาก repo
 ## 2026-11-13 UC-15 Frontend Prototype: ทำ test และตรวจรอบสุดท้าย
 
 - ขอบเขต: Frontend Prototype เท่านั้น; ไม่แก้ Backend, API, Database, Authentication, `tasks.md` หรือ `prototype.html`; ไม่ commit/push

@@ -21,14 +21,6 @@ const initialForm = {
   grade: '',
 };
 
-const scenarios = [
-  { value: 'normal', label: 'นักศึกษาสถานะปกติ' },
-  { value: 'registry-unavailable', label: 'ระบบทะเบียนตรวจสอบไม่ได้' },
-  { value: 'inactive', label: 'สถานะนักศึกษาไม่ปกติ' },
-  { value: 'full', label: 'จำนวนผู้สมัครเต็ม' },
-  { value: 'save-failure', label: 'จำลองการบันทึกล้มเหลว' },
-];
-
 function formatApplicationTime(date) {
   return new Intl.DateTimeFormat('th-TH', {
     dateStyle: 'long',
@@ -254,13 +246,13 @@ export default function ApplyLabBoyPage() {
                     <p id="student-grade-error" className="mt-1 text-sm text-rose-700">{fieldErrors.grade}</p>
                   ) : (
                     <p id="student-grade-hint" className="mt-1 text-xs text-slate-500">
-                      กรอกเกรดของนักศีกษา
+                      กรอกเกรดของนักศึกษา
                     </p>
                   )}
                 </div>
               </div>
 
-           
+             
 
             {error ? (
                 <p role="alert" className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
