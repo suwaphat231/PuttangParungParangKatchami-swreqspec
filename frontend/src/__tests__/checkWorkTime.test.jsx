@@ -18,11 +18,23 @@ function jsonResponse(payload, status = 200) {
 }
 
 function fillPeriodAndSubmit() {
-  fireEvent.change(screen.getByLabelText('วันและเวลาเริ่มต้น'), {
-    target: { value: '2026-07-21T09:00' },
+  fireEvent.change(screen.getByLabelText('วันที่เริ่มต้น'), {
+    target: { value: '2026-07-21' },
   });
-  fireEvent.change(screen.getByLabelText('วันและเวลาสิ้นสุด'), {
-    target: { value: '2026-07-21T17:00' },
+  fireEvent.change(screen.getByLabelText('ชั่วโมงเริ่มต้น'), {
+    target: { value: '09' },
+  });
+  fireEvent.change(screen.getByLabelText('นาทีเริ่มต้น'), {
+    target: { value: '00' },
+  });
+  fireEvent.change(screen.getByLabelText('วันที่สิ้นสุด'), {
+    target: { value: '2026-07-21' },
+  });
+  fireEvent.change(screen.getByLabelText('ชั่วโมงสิ้นสุด'), {
+    target: { value: '17' },
+  });
+  fireEvent.change(screen.getByLabelText('นาทีสิ้นสุด'), {
+    target: { value: '00' },
   });
   fireEvent.click(screen.getByRole('button', { name: 'ตรวจสอบช่วงเวลา' }));
 }
@@ -116,19 +128,27 @@ test('test_AC_CAL_05_displays_the_status_reason_and_calendar_reference', async (
   expect(screen.getByText('effectiveDate').nextElementSibling.textContent).toBe('2026-11-12T00:00:00Z');
 });
 
-test('test_T07_routes_to_the_calendar_check_page', () => {
-  window.history.replaceState({}, '', '/calendar/check');
+test('test_T07_routes_to_the_calendar_page', () => {
+  window.history.replaceState({}, '', '/calendar');
 
   render(<App />);
 
   expect(screen.getByRole('heading', { name: 'ตรวจสอบวันและเวลาปฏิบัติงาน' })).toBeTruthy();
 });
 
-test('test_T07_explains_the_datetime_local_input_format', () => {
+test('test_T06_exposes_hour_and_minute_dropdowns', () => {
   render(<CheckWorkTimePage />);
 
+  expect(screen.getByLabelText('วันที่เริ่มต้น').type).toBe('date');
+  expect(screen.getByLabelText('วันที่สิ้นสุด').type).toBe('date');
+  expect(screen.getByLabelText('ชั่วโมงเริ่มต้น').tagName).toBe('SELECT');
+  expect(screen.getByLabelText('นาทีเริ่มต้น').tagName).toBe('SELECT');
+  expect(screen.getByLabelText('ชั่วโมงสิ้นสุด').tagName).toBe('SELECT');
+  expect(screen.getByLabelText('นาทีสิ้นสุด').tagName).toBe('SELECT');
+  expect(screen.getByLabelText('ชั่วโมงเริ่มต้น').options.length).toBe(25);
+  expect(screen.getByLabelText('นาทีเริ่มต้น').options.length).toBe(61);
   expect(screen.getByText(/YYYY-MM-DDTHH:mm/)).toBeTruthy();
-  expect(screen.getByLabelText('วันและเวลาเริ่มต้น').getAttribute('aria-describedby'))
+  expect(screen.getByLabelText('ชั่วโมงเริ่มต้น').getAttribute('aria-describedby'))
     .toBe('calendar-datetime-help');
 });
 

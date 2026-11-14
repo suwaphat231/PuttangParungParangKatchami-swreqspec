@@ -1224,3 +1224,29 @@
 - `frontend/src/App.jsx` merge อัตโนมัติ มี route ของ main ครบและยังมี `/list-applicants`
 - ผล test หลัง merge: backend 81 ผ่าน; frontend 50 ผ่าน 6 ไม่ผ่าน 1 todo; ทั้ง 6 ที่ไม่ผ่านอยู่ใน `ApplyLabBoyPage.test.jsx` ซึ่งเป็น baseline ที่ไม่ผ่านอยู่แล้วบน main และ branch นี้ไม่ได้แตะ; test ของ 007 ผ่านทั้งหมด
 - merge ผ่าน PR #18
+
+## 2569-11-14 คำสั่ง: /implement T-06 — แก้ UI ให้เลือกเวลาได้
+
+- คำสั่งผู้ใช้: ขอให้เปลี่ยน UI เพื่อให้เลือกเวลาได้ เพราะปัจจุบันเลือกเวลาไม่ได้; ผู้ใช้ยืนยันให้เปิด T-06 กลับมาทำ
+- แก้ `frontend/src/pages/CheckWorkTimePage.jsx` ให้เลือกวันที่และเวลาเริ่มต้น/สิ้นสุดแยกช่อง โดยยังส่ง `startDate` และ `endDate` ในรูปแบบ `YYYY-MM-DDTHH:mm` ตาม FR-CAL-01
+- ปรับ `frontend/src/__tests__/checkWorkTime.test.jsx` ให้ทดสอบ input เวลาแบบเลือกได้และตรวจ payload วันที่/เวลาที่รวมแล้ว
+- อัปเดตสถานะ T-06 เป็น “เสร็จ รอทีมตรวจ”; คงการเปลี่ยนแปลงเดิมของทีมในสถานะ T-07
+- ผล test: `cd frontend && npm test -- --run src/__tests__/checkWorkTime.test.jsx` — 9 tests passed. การเรียก `npm test` จาก root ครั้งแรกไม่สำเร็จเพราะไม่มี `package.json` ที่ root; รันจาก `frontend/` แล้วผ่าน
+- ก่อนเริ่ม มีการถามยืนยันเปิด T-06 จากสถานะเสร็จกลับเป็นพร้อมทำ; ผู้ใช้ตอบ “ได้ทำเลย”
+
+## 2569-11-14 คำสั่ง: /implement T-06 — เปลี่ยนตัวเลือกเวลาเป็น dropdown
+
+- คำสั่งผู้ใช้: เสนอให้เลือกชั่วโมงและนาทีด้วย dropdown แทนการพิมพ์; ผู้ใช้ยืนยันให้เปิด T-06 กลับมาทำ
+- แก้ `frontend/src/pages/CheckWorkTimePage.jsx` ให้เลือกชั่วโมง 00–23 และนาที 00–59 ด้วย dropdown โดยคงความละเอียดหนึ่งนาทีและ payload `YYYY-MM-DDTHH:mm` ตาม FR-CAL-01
+- ปรับ `frontend/src/__tests__/checkWorkTime.test.jsx` ให้ตรวจ dropdown และยืนยันว่าเวลาที่เลือกประกอบเป็น request เดิมได้
+- ผล test: `cd frontend && npm test -- --run src/__tests__/checkWorkTime.test.jsx` — 9 tests passed
+- อัปเดตสถานะ T-06 เป็น “เสร็จ รอทีมตรวจ”; ก่อนแก้ได้ถามยืนยันเปิด task จากสถานะรอทีมตรวจกลับเป็นพร้อมทำ และผู้ใช้ตอบ “ได้”
+
+## 2569-11-14 คำสั่ง: /implement T-07 — เปลี่ยน URL หน้า UC-19
+
+- คำสั่งผู้ใช้: เปลี่ยน URL หน้าเว็บจาก `/calendar/check` เป็น `/calendar` โดยคง API เดิมและไม่แก้ spec
+- ยืนยันขอบเขตกับทีม: เปลี่ยนเฉพาะ URL หน้าเว็บ; ไม่เปลี่ยน `POST /calendar/check`
+- ทีมยืนยัน T-05 และ T-06 เสร็จสมบูรณ์ และอนุมัติเปิด T-07 กลับมาทำ พร้อมเพิ่ม `frontend/src/App.jsx` และ `rtm.md` ในขอบเขตไฟล์
+- แก้ route ใน `frontend/src/App.jsx`, ปรับ route test ใน `frontend/src/__tests__/checkWorkTime.test.jsx` และอัปเดต route ใน `specs/019-check-work-time/rtm.md`
+- ผล test: `cd frontend && npm test -- --run src/__tests__/checkWorkTime.test.jsx` — 9 tests passed
+- ไม่แก้ spec หรือ backend API; อัปเดต T-07 เป็น “เสร็จ รอทีมตรวจ”

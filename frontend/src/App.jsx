@@ -5,12 +5,13 @@ import CheckWorkTimePage from './pages/CheckWorkTimePage.jsx';
 import PaymentTrackingPage from './pages/PaymentTrackingPage.jsx';
 import ViewApplicantsPage from './pages/ViewApplicantsPage.jsx';
 
+// รองรับ FR-CAL-01 และ FR-CAL-05 ด้วย route สำหรับเปิดหน้า UC-19.
 export default function App() {
   if (window.location.pathname === '/create-announcement') {
     return <RecruitmentAnnouncementPrototype />;
   }
 
-  if (window.location.pathname === '/calendar/check') {
+  if (window.location.pathname === '/calendar') {
     return <CheckWorkTimePage />;
   }
 

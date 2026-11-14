@@ -58,10 +58,10 @@ Spec ID: SPEC-19-19- | อ้างอิง plan.md: plan.md | วันที�
 ### T-07 ต่อหน้า UI กับ API จริงและทดสอบ acceptance สำหรับทุก AC
 - รองรับ: FR-CAL-01, FR-CAL-02, FR-CAL-03, FR-CAL-04, FR-CAL-05, NFR-REL-01, NFR-PERF-01, NFR-INT-01
 - ตรวจด้วย: AC-CAL-01, AC-CAL-02, AC-CAL-03, AC-CAL-04, AC-CAL-05
-- ไฟล์ที่แตะ: backend/tests/test_check_work_time.py, frontend/src/__tests__/checkWorkTime.test.jsx, frontend/src/pages/CheckWorkTimePage.jsx
+- ไฟล์ที่แตะ: backend/tests/test_check_work_time.py, frontend/src/__tests__/checkWorkTime.test.jsx, frontend/src/pages/CheckWorkTimePage.jsx, frontend/src/App.jsx, rtm.md
 - ต้องทำหลัง: T-05, T-06
 - เสร็จเมื่อ: API และ UI ผ่านทุกกรณีหลักของ acceptance criteria รวมถึง benchmark ความเร็วที่ไม่เกินเกณฑ์ธุรกิจ และไม่มีผลลัพธ์ pass เมื่อข้อมูลปฏิทินไม่พร้อมใช้งาน
-- สถานะ: เสร็จ รอทีมตรวจ
+- สถานะ: เสร็จ 
 
 ## ตารางตรวจความครบ
 
