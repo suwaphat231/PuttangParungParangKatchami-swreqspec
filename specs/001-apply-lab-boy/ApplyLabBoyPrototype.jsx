@@ -117,24 +117,13 @@ export default function ApplyLabBoyPage() {
                 ดูประกาศและยืนยันใบสมัคร
               </p>
             </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/15 px-3 py-2 text-sm font-medium text-amber-100">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-amber-300" />
-              Prototype · ข้อมูลจำลอง
-            </span>
+           
           </div>
         </div>
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            <strong>ตัวอย่างเพื่อทดลองหน้าจอ</strong>
-            {' '}ข้อมูลและการส่งใบสมัครไม่เชื่อมต่อระบบจริง
-          </p>
-          <p className="text-blue-800">ใช้ข้อมูลบัญชีและยืนยันเกรด · ไม่ต้องแนบเอกสาร</p>
-        </div>
-
-        <div className="mx-auto max-w-5xl space-y-6">
+        <div className="mx-auto max-w-5xl space-y-1">
           <section aria-labelledby="announcement-title" className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="border-b border-slate-200 p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -164,7 +153,7 @@ export default function ApplyLabBoyPage() {
 
               <div className="border-t border-slate-100 px-5 py-5 sm:px-6">
                 <h3 className="font-semibold text-slate-900">คุณสมบัติและเงื่อนไข</h3>
-                <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                <ul className="mt-3 space-y-1 text-sm text-slate-600">
                   {announcement.requirements.map((requirement) => (
                     <li key={requirement} className="flex gap-2">
                       <span aria-hidden="true" className="font-bold text-emerald-600">✓</span>
