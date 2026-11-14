@@ -28,7 +28,7 @@
 | [calendar_check_service.py](../../backend/app/services/calendar_check_service.py): `build_calendar_check_response` | FR-CAL-05, NFR-INT-01 | ตรง | สร้าง response ที่มี `status`, `reason`, `calendarVersion`, `effectiveDate` |
 | [calendarCheckApi.js](../../frontend/src/api/calendarCheckApi.js): `checkCalendarPeriod` | FR-CAL-01, FR-CAL-05, NFR-INT-01 | ตรง | POST JSON และแปลง error ตาม HTTP status |
 | [CheckWorkTimePage.jsx](../../frontend/src/pages/CheckWorkTimePage.jsx): `CheckWorkTimePage`, `handleSubmit` | FR-CAL-01, FR-CAL-05, NFR-INT-01 | ตรง | รับข้อมูลจาก input และแสดงผลให้ผู้ใช้เห็น |
-| [App.jsx](../../frontend/src/App.jsx): route `/calendar/check` | FR-CAL-01, FR-CAL-05 | ตรง | เปิดหน้า UC-19 ตามวิธีที่ถูกต้อง |
+| [App.jsx](../../frontend/src/App.jsx): route `/calendar` | FR-CAL-01, FR-CAL-05 | ตรง | เปิดหน้า UC-19 ตามวิธีที่ถูกต้อง |
 
 ## 3. ข้อค้นพบ
 ชนิด: AC ไม่มี test / test อ่อน / โค้ดไม่มี FR / FR ไม่มี AC / เดา Q-xx / ละเมิด Constraint / ตัวเลขไม่ตรง spec / อ้าง ID ผิดเรื่อง

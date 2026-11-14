@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { checkCalendarPeriod } from '../api/calendarCheckApi.js';
 
+const HOURS = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, '0'));
+const MINUTES = Array.from({ length: 60 }, (_, minute) => String(minute).padStart(2, '0'));
+
 // รองรับ FR-CAL-01, FR-CAL-05 และ NFR-INT-01 สำหรับฟอร์มและผลตรวจจาก API.
 export default function CheckWorkTimePage() {
   const [startDate, setStartDate] = useState('');
+  const [startHour, setStartHour] = useState('');
+  const [startMinute, setStartMinute] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [endHour, setEndHour] = useState('');
+  const [endMinute, setEndMinute] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +24,10 @@ export default function CheckWorkTimePage() {
     setIsSubmitting(true);
 
     try {
-      const response = await checkCalendarPeriod({ startDate, endDate });
+      const response = await checkCalendarPeriod({
+        startDate: `${startDate}T${startHour}:${startMinute}`,
+        endDate: `${endDate}T${endHour}:${endMinute}`,
+      });
       setResult(response);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'ไม่สามารถตรวจสอบช่วงเวลาได้');
@@ -48,39 +58,117 @@ export default function CheckWorkTimePage() {
           className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7"
         >
           <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label htmlFor="calendar-start-date" className="mb-2 block text-sm font-medium text-slate-700">
-                วันและเวลาเริ่มต้น
-              </label>
-              <input
-                id="calendar-start-date"
-                name="startDate"
-                type="datetime-local"
-                required
-                aria-describedby="calendar-datetime-help"
-                value={startDate}
-                onChange={(event) => setStartDate(event.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
-              />
-            </div>
-            <div>
-              <label htmlFor="calendar-end-date" className="mb-2 block text-sm font-medium text-slate-700">
-                วันและเวลาสิ้นสุด
-              </label>
-              <input
-                id="calendar-end-date"
-                name="endDate"
-                type="datetime-local"
-                required
-                aria-describedby="calendar-datetime-help"
-                value={endDate}
-                onChange={(event) => setEndDate(event.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
-              />
-            </div>
+            <fieldset className="space-y-3">
+              <legend className="text-sm font-semibold text-slate-700">ช่วงเวลาเริ่มต้น</legend>
+              <div>
+                <label htmlFor="calendar-start-date" className="mb-2 block text-sm font-medium text-slate-700">
+                  วันที่เริ่มต้น
+                </label>
+                <input
+                  id="calendar-start-date"
+                  name="startDate"
+                  type="date"
+                  required
+                  aria-describedby="calendar-datetime-help"
+                  value={startDate}
+                  onChange={(event) => setStartDate(event.target.value)}
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="calendar-start-hour" className="mb-2 block text-sm font-medium text-slate-700">
+                    ชั่วโมงเริ่มต้น
+                  </label>
+                  <select
+                    id="calendar-start-hour"
+                    name="startHour"
+                    required
+                    aria-describedby="calendar-datetime-help"
+                    value={startHour}
+                    onChange={(event) => setStartHour(event.target.value)}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                  >
+                    <option value="" disabled>เลือกชั่วโมง</option>
+                    {HOURS.map((hour) => <option key={hour} value={hour}>{hour}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="calendar-start-minute" className="mb-2 block text-sm font-medium text-slate-700">
+                    นาทีเริ่มต้น
+                  </label>
+                  <select
+                    id="calendar-start-minute"
+                    name="startMinute"
+                    required
+                    aria-describedby="calendar-datetime-help"
+                    value={startMinute}
+                    onChange={(event) => setStartMinute(event.target.value)}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                  >
+                    <option value="" disabled>เลือกนาที</option>
+                    {MINUTES.map((minute) => <option key={minute} value={minute}>{minute}</option>)}
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset className="space-y-3">
+              <legend className="text-sm font-semibold text-slate-700">ช่วงเวลาสิ้นสุด</legend>
+              <div>
+                <label htmlFor="calendar-end-date" className="mb-2 block text-sm font-medium text-slate-700">
+                  วันที่สิ้นสุด
+                </label>
+                <input
+                  id="calendar-end-date"
+                  name="endDate"
+                  type="date"
+                  required
+                  aria-describedby="calendar-datetime-help"
+                  value={endDate}
+                  onChange={(event) => setEndDate(event.target.value)}
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="calendar-end-hour" className="mb-2 block text-sm font-medium text-slate-700">
+                    ชั่วโมงสิ้นสุด
+                  </label>
+                  <select
+                    id="calendar-end-hour"
+                    name="endHour"
+                    required
+                    aria-describedby="calendar-datetime-help"
+                    value={endHour}
+                    onChange={(event) => setEndHour(event.target.value)}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                  >
+                    <option value="" disabled>เลือกชั่วโมง</option>
+                    {HOURS.map((hour) => <option key={hour} value={hour}>{hour}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="calendar-end-minute" className="mb-2 block text-sm font-medium text-slate-700">
+                    นาทีสิ้นสุด
+                  </label>
+                  <select
+                    id="calendar-end-minute"
+                    name="endMinute"
+                    required
+                    aria-describedby="calendar-datetime-help"
+                    value={endMinute}
+                    onChange={(event) => setEndMinute(event.target.value)}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                  >
+                    <option value="" disabled>เลือกนาที</option>
+                    {MINUTES.map((minute) => <option key={minute} value={minute}>{minute}</option>)}
+                  </select>
+                </div>
+              </div>
+            </fieldset>
           </div>
           <p id="calendar-datetime-help" className="text-xs text-slate-500">
-            เลือกวันและเวลาจากตัวเลือกในช่อง หรือใช้รูปแบบ YYYY-MM-DDTHH:mm เช่น 2026-11-16T09:00
+            เลือกวันที่ แล้วเลือกชั่วโมง 00–23 และนาที 00–59 เช่น 09:30 ระบบจะส่งช่วงเวลาในรูปแบบ YYYY-MM-DDTHH:mm
           </p>
 
           <button
