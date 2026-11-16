@@ -5,3 +5,7 @@ import os
 # เช่น postgresql+psycopg://user:pass@db:5432/checkup
 # ค่าเริ่มต้นเป็น SQLite ไว้ลองรันใน Codespace เท่านั้น
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
+
+# ปิด demo authentication เป็นค่าเริ่มต้น; เปิดได้เฉพาะ local/test (FR-PAY-04)
+APP_ENV = os.getenv("APP_ENV", "production").lower()
+PAYMENT_DEMO_AUTH_TOKENS = os.getenv("PAYMENT_DEMO_AUTH_TOKENS")

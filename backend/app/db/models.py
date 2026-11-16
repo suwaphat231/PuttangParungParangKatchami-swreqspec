@@ -46,6 +46,19 @@ class AuditLog(Base):
     accessed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
+class PaymentAuditLog(Base):
+    """บันทึกการเข้าถึงข้อมูลการจ่ายเงินโดยไม่เก็บ bearer token (FR-PAY-05, NFR-AUD-01)."""
+    __tablename__ = "payment_audit_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    accessed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
+    )
+    resource: Mapped[str] = mapped_column(String(512))
+    authorization_result: Mapped[str] = mapped_column(String(10))
+
+
 class StudentVerification(Base):
     __tablename__ = "student_verifications"
 

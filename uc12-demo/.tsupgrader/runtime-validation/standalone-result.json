@@ -1,0 +1,117 @@
+{
+  "planHash": "3be98f19e02ae8e7ed0deff80697f3c50db83c3f1f4482b7757aad8527804f8f",
+  "phase": "standalone",
+  "recordedAtUtc": "2026-11-13T16:13:34.1425170Z",
+  "retryCount": 0,
+  "resetBaseline": false,
+  "complete": true,
+  "result": {
+    "setupSucceeded": true,
+    "setupDurationMs": 4768,
+    "setupFailureOutput": null,
+    "assertions": [
+      {
+        "name": "tests-pass",
+        "kind": "process",
+        "verificationMethod": "test-results",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\n\u003E uc12-demo@0.0.0 test\n\u003E vitest run\n\n\n RUN  v4.1.12 /workspaces/PuttangParungParangKatchami-swreqspec/uc12-demo\n\n\n Test Files  1 passed (1)\n      Tests  8 passed (8)\n   Start at  16:13:29\n   Duration  2.38s (transform 103ms, setup 0ms, import 288ms, tests 1.41s, environment 513ms)\n\n",
+        "durationMs": 3359,
+        "testResults": {
+          "testFramework": "vitest",
+          "runnerDetectedFrom": "package_json",
+          "testsTotal": 8,
+          "testsPassed": 8,
+          "testsFailed": 0,
+          "testsSkipped": 0,
+          "parseFailed": false
+        }
+      },
+      {
+        "name": "production-build",
+        "kind": "process",
+        "verificationMethod": "exit-code",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\n\u003E uc12-demo@0.0.0 build\n\u003E vite build\n\nvite v8.3.8 building client environment for production...\ntransforming...\n\u2713 17 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.45 kB \u2502 gzip:  0.29 kB\ndist/assets/index-Bpw05CLh.css    0.03 kB \u2502 gzip:  0.05 kB\ndist/assets/index-D5kFQLXW.js   246.52 kB \u2502 gzip: 74.83 kB\n\n\u2713 built in 219ms\n",
+        "durationMs": 780
+      },
+      {
+        "name": "home-route-serves",
+        "kind": "http-probe",
+        "verificationMethod": "http-status",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": null,
+        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml lang=\u0022en\u0022\u003E\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022/favicon.svg\u0022 /\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\n    \u003Ctitle\u003Euc12-demo\u003C/title\u003E\n  \u003C/head\u003E\n  \u003Cbody\u003E\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\n    \u003Cscript type=\u0022module\u0022 src=\u0022/src/main.jsx\u0022\u003E\u003C/script\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n--- server output ---\n\n\u003E uc12-demo@0.0.0 dev\n\u003E vite --host 127.0.0.1 --port 4173 --strictPort\n\n\n  VITE v8.3.8  ready in 238 ms\n\n  \u279C  Local:   http://127.0.0.1:4173/\n",
+        "durationMs": 861
+      }
+    ],
+    "executions": [
+      {
+        "source": "setup[0]",
+        "resolvedExecutable": "/home/codespace/nvm/current/bin/npm",
+        "args": [
+          "ci",
+          "--legacy-peer-deps",
+          "--no-audit",
+          "--no-fund"
+        ],
+        "cwd": "/workspaces/PuttangParungParangKatchami-swreqspec/uc12-demo",
+        "env": {},
+        "prependPath": [],
+        "platform": "linux"
+      },
+      {
+        "source": "tests-pass",
+        "resolvedExecutable": "/home/codespace/nvm/current/bin/npm",
+        "args": [
+          "test"
+        ],
+        "cwd": "/workspaces/PuttangParungParangKatchami-swreqspec/uc12-demo",
+        "env": {},
+        "prependPath": [],
+        "platform": "linux"
+      },
+      {
+        "source": "production-build",
+        "resolvedExecutable": "/home/codespace/nvm/current/bin/npm",
+        "args": [
+          "run",
+          "build"
+        ],
+        "cwd": "/workspaces/PuttangParungParangKatchami-swreqspec/uc12-demo",
+        "env": {},
+        "prependPath": [],
+        "platform": "linux"
+      },
+      {
+        "source": "home-route-serves",
+        "resolvedExecutable": "/home/codespace/nvm/current/bin/npm",
+        "args": [
+          "run",
+          "dev",
+          "--",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "4173",
+          "--strictPort"
+        ],
+        "cwd": "/workspaces/PuttangParungParangKatchami-swreqspec/uc12-demo",
+        "env": {},
+        "prependPath": [],
+        "platform": "linux"
+      }
+    ]
+  }
+}

@@ -96,6 +96,17 @@ Updated: 2569-09-19
 - [ ] ยืนยันนโยบาย cache และระยะเวลาที่ถือว่าข้อมูลสด
 - [ ] ยืนยัน audit log สำหรับการเข้าดูข้อมูลของนักศึกษา
 
+## Proposed API Contract (รอทีมตรวจ)
+
+ข้อเสนอนี้เป็นรายละเอียดทางเทคนิคสำหรับทีมพิจารณา ไม่ใช่ requirement ที่ยืนยันแล้วใน `spec.md`.
+
+- รายการ: `GET /applications` (เรียกจาก frontend ผ่าน `/api/applications`) คืนเฉพาะใบสมัครของผู้ใช้ที่ยืนยันตัวตนแล้ว เรียง `updated_at` ล่าสุดก่อน; ตัวกรองประกาศใช้ query parameter ตาม FR-STS-05.
+- รายละเอียด: `GET /applications/{application_id}` คืนสถานะปัจจุบัน, `updated_at`, เหตุผล และรายการที่ต้องแก้ของใบสมัครนั้น โดยตรวจเจ้าของจาก session ฝั่ง server ไม่รับ `user_id` จาก client.
+- รูปแบบข้อมูลที่เสนอ: รายการคืน `{ "applications": [...] }`; แต่ละรายการมี `application_id`, `announcement_id`, `status`, `updated_at`, `reason` และ `required_actions`. รายละเอียดคืน object ของรายการเดียวกัน.
+- ความสด: โหลดจากแหล่งข้อมูลทุกครั้งที่เปิดหน้า และตอบ `Cache-Control: no-store`; ยังต้องให้ทีมยืนยัน source of truth และนโยบาย cache.
+- เทคโนโลยี FastAPI/React และเส้นทางข้างต้นเป็นข้อเสนอจากโครง repo ไม่ได้มาจาก Constraints ใน spec; ทีมเป็นผู้เลือก.
+- จุดต้องตัดสินใจก่อน implement: กลไก session/การเชื่อม identity provider, model/source ของใบสมัคร และ response สำหรับหน้าเปิดใหม่. `TC-STS-06-1` ปัจจุบัน mock object เดี่ยว แต่ข้อเสนอหน้า list คืน object ห่อด้วย `applications`; ทีมต้องยืนยันว่าจะปรับ fixture/test case ให้ตรง contract หรือกำหนด contract รายละเอียดแบบ object เดี่ยวก่อน.
+
 ## Traceability
 | Area | Requirements / Acceptance Criteria |
 |---|---|

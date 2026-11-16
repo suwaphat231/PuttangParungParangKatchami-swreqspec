@@ -6,7 +6,6 @@ export default function ApplicationStatusDetail({ application }) {
   }
 
   const updatedAt = application.updated_at || application.updatedAt;
-  const status = application.status;
   const validDate = updatedAt ? new Date(updatedAt) : null;
   const formattedTime = validDate
     ? new Intl.DateTimeFormat('th-TH', {
@@ -22,7 +21,7 @@ export default function ApplicationStatusDetail({ application }) {
       <dl>
         <div>
           <dt>สถานะล่าสุด</dt>
-          <dd>{status}</dd>
+          <dd>{application.status}</dd>
         </div>
         <div>
           <dt>เวลาอัปเดต</dt>
