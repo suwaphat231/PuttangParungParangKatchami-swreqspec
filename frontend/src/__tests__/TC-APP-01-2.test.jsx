@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, test } from 'vitest';
-import ViewApplicantsPage from '../pages/ViewApplicantsPage.jsx';
+import ViewApplicantsPage from '../../../specs/007-viewapplicants/demo/ViewApplicantsPage.jsx';
 
 describe('TC-APP-01-2: แสดงผู้สมัครหนึ่งรายในรอบที่อาจารย์รับผิดชอบ', () => {
   afterEach(() => {

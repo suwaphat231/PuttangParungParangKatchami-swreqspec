@@ -36,6 +36,10 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
       Given วันปิดก่อนวันเปิด
             When  บันทึก
             Then  ระบบปฏิเสธและแจ้งข้อผิดพลาด
+- [ ] AC-REC-04 (FR-REC-01)
+      Given อาจารย์เปิดหน้าสร้างการรับสมัคร
+            When  กรอกรายวิชา คุณสมบัติ จำนวนที่รับ และช่วงเวลารับสมัคร แล้วบันทึก
+            Then  ระบบบันทึกรายละเอียดการรับสมัครและแสดงข้อมูลที่บันทึกให้ตรวจสอบได้
 
 ## Assumptions & Open Questions
 - ASM-01 รายวิชาและผู้รับผิดชอบมีอยู่ในระบบ
@@ -44,7 +48,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-06 requirement 1 | FR-REC-01 | AC-REC-01 |
+| UC-06 requirement 1 | FR-REC-01 | AC-REC-04 |
 | UC-06 requirement 2 | FR-REC-02 | AC-REC-02 |
 | UC-06 requirement 3 | FR-REC-03 |  |
 | NFR-SEC-01 | Quality Requirements |  |

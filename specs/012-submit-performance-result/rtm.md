@@ -6,7 +6,7 @@
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
 | FR-RES-01 | AC-RES-01 | T-01 | prototype.html จำลองเงื่อนไข | ไม่พบ test | ยังไม่ถึง |
-| FR-RES-02 | AC-RES-02 | T-02, T-04 | prototype แสดงข้อมูลตัวอย่าง | ไม่พบ test | ยังไม่ถึง |
+| FR-RES-02 | AC-RES-04 | T-02, T-04 | prototype แสดงข้อมูลตัวอย่าง | ไม่พบ test | ยังไม่ถึง |
 | FR-RES-03 | AC-RES-02 | T-03 | prototype จำลองสถานะ | ไม่พบ test | ยังไม่ถึง |
 | NFR-REL-01 | ไม่มี AC ตรง | T-03 | ไม่พบ transaction จริง | ไม่พบ test | ช่องโหว่ |
 | NFR-AUD-01 | ไม่มี AC ตรง | T-04 | ไม่พบ audit persistence | ไม่พบ test | ช่องโหว่ |
@@ -22,4 +22,6 @@
 | F-001 | FR ไม่มี AC | `spec.md`: Traceability | NFR-REL-01, NFR-AUD-01 | NFR-REL-01 และ NFR-AUD-01 ไม่มี AC ที่ตรวจโดยตรง | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| - | เพิ่ม AC-RES-04 (FR-RES-02) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) และผูก FR-RES-02 กับ AC ของตัวเองแทน AC-RES-02 | `spec.md` Traceability ผูก FR-RES-02 → AC-RES-04; ยังไม่มี test |

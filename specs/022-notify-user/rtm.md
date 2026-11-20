@@ -6,7 +6,7 @@
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
 | FR-MSG-01 | AC-MSG-01 | T-01, T-02 | ไม่พบ notification service | ไม่พบ test | ยังไม่ถึง |
-| FR-MSG-02 | AC-MSG-02 | T-03 | ไม่พบ in-app channel | ไม่พบ test | ยังไม่ถึง |
+| FR-MSG-02 | AC-MSG-02 | T-03 | ไม่พบ in-app channel และการส่งอีเมลเสริมกรณีส่งกลับแก้ไขเอกสาร | ไม่พบ test | ยังไม่ถึง |
 | FR-MSG-03 | AC-MSG-03 | T-04 | ไม่พบ status/retry storage | ไม่พบ test | ยังไม่ถึง |
 | NFR-REL-02 | AC-MSG-03 | T-04 | ไม่พบ retry implementation | ไม่พบ test | ยังไม่ถึง |
 | NFR-SEC-01 | AC-MSG-04 | T-05 | ไม่พบ notification implementation | ไม่พบ test | ยังไม่ถึง |
@@ -22,4 +22,6 @@
 | - | - | - | - | ไม่มีข้อค้นพบใหม่; requirement ที่ยังไม่มีโค้ดแสดงเป็น `ยังไม่ถึง` | - |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| - | แก้ FR-MSG-02, AC-MSG-02, ASM-01, Q-01 เป็น notification ในระบบเป็นหลัก + อีเมลเสริมเมื่อส่งกลับแก้ไขเอกสาร (UC-14) ให้ตรงกับ SRS (2569-11-20) | `spec.md`, `plan.md`, `tasks.md` ใช้ข้อความเดียวกัน |

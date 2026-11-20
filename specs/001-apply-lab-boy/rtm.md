@@ -7,7 +7,7 @@
 |---|---|---|---|---|---|
 | FR-LB-01 | AC-LB-02 | T-02 | `specs/001-apply-lab-boy/ApplyLabBoyPrototype.jsx`: announcement details | `ApplyLabBoyPage.test.jsx` ผ่าน: แสดงเงื่อนไข ช่วงเวลา จำนวนที่รับ และห้องทำงาน | ครบ |
 | FR-LB-02 | AC-LB-03 | T-03 | `backend/app/services/eligibility_service.py`: `EligibilityService.evaluate`; `backend/app/controllers/student_application_controller.py` | `backend/tests/test_T03_eligibility.py` ผ่าน: session/profile/status ถูกตรวจจริง | ครบ |
-| FR-LB-03 | AC-LB-04 | T-02, T-03 | `backend/app/services/application_draft_service.py`; `backend/app/services/eligibility_service.py` | `test_T03_eligibility.py` + `test_T06_application_draft_service.py` ผ่าน: ข้อมูลไม่ครบถูกปฏิเสธ | ครบ |
+| FR-LB-03 | AC-LB-04 | T-02, T-03, T-10 | `backend/app/services/application_draft_service.py`; `backend/app/services/eligibility_service.py` | `test_T03_eligibility.py` + `test_T06_application_draft_service.py` ผ่าน: ข้อมูลไม่ครบถูกปฏิเสธ | ช่องโหว่ (F-006) |
 | FR-LB-04 | AC-LB-01 | T-04 | `backend/app/services/application_submit_service.py` | `test_T04_submit_application.py` ผ่าน: บันทึกใบสมัครครั้งเดียวและประสบความสำเร็จ | ครบ |
 | FR-LB-05 | AC-LB-05 | T-04 | `backend/app/services/application_submit_service.py` | `test_T04_submit_application.py` ผ่าน: save failure ไม่ทิ้งใบสมัครที่ไม่สมบูรณ์ | ครบ |
 | FR-LB-06 | AC-LB-06 | T-02, T-06 | `backend/app/services/application_draft_service.py` | `test_T06_application_draft_service.py` ผ่าน: แก้ไขก่อนยืนยันและยกเลิกแบบ no-op | ครบ |
@@ -20,9 +20,8 @@
 | NFR-USE-01 | AC-LB-02 | T-02, T-09 | prototype UI ใช้งานได้ แต่ไม่มีการวัด UX แบบเป็นเรื่องจริง | frontend prototype tests ผ่านแต่ยังไม่มี `คน` ทดสอบจริง | ยังไม่ถึง |
 | Constraint: ต้องเข้าสู่ระบบก่อนสมัคร | ไม่มี AC | T-03 | `backend/app/services/eligibility_service.py`: `require_authenticated_session` | `test_T03_eligibility.py` ผ่าน: session ว่างถูกปฏิเสธ | ครบ |
 | Constraint: ต้องมีประกาศรับสมัครที่อยู่ในช่วงเวลาเปิดรับ | ไม่มี AC | T-01, T-02 | `backend/app/models/recruitment.py`: `is_open`, `is_open_at`; `ApplicationRules.is_application_open` | `test_T01_lab_boy_model.py` ผ่าน: timezone-aware open window | ครบ |
-| Constraint: ข้อมูลที่จำเป็นจากบัญชีผู้ใช้ต้องครบก่อนยืนยัน | AC-LB-04 | T-02, T-03 | `backend/app/services/eligibility_service.py` + `application_draft_service.py` | `test_T03_eligibility.py` และ `test_T06_application_draft_service.py` ผ่าน | ครบ |
+| Constraint: ข้อมูลที่จำเป็นจากบัญชีผู้ใช้และเอกสารแนบตามรายการในประกาศรับสมัครต้องครบก่อนยืนยัน | AC-LB-04 | T-02, T-03, T-10 | `backend/app/services/eligibility_service.py` + `application_draft_service.py` | `test_T03_eligibility.py` และ `test_T06_application_draft_service.py` ผ่าน | ช่องโหว่ (F-006) |
 | Constraint: หากสมัครสำเร็จต้องไม่สร้างใบสมัครซ้ำสำหรับประกาศเดียวกัน | AC-LB-11 | T-01, T-04 | `backend/app/services/application_rules.py` | `test_T01_lab_boy_model.py` ผ่าน: duplicate rejected | ครบ |
-| Constraint: ใช้ข้อมูลจากบัญชีผู้ใช้โดยไม่ต้องแนบเอกสาร | ไม่มี AC | T-02 | `specs/001-apply-lab-boy/ApplyLabBoyPrototype.jsx` ใช้ profile state โดยไม่ upload เอกสาร | prototype test ไม่ตรวจเรื่องเอกสารจริง | ครบ |
 | Constraint: หากจำนวนผู้สมัครเต็ม ให้รับคำขอตามลำดับเวลาที่ยืนยันสำเร็จ | AC-LB-10 | T-05 | ไม่มี capacity service หรือ queue logic จริงใน repo | ไม่มี test/โค้ดที่พิสูจน์ ordering เมื่อมี capacity เต็ม | ยังไม่ถึง |
 
 สรุปสถานะแถว: ครบ 14 | ยังไม่ถึง 4 | รอ 0 | ช่องโหว่ 1
@@ -52,6 +51,7 @@
 | F-003 | AC ไม่มี test | `specs/001-apply-lab-boy/test-cases.md` | AC-LB-02 ถึง AC-LB-10 | แถวหลายตัวเป็น `ใช้ได้` แต่ไม่มี executable test ใน `backend/tests/` หรือ `frontend/src/__tests__/` ที่ยืนยันทั้งหมด | แก้ spec / เพิ่ม test |
 | F-004 | test อ่อน | `frontend/src/pages/ApplyLabBoyPage.test.jsx` | FR-LB-01, FR-LB-02, FR-LB-04 | Test prototype ใช้ scenario/local state มากเกินกว่าการเชื่อมกับ backend จริง จึงไม่พิสูจน์ production flow | แก้โค้ด |
 | F-005 | ตัวเลขไม่ตรง spec | `specs/001-apply-lab-boy/ApplyLabBoyPrototype.jsx` | ASM-07, FR-LB-01 | prototype กำหนดเลขใบสมัคร `LB-2569-0001` และเกณฑ์เกรด B ขึ้นไป แม้ spec ระบุว่าเกรดไม่ใช้ตัดสินคุณสมบัติ | แก้ spec |
+| F-006 | โค้ดไม่มี FR | `ApplyLabBoyPrototype.jsx`, `backend/app/services/` | FR-LB-03, AC-LB-04, ASM-03 | spec แก้แล้วให้ต้องแนบเอกสารตามรายการในประกาศ แต่ prototype และ backend ยังไม่มีช่องอัปโหลดหรือการตรวจเอกสารแนบ (ดู T-10) | แก้โค้ด |
 
 ## 4. แก้แล้ว
 | F-ID | แก้อย่างไร | รู้ได้อย่างไร |

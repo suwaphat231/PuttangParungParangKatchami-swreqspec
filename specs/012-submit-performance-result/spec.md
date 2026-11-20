@@ -40,6 +40,10 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
       Given การบันทึกล้มเหลว
             When  ส่งผล
             Then  สถานะต้องไม่เปลี่ยนเป็นส่งแล้ว
+- [ ] AC-RES-04 (FR-RES-02)
+      Given อาจารย์ส่งผลการปฏิบัติงานสำเร็จ
+            When  ระบบบันทึกการส่ง
+            Then  ระบบบันทึกวันและเวลาที่ส่ง และแสดงเวลาส่งในรายละเอียดผล
 
 ## Assumptions & Open Questions
 - ASM-01 ขั้นตอนส่งผลถือเป็นจุดสิ้นสุดการแก้ไขตามปกติ
@@ -49,7 +53,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
 | UC-12 requirement 1 | FR-RES-01 | AC-RES-01 |
-| UC-12 requirement 2 | FR-RES-02 | AC-RES-02 |
+| UC-12 requirement 2 | FR-RES-02 | AC-RES-04 |
 | UC-12 requirement 3 | FR-RES-03 | AC-RES-03 |
 | NFR-REL-01 | Quality Requirements |  |
 | NFR-AUD-01 | Quality Requirements |  |

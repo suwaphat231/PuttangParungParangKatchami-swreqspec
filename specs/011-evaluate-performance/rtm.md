@@ -5,7 +5,7 @@
 ## 1. ตามรอยไปข้างหน้า
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
-| FR-EVL-01 | ไม่มี AC | T-01, T-06 | ไม่พบ evaluation form/UI | ไม่พบ test | ช่องโหว่ |
+| FR-EVL-01 | AC-EVL-04 | T-01, T-06 | ไม่พบ evaluation form/UI | ไม่พบ test | ช่องโหว่ |
 | FR-EVL-02 | AC-EVL-01 | T-02, T-03 | ไม่พบ score validation | ไม่พบ test | ยังไม่ถึง |
 | FR-EVL-03 | AC-EVL-02 | T-04 | ไม่พบ persistence/auditor | ไม่พบ test | ยังไม่ถึง |
 | NFR-AUD-01 | ไม่มี AC | T-05 | ไม่พบ evaluation history | ไม่พบ test | ช่องโหว่ |
@@ -22,4 +22,6 @@
 | F-001 | FR ไม่มี AC | spec.md: Requirements/Traceability | FR-EVL-01, NFR-AUD-01, NFR-SEC-01 | มี requirement แต่ไม่มี AC ตรวจโดยตรง | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| F-001 (FR-EVL-01) | เพิ่ม AC-EVL-04 (FR-EVL-01) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) | `spec.md` Traceability ผูก FR-EVL-01 → AC-EVL-04; NFR-AUD-01, NFR-SEC-01 ยังไม่มี AC |

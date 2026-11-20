@@ -5,7 +5,7 @@
 ## 1. ตามรอยไปข้างหน้า
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
-| FR-DOC-01 | ไม่มี AC ตรง | T-01, T-06 | ไม่พบ document endpoint/UI | ไม่พบ test | ช่องโหว่ |
+| FR-DOC-01 | AC-DOC-04 | T-01, T-06 | ไม่พบ document endpoint/UI | ไม่พบ test | ช่องโหว่ |
 | FR-DOC-02 | AC-DOC-01 | T-02, T-05 | ไม่พบ review/audit implementation | ไม่พบ test | ยังไม่ถึง |
 | FR-DOC-03 | AC-DOC-02 | T-03 | ไม่พบ reason validation | ไม่พบ test | ยังไม่ถึง |
 | NFR-SEC-01 | AC-DOC-03 | T-01, T-06 | ไม่พบ RBAC document access | ไม่พบ test | ยังไม่ถึง |
@@ -23,4 +23,6 @@
 | F-002 | FR ไม่มี AC | `spec.md`: Traceability | NFR-AUD-01 | NFR-AUD-01 ไม่มี AC ที่ตรวจโดยตรง | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| F-001 | เพิ่ม AC-DOC-04 (FR-DOC-01) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) | `spec.md` Traceability ผูก FR-DOC-01 → AC-DOC-04; ยังไม่มี test |

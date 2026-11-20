@@ -1,5 +1,5 @@
 # RTM: เข้าสู่ระบบ
-อ้างอิง: [spec.md](./spec.md) Draft v1/v2 มี conflict markers | [plan.md](./plan.md) | [tasks.md](./tasks.md)
+อ้างอิง: [spec.md](./spec.md) Draft v2 | [plan.md](./plan.md) | [tasks.md](./tasks.md)
 สร้างด้วย /verify เมื่อ 2569-11-11 | test เฉพาะฟีเจอร์: ไม่พบ
 
 ## 1. ตามรอยไปข้างหน้า
@@ -36,4 +36,7 @@
 | F-003 | โค้ดไม่มี FR | `tasks.md`: T-01 | FR-AUTH-01, FR-AUTH-02, FR-AUTH-04, FR-AUTH-07, NFR-SEC-02, NFR-AUD-01, NFR-AUD-02 | T-01 ระบุ “เสร็จ รอทีมตรวจ” แต่ไม่พบ implementation ตาม task; จึงยังยืนยัน requirement เหล่านี้ไม่ได้ | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| F-001 | ลบ conflict markers และเก็บเนื้อหา v2 ทั้งหมด (SSO, ไม่ใช้ MFA, idle timeout 120 นาที, ล็อก 5 ครั้ง/15 นาที) (2569-11-20) | `spec.md` ไม่มี `<<<<<<<` / `=======` / `>>>>>>>` แล้ว |
+| F-002 (บางส่วน) | ฉบับ v2 ผูก NFR-SEC-01 กับ AC-AUTH-01 และ NFR-AUD-01 กับ AC-AUTH-08 | ตาราง Traceability ใน `spec.md`; NFR-SEC-02 ยังไม่มี AC |

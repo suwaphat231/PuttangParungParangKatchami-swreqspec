@@ -45,6 +45,10 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
       Given ไม่มีสิทธิ์ดูเอกสาร
             When  เปิดเอกสาร
             Then  ระบบปฏิเสธการเข้าถึงและแสดงข้อความที่ชัดเจน
+- [ ] AC-DOC-04 (FR-DOC-01)
+      Given อาจารย์มีสิทธิ์ตรวจเอกสารของรอบรับสมัคร
+            When  เปิดรายการเอกสารของผู้สมัคร
+            Then  ระบบแสดงเอกสารของผู้สมัครในรอบนั้นตามรูปแบบที่กำหนดและเปิดตรวจสอบได้
 
 ## Assumptions & Open Questions
 - ASM-01 ประเภทและรายการเอกสารที่ต้องตรวจสอบถูกกำหนดไว้ในประกาศรับสมัครหรือรายการเอกสารที่ระบุไว้ล่วงหน้า -> Assumption: ยังต้องยืนยันกับผู้รับผิดชอบ
@@ -62,7 +66,7 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-10 requirement 1 | FR-DOC-01 | — |
+| UC-10 requirement 1 | FR-DOC-01 | AC-DOC-04 |
 | UC-10 requirement 2 | FR-DOC-02 | AC-DOC-01 |
 | UC-10 requirement 3 | FR-DOC-03 | AC-DOC-02 |
 | NFR-SEC-01 | NFR-SEC-01 | AC-DOC-03 |

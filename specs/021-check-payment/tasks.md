@@ -14,6 +14,7 @@ Spec ID: SPEC-21-21- / UC-21
 
 ### T-01 สร้าง model และ lookup reference สำหรับ payment record
 - รองรับ: FR-FIN-01, NFR-REL-01
+- ตรวจด้วย: AC-FIN-04
 - ตรวจด้วย: ไม่มี AC ตรง ๆ เป็นงานพื้นฐานของ T-01
 - ไฟล์ที่แตะ: `backend/app/payment_service.py`, `backend/app/router.py`
 - ต้องทำหลัง: ไม่มี
@@ -62,7 +63,7 @@ Spec ID: SPEC-21-21- / UC-21
 
 ### T-07 ทดสอบยอมรับสำหรับ duplicate, paid, และ mismatch
 - รองรับ: FR-FIN-01, FR-FIN-02, FR-FIN-03, FR-FIN-04, NFR-REL-01, NFR-SEC-01
-- ตรวจด้วย: AC-FIN-01, AC-FIN-02, AC-FIN-03
+- ตรวจด้วย: AC-FIN-01, AC-FIN-02, AC-FIN-03, AC-FIN-04
 - ไฟล์ที่แตะ: `backend/tests/test_track_payment.py`
 - ต้องทำหลัง: T-03, T-04, T-05, T-06
 - เสร็จเมื่อ: test_AC_Fin_01, test_AC_Fin_02, test_AC_Fin_03 ผ่านและครอบคลุม duplicate callback, status mapping, stale timestamp rejection, unknown status rejection, และ mismatch rejection ตามข้อกำหนด
@@ -76,6 +77,7 @@ Spec ID: SPEC-21-21- / UC-21
 | AC-FIN-01 | T-03, T-07 |
 | AC-FIN-02 | T-02, T-05, T-06, T-07 |
 | AC-FIN-03 | T-04, T-06, T-07 |
+| AC-FIN-04 | T-01, T-07 |
 
 ### 2) Constraint / Requirement ที่มีลักษณะเป็นข้อจำกัด | task ที่ทำให้เป็นจริง
 | Constraint / Requirement | task ที่ทำให้เป็นจริง |

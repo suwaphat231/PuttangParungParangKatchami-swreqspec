@@ -36,7 +36,7 @@
 
 ### T-03: บันทึกผู้ส่งและเวลาการส่งผล
 - รองรับ: FR-RES-02, NFR-AUD-01
-- ตรวจด้วย: AC-RES-02
+- ตรวจด้วย: AC-RES-02, AC-RES-04
 - ไฟล์ที่แตะ: `specs/12-12-submit-performance-result/prototype.html`
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ:
@@ -79,7 +79,7 @@
 
 ### T-06: ทดสอบ Acceptance Criteria และความต้องการเชิงคุณภาพ
 - รองรับ: FR-RES-01, FR-RES-02, FR-RES-03, NFR-REL-01, NFR-AUD-01
-- ตรวจด้วย: AC-RES-01, AC-RES-02, AC-RES-03
+- ตรวจด้วย: AC-RES-01, AC-RES-02, AC-RES-03, AC-RES-04
 - ไฟล์ที่แตะ: `specs/12-12-submit-performance-result/tasks.md` (Test Scenarios) และ `uc12-demo/src/Prototype.test.jsx`
 - ต้องทำหลัง: T-02, T-03, T-04, T-05
 - เสร็จเมื่อ:
@@ -132,6 +132,7 @@
 | AC-RES-01 | Prototype อนุญาตให้ยืนยันเมื่อ Mock Data ประเมินครบ และปฏิเสธเมื่อไม่ครบ | T-01, T-02, T-06 |
 | AC-RES-02 | Prototype แสดงสถานะส่งแล้วหลังส่งสำเร็จและกลับมาดูข้อมูล | T-03, T-04, T-06 |
 | AC-RES-03 | Prototype จำลองบันทึกล้มเหลวแล้วคงสถานะไม่เป็นส่งแล้ว; ไม่ยืนยัน Transaction จริง | T-04, T-06 |
+| AC-RES-04 | Given ส่งผลสำเร็จ เมื่อระบบบันทึกการส่ง Then บันทึกวันเวลาที่ส่งและแสดงในรายละเอียดผล | T-03, T-06 |
 
 ### Constraint coverage
 | Constraint | รายละเอียด | Task ที่ทำให้เป็นจริง |

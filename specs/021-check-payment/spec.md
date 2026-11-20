@@ -47,6 +47,10 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
       Given ระบบการเงินตอบกลับสถานะสำหรับ reference ที่ไม่ตรงหรือข้อมูลไม่สอดคล้อง
             When  ระบบประมวลผลข้อมูลดังกล่าว
             Then  ระบบปฏิเสธการอัปเดต และไม่แก้ไขสถานะเดิมของรายการที่มีอยู่
+- [ ] AC-FIN-04 (FR-FIN-01)
+      Given มีรายการจ่ายเงินที่มี reference จากระบบการเงิน
+            When  ระบบค้นหาด้วย reference นั้น
+            Then  ระบบระบุรายการจ่ายเงินที่ตรงกันได้ และหากไม่พบ ระบบแจ้งว่าไม่พบรายการ
 
 ## Assumptions & Open Questions
 - ASM-01 ระบบการเงินมี reference ที่ใช้เชื่อมรายการภายใน LAB BOY กับรายการชำระเงิน
@@ -61,7 +65,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-21 requirement 1 | FR-FIN-01 | AC-FIN-01 |
+| UC-21 requirement 1 | FR-FIN-01 | AC-FIN-04 |
 | UC-21 requirement 2 | FR-FIN-02 | AC-FIN-02 |
 | UC-21 requirement 3 | FR-FIN-03 | AC-FIN-01 |
 | UC-21 requirement 4 | FR-FIN-04 | AC-FIN-03 |

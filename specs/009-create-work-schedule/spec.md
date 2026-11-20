@@ -47,6 +47,14 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
       Given มีผู้ใช้หลายคนบันทึกตารางในช่วงเวลาเดียวกัน
             When  ระบบตรวจสอบและตัดโควตา
             Then  การตัดโควตาต้องเป็น Atomic Transaction และโควตาต้องไม่ติดลบหรือเกินจำนวนที่กำหนด
+- [ ] AC-SCH-04 (FR-SCH-01)
+      Given อาจารย์เปิดหน้าจัดตารางปฏิบัติงานของรายวิชา
+            When  ระบบโหลดข้อมูล
+            Then  ระบบแสดงเฉพาะช่วงเวลาที่จัดตารางได้ พร้อมโควตาคงเหลือของแต่ละช่วง
+- [ ] AC-SCH-05 (FR-SCH-04)
+      Given บันทึกตารางปฏิบัติงานสำเร็จ
+            When  ระบบยืนยันการบันทึก
+            Then  ระบบแสดงตารางล่าสุดที่รวมรายการที่เพิ่งบันทึก
 
 ## Assumptions & Open Questions
 - ASM-01 โควตาต่อช่วงเวลามีแหล่งข้อมูลที่เชื่อถือได้
@@ -65,9 +73,9 @@ Owner: ทีม A | Status: Draft v2 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-09 requirement 1 | FR-SCH-01 | AC-SCH-01 |
+| UC-09 requirement 1 | FR-SCH-01 | AC-SCH-04 |
 | UC-09 requirement 2 | FR-SCH-02 | AC-SCH-01 |
 | UC-09 requirement 3 | FR-SCH-03 | AC-SCH-02 |
-| UC-09 requirement 4 | FR-SCH-04 | AC-SCH-01 |
+| UC-09 requirement 4 | FR-SCH-04 | AC-SCH-05 |
 | NFR-REL-01 | Quality Requirements | AC-SCH-03 |
 | NFR-PERF-01 | Quality Requirements | AC-SCH-01, AC-SCH-02 |

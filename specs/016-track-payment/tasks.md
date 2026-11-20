@@ -31,7 +31,8 @@
 - ไฟล์ที่แตะ: `backend/app/config.py`, `backend/app/payments/auth.py` (สร้าง), `backend/app/payments/audit.py` (สร้าง), `backend/app/db/models.py`, `backend/app/db/migrations/002_payment_audit_log.py` (สร้าง), `backend/tests/test_AC_PAY_04.py` (สร้าง), `backend/tests/test_AC_PAY_05.py` (สร้าง)
 - สถานะ: เสร็จ
 - ต้องทำหลัง: T-01
-- สิทธิ์ที่ยืนยัน: HR และ Manager/Executive อ่านได้แบบ Read-only; Student และผู้ปฏิบัติงานทั่วไปถูกปฏิเสธ
+- สิทธิ์ที่ยืนยัน (spec ปัจจุบัน): เจ้าหน้าที่ภาควิชาและหัวหน้าภาควิชาอ่านได้แบบ Read-only; นักศึกษาและ Lab Boy ไม่มีสิทธิ์ดูข้อมูลการเงินของผู้อื่น
+- หมายเหตุ (2569-11-20): โค้ดที่ทำเสร็จแล้วยังใช้ชื่อบทบาทเดิม HR/MANAGER/EXECUTIVE ต้องแมปหรือเปลี่ยนเป็นบทบาทใหม่ (ดู rtm.md F-001)
 - Auth สำหรับสาธิต: `PAYMENT_DEMO_AUTH_TOKENS` เป็น JSON map จาก bearer token ไป `user_id`/role; ใช้ได้เฉพาะ `APP_ENV=local` หรือ `test` และค่าเริ่มต้น `APP_ENV=production`; ห้ามรับ role จาก request และห้ามบันทึก token
 - Audit Log: ตาราง `payment_audit_logs` แยก เก็บ user ID (nullable เมื่อระบุตัวตนไม่ได้), วันเวลา UTC, resource/item และผล `ALLOWED`/`DENIED`
 - เสร็จเมื่อ: HR/MANAGER/EXECUTIVE ได้รับอนุญาต, STUDENT/WORKER และ token ที่ไม่ถูกต้องถูกปฏิเสธ; demo auth ปิดเมื่อไม่ใช่ local/test; ทุกผลการอนุญาต/ปฏิเสธถูกบันทึกลงตารางโดยไม่เก็บ token; migration และ test AC-PAY-04/05 ผ่าน

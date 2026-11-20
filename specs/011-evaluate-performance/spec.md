@@ -36,6 +36,10 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
       Given กรอกข้อมูลครบ
             When  ยืนยัน
             Then  บันทึกผลพร้อมผู้ประเมินและเวลา
+- [ ] AC-EVL-04 (FR-EVL-01)
+      Given Lab Boy มีกิจกรรมหรือรายวิชาที่ปฏิบัติงาน
+            When  อาจารย์เปิดหน้าประเมิน
+            Then  ระบบแสดงแบบประเมินที่ตรงกับกิจกรรมหรือรายวิชานั้น
 
 ## Assumptions & Open Questions
 - ASM-01 เกณฑ์การประเมินถูกกำหนดก่อนเปิดรอบ
@@ -44,7 +48,7 @@ Owner: ทีม A | Status: Draft v1 | Updated: 2569-09-19
 ## Traceability
 | SRS / Use Case | spec.md | AC |
 |---|---|---|
-| UC-11 requirement 1 | FR-EVL-01 | ไม่มี AC ที่ระบุ |
+| UC-11 requirement 1 | FR-EVL-01 | AC-EVL-04 |
 | UC-11 requirement 2 | FR-EVL-02 | AC-EVL-01 |
 | UC-11 requirement 3 | FR-EVL-03 | AC-EVL-02 |
 | NFR-AUD-01 | Quality Requirements | ไม่มี AC ที่ระบุ |

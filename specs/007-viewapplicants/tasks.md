@@ -9,7 +9,7 @@ Feature: ดูรายชื่อผู้สมัคร | Spec ID: SPEC-07-
 ### T-01 สร้างหน้าจอแสดงรายชื่อผู้สมัครตามสิทธิ์
 - รองรับ: FR-APP-01, NFR-SEC-01, Constraint: ระบบต้องแสดงข้อมูลเฉพาะในรอบ/รายวิชาที่อาจารย์มีสิทธิ์
 - ตรวจด้วย: AC-APP-01
-- ไฟล์ที่แตะ: `frontend/src/pages/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`, `frontend/src/App.jsx`
+- ไฟล์ที่แตะ: `specs/007-viewapplicants/demo/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`, `frontend/src/App.jsx`
 - ต้องทำหลัง: ไม่มี
 - เสร็จเมื่อ: `test_AC_APP_01` ผ่านและหน้าจอแสดงเฉพาะรายชื่อผู้สมัครของรอบที่อาจารย์รับผิดชอบ
 - สถานะ: เสร็จ
@@ -26,7 +26,7 @@ Feature: ดูรายชื่อผู้สมัคร | Spec ID: SPEC-07-
 ### T-05 เพิ่ม empty-state สำหรับรอบที่ไม่มีผู้สมัคร
 - รองรับ: FR-APP-01, AC-APP-01
 - ตรวจด้วย: AC-APP-01
-- ไฟล์ที่แตะ: `frontend/src/pages/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
+- ไฟล์ที่แตะ: `specs/007-viewapplicants/demo/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: มีข้อมูลตัวอย่างรอบรับสมัครที่อาจารย์มีสิทธิ์แต่ไม่มีผู้สมัคร และเมื่อเปิดรอบนั้นระบบแสดงตารางว่างพร้อมข้อความ “ไม่พบผู้สมัคร”
 - สถานะ: เสร็จ รอทีมตรวจ
@@ -36,7 +36,7 @@ Feature: ดูรายชื่อผู้สมัคร | Spec ID: SPEC-07-
 ### T-02 เพิ่มการค้นหาและกรองรายชื่อ
 - รองรับ: FR-APP-02, NFR-PERF-01
 - ตรวจด้วย: AC-APP-02
-- ไฟล์ที่แตะ: `frontend/src/pages/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
+- ไฟล์ที่แตะ: `specs/007-viewapplicants/demo/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: `test_AC_APP_02` ผ่านและผลลัพธ์ตรงกับชื่อ รหัสนักศึกษา รอบรับสมัคร หรือสถานะที่กรอง
 - สถานะ: เสร็จ
@@ -55,7 +55,7 @@ Feature: ดูรายชื่อผู้สมัคร | Spec ID: SPEC-07-
 ### T-03 เพิ่มสถานะปฏิเสธการเข้าถึงข้อมูลนอกสิทธิ์
 - รองรับ: FR-APP-03, NFR-SEC-01, Constraint: หากอาจารย์ไม่มีสิทธิ์ในรอบใด ระบบต้องปฏิเสธการเข้าถึงการดูข้อมูลของรอบนั้น
 - ตรวจด้วย: AC-APP-03
-- ไฟล์ที่แตะ: `frontend/src/pages/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
+- ไฟล์ที่แตะ: `specs/007-viewapplicants/demo/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: `test_AC_APP_03` ผ่านและรอบที่ไม่มีสิทธิ์ไม่แสดงรายละเอียดผู้สมัคร
 - สถานะ: เสร็จ
@@ -74,7 +74,7 @@ Feature: ดูรายชื่อผู้สมัคร | Spec ID: SPEC-07-
 ### T-04 กำหนดข้อมูลผู้สมัครที่เปิดเผยได้ตามบทบาท
 - รองรับ: NFR-SEC-01, Q-01
 - ตรวจด้วย: ไม่มี AC ตรง ๆ ตรวจตามคำตอบของ Q-01
-- ไฟล์ที่แตะ: `frontend/src/pages/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
+- ไฟล์ที่แตะ: `specs/007-viewapplicants/demo/ViewApplicantsPage.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx`
 - ต้องทำหลัง: T-01
 - เสร็จเมื่อ: ทีมยืนยันรายการข้อมูลที่อาจารย์มีสิทธิ์ดูได้ และหน้าจอแสดงข้อมูลตามคำตอบโดยไม่เดา
 - สถานะ: เสร็จ

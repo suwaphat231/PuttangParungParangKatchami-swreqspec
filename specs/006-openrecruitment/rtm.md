@@ -5,7 +5,7 @@
 ## 1. ตามรอยไปข้างหน้า
 | ID | AC | task | โค้ด | test (ผล) | สถานะ |
 |---|---|---|---|---|---|
-| FR-REC-01 | ไม่มี AC ตรง | T-01 พร้อมทำ | ไม่พบ recruitment creation API/UI | ไม่พบ test | ช่องโหว่ |
+| FR-REC-01 | AC-REC-04 | T-01 พร้อมทำ | ไม่พบ recruitment creation API/UI | ไม่พบ test | ช่องโหว่ |
 | FR-REC-02 | AC-REC-02 | T-02 พร้อมทำ | ไม่พบ date/quota validation | ไม่พบ test AC-REC-02 | ยังไม่ถึง |
 | FR-REC-03 | AC-REC-01 | T-03 พร้อมทำ | ไม่พบ publish-state transition | ไม่พบ test AC-REC-01 | ยังไม่ถึง |
 | NFR-SEC-01 | ไม่มี AC ตรง | T-01, T-04 | ไม่พบ authorization ก่อนแก้ไข | ไม่พบ test | ช่องโหว่ |
@@ -26,4 +26,6 @@
 | F-002 | อ้าง ID ผิดเรื่อง | `spec.md`: Traceability | FR-REC-01, FR-REC-03, AC-REC-01 | หัวข้อ AC-REC-01 ระบุว่าเป็นของ FR-REC-03 แต่ตาราง Traceability กลับผูก AC-REC-01 กับ FR-REC-01 | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| F-001 (FR-REC-01), F-002 | เพิ่ม AC-REC-04 (FR-REC-01) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) | `spec.md` มี AC-REC-04 และ Traceability ผูก FR-REC-01 → AC-REC-04; ยังไม่มี test |

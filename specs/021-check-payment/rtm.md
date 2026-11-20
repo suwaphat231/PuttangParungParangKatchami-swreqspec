@@ -5,7 +5,7 @@
 ## 1. ตามรอยไปข้างหน้า
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
-| FR-FIN-01 | AC-FIN-01 | T-01 | ไม่พบ reference lookup ของ UC-21 | ไม่พบ test AC-FIN-01 | ยังไม่ถึง |
+| FR-FIN-01 | AC-FIN-04 | T-01 | ไม่พบ reference lookup ของ UC-21 | ไม่พบ test AC-FIN-04 | ยังไม่ถึง |
 | FR-FIN-02 | AC-FIN-02 | T-02 | ไม่พบ status/timestamp intake ของ UC-21 | ไม่พบ test AC-FIN-02 | ยังไม่ถึง |
 | FR-FIN-03 | AC-FIN-01 | T-03, T-05 | ไม่พบ idempotent update ของ UC-21 | ไม่พบ test AC-FIN-01 | ยังไม่ถึง |
 | FR-FIN-04 | AC-FIN-03 | T-04, T-06 | ไม่พบ mismatch rejection/audit reason | ไม่พบ test AC-FIN-03 | ยังไม่ถึง |
@@ -23,4 +23,6 @@
 | F-001 | FR ไม่มี AC | `spec.md`: Traceability | FR-FIN-02, NFR-SEC-01 | FR-FIN-02 และ NFR-SEC-01 ไม่มี AC โดยตรง | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| - | เพิ่ม AC-FIN-04 (FR-FIN-01) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) และผูก FR-FIN-01 กับ AC ของตัวเองแทน AC-FIN-01 | `spec.md` Traceability ผูก FR-FIN-01 → AC-FIN-04; ยังไม่มี test |

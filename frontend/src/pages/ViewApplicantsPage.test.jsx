@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, test } from 'vitest';
-import ViewApplicantsPage, { TEACHER_VISIBLE_FIELDS, toTeacherView } from './ViewApplicantsPage.jsx';
+import ViewApplicantsPage, { TEACHER_VISIBLE_FIELDS, toTeacherView } from '../../../specs/007-viewapplicants/demo/ViewApplicantsPage.jsx';
 
 describe('ViewApplicantsPage', () => {
   afterEach(() => {

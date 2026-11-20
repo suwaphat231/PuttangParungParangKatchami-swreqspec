@@ -5,10 +5,10 @@
 ## 1. ตามรอยไปข้างหน้า
 | ID | AC | task | โค้ด | test | สถานะ |
 |---|---|---|---|---|---|
-| FR-SCH-01 | ไม่มี AC | T-01, T-02 | ไม่พบ schedule model/API | ไม่พบ test | ช่องโหว่ |
+| FR-SCH-01 | AC-SCH-04 | T-01, T-02 | ไม่พบ schedule model/API | ไม่พบ test | ช่องโหว่ |
 | FR-SCH-02 | AC-SCH-01 | T-01, T-03 | ไม่พบ quota logic | ไม่พบ test | ยังไม่ถึง |
 | FR-SCH-03 | AC-SCH-02 | T-01, T-04 | ไม่พบ overlap logic | ไม่พบ test | ยังไม่ถึง |
-| FR-SCH-04 | ไม่มี AC | T-06 | ไม่พบการแสดงตารางล่าสุด | ไม่พบ test | ช่องโหว่ |
+| FR-SCH-04 | AC-SCH-05 | T-06 | ไม่พบการแสดงตารางล่าสุด | ไม่พบ test | ช่องโหว่ |
 | NFR-REL-01 | AC-SCH-03 | T-01, T-05 | ไม่พบ atomic transaction/concurrency control | ไม่พบ test | ยังไม่ถึง |
 | NFR-PERF-01 | ไม่มี AC ที่ตรวจเวลา | T-01 ถึง T-07 | ไม่พบ benchmark | ไม่พบ test | ช่องโหว่ |
 
@@ -25,4 +25,6 @@
 | F-003 | AC ไม่มี test | `tasks.md`: T-07 | AC-SCH-01 ถึง AC-SCH-03 | T-07 ระบุเพียง test scenario ในเอกสาร และไม่มีผลทดสอบจริง | |
 
 ## 4. แก้แล้ว
-ไม่มี
+| F-ID | แก้อย่างไร | รู้ได้อย่างไร |
+|---|---|---|
+| F-001 | เพิ่ม AC-SCH-04 (FR-SCH-01) และ AC-SCH-05 (FR-SCH-04) ใน spec.md ตามที่ทีมยืนยันใน SRS (2569-11-20) | `spec.md` Traceability ผูก FR-SCH-01 → AC-SCH-04 และ FR-SCH-04 → AC-SCH-05; ยังไม่มี test |

@@ -1264,3 +1264,9 @@
 - แก้ route ใน `frontend/src/App.jsx`, ปรับ route test ใน `frontend/src/__tests__/checkWorkTime.test.jsx` และอัปเดต route ใน `specs/019-check-work-time/rtm.md`
 - ผล test: `cd frontend && npm test -- --run src/__tests__/checkWorkTime.test.jsx` — 9 tests passed
 - ไม่แก้ spec หรือ backend API; อัปเดต T-07 เป็น “เสร็จ รอทีมตรวจ”
+
+## 2569-11-20 คำสั่ง: ย้าย demo ของ specs/007-viewapplicants ไปไว้ในโฟลเดอร์ของฟีเจอร์
+
+- ย้าย `ViewApplicantsPage.jsx` ไปไว้ที่ `specs/007-viewapplicants/demo/` และคง test ไว้ใต้ `frontend/` เพื่อให้ Vitest ค้นพบและ resolve dependency ได้ตาม root เดิม
+- ปรับ import ใน `frontend/src/App.jsx`, `frontend/src/pages/ViewApplicantsPage.test.jsx` และ test cases ของ AC-APP-01 ให้ชี้ไปยังตำแหน่ง component ใหม่
+- ไม่ย้ายหรือแก้ test cases ที่มาจาก `specs/007-viewapplicants/test-cases.md`

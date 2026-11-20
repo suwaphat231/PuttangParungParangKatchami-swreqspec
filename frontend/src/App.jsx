@@ -3,7 +3,7 @@ import ApplyLabBoyPage from '../../specs/001-apply-lab-boy/ApplyLabBoyPrototype.
 import RecruitmentAnnouncementPrototype from '../../specs/015-create-recruitment-announcement/prototype.jsx';
 import CheckWorkTimePage from './pages/CheckWorkTimePage.jsx';
 import PaymentTrackingPage from './pages/PaymentTrackingPage.jsx';
-import ViewApplicantsPage from './pages/ViewApplicantsPage.jsx';
+import ViewApplicantsPage from '../../specs/007-viewapplicants/demo/ViewApplicantsPage.jsx';
 
 // รองรับ FR-CAL-01 และ FR-CAL-05 ด้วย route สำหรับเปิดหน้า UC-19.
 export default function App() {
